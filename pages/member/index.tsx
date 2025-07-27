@@ -3,16 +3,12 @@ import { Box, Container, Stack } from "@mui/material";
 import { NextPage } from "next";
 import React from "react";
 
-const Home: NextPage = () => {
+const Members: NextPage = () => {
   return (
     <Container>
-      <Stack>
-        <Box>Popular Products</Box>
-        <Box>TopProducts</Box>
-        <Box>Discounted Products</Box>
-      </Stack>
+      <Stack>Members Page</Stack>
     </Container>
   );
 };
 
-export default withLayoutMain(Home);
+export default withLayoutMain(Members);
