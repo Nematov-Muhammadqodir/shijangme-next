@@ -1,5 +1,6 @@
 import Banner from "@/libs/components/homePage/Banner";
 import Category from "@/libs/components/homePage/Category";
+import DiscounProductsList from "@/libs/components/homePage/DiscounProductsList";
 import withLayoutMain from "@/libs/components/layout/LayoutHome";
 import { Box, Stack } from "@mui/material";
 import { NextPage } from "next";
@@ -10,6 +11,7 @@ const Home: NextPage = () => {
     <Stack className="home-page" sx={{ height: "600px", marginTop: "200px" }}>
       <Banner />
       <Category />
+      <DiscounProductsList />
       <Box className={"container"}>TopProducts</Box>
       <Box className={"container"}>Discounted Products</Box>
     </Stack>

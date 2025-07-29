@@ -130,5 +130,153 @@
         }
       }
     }
+    .discount-products-list-main-countainer {
+      margin-top: 100px;
+      .container {
+        .discount-products-list {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          .discount-card-main-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            gap: 10px;
+            .discount-card {
+              display: flex;
+              flex-direction: column;
+              width: 275px;
+              height: 492px;
+              border-radius: 10px;
+              border: 1px solid #d9d9d9;
+              background: #f6f9fa;
+              .card-image {
+                height: 50%;
+                position: relative;
+                .card-features {
+                  position: absolute;
+                  display: flex;
+                  flex-direction: column;
+                  right: 25px;
+                  top: 34px;
+                  gap: 20px;
+                  .discount {
+                    width: 34px;
+                    height: 34px;
+                    background: #434343;
+                    color: white;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                  }
+                  .like {
+                    width: 34px;
+                    height: 34px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background-color: white;
+                  }
+                }
+              }
+              .card-info {
+                display: flex;
+                flex-direction: column;
+                // background-color: #316e4e;
+                height: 50%;
+                padding: 10px 20px;
+                gap: 20px;
+                .product-name {
+                  width: 100%;
+                  color: #3d3d3d;
+                  font-size: 14px;
+                  font-style: normal;
+                  font-weight: 500;
+                  line-height: 22px; /* 157.143% */
+                  text-transform: capitalize;
+                }
+                .product-price {
+                  display: flex;
+                  flex-direction: row;
+                  align-items: center;
+                  gap: 15px;
+                  .discount-price {
+                    color: #3d3d3d;
+                    font-size: 18px;
+                    font-style: normal;
+                    font-weight: 600;
+                    line-height: normal;
+                    text-transform: capitalize;
+                  }
+                  .original-price {
+                    color: #b8bdc1;
+                    font-size: 14px;
+                    font-style: normal;
+                    font-weight: 500;
+                    line-height: normal;
+                    text-decoration-line: line-through;
+                    text-transform: capitalize;
+                  }
+                  .discount-amount {
+                    width: 44px;
+                    height: 16px;
+                    flex-shrink: 0;
+                    border-radius: 2px;
+                    background: #e00000;
+                    padding: 0px -10px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    span {
+                      color: #fff;
+                      width: 26px;
+                      height: 7px;
+                      flex-shrink: 0;
+                      font-size: 10px;
+                      font-style: normal;
+                      font-weight: 500;
+                      line-height: 7px; /* 70% */
+                      text-transform: capitalize;
+                    }
+                  }
+                }
+                .product-weight {
+                  width: 74px;
+                  height: 28px;
+                  flex-shrink: 0;
+                  border-radius: 100px;
+                  border: 1px solid #d9d9d9;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  span {
+                    width: 43px;
+                    height: 9px;
+                    flex-shrink: 0;
+                    color: #707070;
+                    font-size: 12px;
+                    font-style: normal;
+                    font-weight: 500;
+                    line-height: 9px; /* 75% */
+                    text-transform: capitalize;
+                  }
+                }
+                .add-to-cart-btn {
+                  display: flex;
+                  gap: 10px;
+                  width: 211px;
+                  height: 40px;
+                  flex-shrink: 0;
+                  border-radius: 30px;
+                  background: #83bd96;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
