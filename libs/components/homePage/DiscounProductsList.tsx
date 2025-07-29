@@ -41,7 +41,11 @@ const DiscounProductsList = () => {
     <div className="discount-products-list-main-countainer">
       <Stack className="container">
         <Stack className="discount-products-list">
-          <Stack>Discount Products</Stack>
+          <Stack className="discount-products-intro">
+            <div className="horizontal-line"></div>
+            <span>Discounted Products</span>
+            <div className="horizontal-line"></div>
+          </Stack>
           <Stack className="discount-card-main-container">
             {productsToDisplay.length === 0 ? (
               <Box
