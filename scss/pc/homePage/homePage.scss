@@ -199,6 +199,7 @@
                     align-items: center;
                     justify-content: center;
                     background-color: white;
+                    color: red;
                   }
                 }
               }
@@ -294,6 +295,36 @@
                   background: #83bd96;
                 }
               }
+            }
+          }
+        }
+      }
+    }
+    .new-products-list-main-container {
+      margin-top: 50px;
+      .container {
+        .new-products-list {
+          display: flex;
+          flex-direction: column;
+          gap: 20px;
+          .new-products-intro {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            .horizontal-line {
+              width: 30%;
+              border-bottom: 2px solid black;
+            }
+            span {
+              text-align: center;
+              color: #3d3d3d;
+              font-size: 26px;
+              font-style: normal;
+              font-weight: 600;
+              line-height: 24px;
+              text-transform: capitalize;
+              width: 40%;
             }
           }
         }
