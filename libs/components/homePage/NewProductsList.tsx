@@ -29,7 +29,11 @@ const NewProductsList = () => {
             <span>NewProducts</span>
             <div className="horizontal-line"></div>
           </Stack>
-          <Stack className="new-product-card-main-container">
+          <Stack
+            className={`new-product-card-main-container ${
+              productsToDisplay.length < 4 ? "flex-left" : ""
+            }`}
+          >
             {productsToDisplay.length === 0 ? (
               <Box
                 component={"div"}
@@ -50,9 +54,7 @@ const NewProductsList = () => {
           </Stack>
 
           {pageCount > 1 && (
-            <Box
-              sx={{ display: "flex", justifyContent: "center", mt: 3, mb: 3 }}
-            >
+            <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
               <Pagination
                 count={pageCount}
                 page={page}

@@ -162,7 +162,7 @@
             display: flex;
             flex-direction: row;
             justify-content: space-between;
-            gap: 10px;
+            gap: 40px;
             .discount-card {
               display: flex;
               flex-direction: column;
@@ -301,7 +301,7 @@
       }
     }
     .new-products-list-main-container {
-      margin-top: 50px;
+      margin-top: 100px;
       .container {
         .new-products-list {
           display: flex;
@@ -312,11 +312,15 @@
             flex-direction: row;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 20px;
             .horizontal-line {
               width: 30%;
               border-bottom: 2px solid black;
             }
             span {
+              display: flex;
+              align-items: center;
+              justify-content: center;
               text-align: center;
               color: #3d3d3d;
               font-size: 26px;
@@ -325,6 +329,121 @@
               line-height: 24px;
               text-transform: capitalize;
               width: 40%;
+            }
+          }
+          .new-product-card-main-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            &.flex-left {
+              display: flex;
+              justify-content: flex-start;
+              gap: 50px;
+            }
+            .new-product-card {
+              width: 288px;
+              height: 492px;
+              display: flex;
+              flex-direction: column;
+              .new-product-card-image {
+                height: 60%;
+                width: 100%;
+                border-radius: 10px;
+                border: 1px solid #d9d9d9;
+                background: #fff;
+                position: relative;
+                .product-image {
+                  width: 288px;
+                  height: 348px;
+                  flex-shrink: 0;
+                }
+                .like {
+                  position: absolute;
+                  left: 30px;
+                  top: 35px;
+                  color: red;
+                }
+                .new {
+                  position: absolute;
+                  right: 25px;
+                  top: 35px;
+                  svg {
+                    font-size: 30px;
+                  }
+                }
+                .product-volume {
+                  width: 100%;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  position: absolute;
+                  bottom: 22px;
+                  div {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    width: 69.438px;
+                    height: 26.274px;
+                    flex-shrink: 0;
+                    border-radius: 100px;
+                    border: 1px solid #d9d9d9;
+                    text-align: center;
+                    color: #707070;
+                    font-size: 12px;
+                    font-style: normal;
+                    font-weight: 500;
+                    line-height: 9px; /* 75% */
+                    text-transform: capitalize;
+                  }
+                }
+              }
+              .card-info {
+                height: 40%;
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px;
+                .product-origin {
+                  font-size: 18px;
+                  color: #2c2c2c;
+                }
+                .product-price {
+                  display: flex;
+                  flex-direction: row;
+                  justify-content: space-between;
+                  align-items: center;
+                  span {
+                    color: #3d3d3d;
+                    font-size: 18px;
+                    font-style: normal;
+                    font-weight: 600;
+                    line-height: normal;
+                    text-transform: capitalize;
+                  }
+                  .add-btn {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    width: 41.561px;
+                    height: 41.561px;
+                    flex-shrink: 0;
+                    border-radius: 50%;
+                    background: #1b8057;
+                    color: white;
+                  }
+                }
+                .product-name {
+                  height: 49px;
+                  flex-shrink: 0;
+                  color: #3d3d3d;
+                  font-size: 14px;
+                  font-style: normal;
+                  font-weight: 500;
+                  line-height: 22px; /* 157.143% */
+                  text-transform: capitalize;
+                }
+              }
             }
           }
         }
