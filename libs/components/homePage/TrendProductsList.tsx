@@ -1,8 +1,8 @@
 import { Box, Fade, Pagination, Stack } from "@mui/material";
 import React, { useState } from "react";
-import NewProductCard from "./NewProductCard";
+import TrendProductsCard from "./TrendProductsCard";
 
-const NewProductsList = () => {
+const TrendProductsList = () => {
   const allProducts = [1, 2, 3, 4, 5, 6];
 
   const [page, setPage] = useState(1);
@@ -21,12 +21,12 @@ const NewProductsList = () => {
     // window.scrollTo({ top: 0, behavior: "smooth" });
   };
   return (
-    <div className="new-products-list-main-container">
+    <div className="trend-products-list-main-container">
       <Stack className="container">
-        <Stack className="new-products-list">
-          <Stack className="new-products-intro">
+        <Stack className="trend-products-list">
+          <Stack className="trend-products-intro">
             <div className="horizontal-line"></div>
-            <span>New Products</span>
+            <span>Trend Products</span>
             <div className="horizontal-line"></div>
           </Stack>
           <Stack
@@ -46,13 +46,12 @@ const NewProductsList = () => {
               productsToDisplay.map((product, key) => (
                 <Fade in={true} timeout={1000} key={key}>
                   <Box>
-                    <NewProductCard />
+                    <TrendProductsCard />
                   </Box>
                 </Fade>
               ))
             )}
           </Stack>
-
           {pageCount > 1 && (
             <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
               <Pagination
@@ -72,4 +71,4 @@ const NewProductsList = () => {
   );
 };
 
-export default NewProductsList;
+export default TrendProductsList;

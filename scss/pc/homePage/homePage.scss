@@ -144,6 +144,7 @@
             width: 100%;
             justify-content: space-between;
             span {
+              letter-spacing: 4px;
               text-align: center;
               color: #3d3d3d;
               font-size: 26px;
@@ -318,6 +319,8 @@
               border-bottom: 2px solid black;
             }
             span {
+              letter-spacing: 4px;
+
               display: flex;
               align-items: center;
               justify-content: center;
@@ -352,6 +355,7 @@
                 border: 1px solid #d9d9d9;
                 background: #fff;
                 position: relative;
+                background: #f6f9fa;
                 .product-image {
                   width: 288px;
                   height: 348px;
@@ -444,6 +448,39 @@
                   text-transform: capitalize;
                 }
               }
+            }
+          }
+        }
+      }
+    }
+    .trend-products-list-main-container {
+      margin-top: 100px;
+      .container {
+        .trend-products-list {
+          display: flex;
+          flex-direction: column;
+          gap: 20px;
+          .trend-products-intro {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            .horizontal-line {
+              width: 30%;
+              border-bottom: 2px solid black;
+            }
+            span {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              text-align: center;
+              color: #3d3d3d;
+              font-size: 26px;
+              font-style: normal;
+              font-weight: 600;
+              line-height: 24px;
+              text-transform: capitalize;
+              width: 40%;
+              letter-spacing: 4px;
             }
           }
         }

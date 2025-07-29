@@ -2,6 +2,7 @@ import Banner from "@/libs/components/homePage/Banner";
 import Category from "@/libs/components/homePage/Category";
 import DiscounProductsList from "@/libs/components/homePage/DiscounProductsList";
 import NewProductsList from "@/libs/components/homePage/NewProductsList";
+import TrendProductsList from "@/libs/components/homePage/TrendProductsList";
 import withLayoutMain from "@/libs/components/layout/LayoutHome";
 import { Box, Stack } from "@mui/material";
 import { NextPage } from "next";
@@ -14,6 +15,7 @@ const Home: NextPage = () => {
       <Category />
       <DiscounProductsList />
       <NewProductsList />
+      <TrendProductsList />
       <Box className={"container"}>TopProducts</Box>
       <Box className={"container"}>Discounted Products</Box>
     </Stack>
