@@ -1,0 +1,134 @@
+@import "/scss/variables.scss";
+
+#pc-wrap {
+  .navbar-main {
+    background-color: #2b4d24;
+    width: 100%;
+    position: fixed;
+    height: 200px;
+    z-index: 99;
+    transition: background-color 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Example of a more dramatic ease */
+    &.transparent {
+      background-color: #6c8667;
+      z-index: 0;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      padding: 20px 0px;
+      .top-navbar {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        .logo-box {
+          width: 130px;
+          height: 52px;
+          display: flex;
+          align-items: center;
+          a {
+            color: white;
+          }
+        }
+        .router-box {
+          display: flex;
+          flex-direction: row;
+          width: 768px;
+          height: 20px;
+          justify-content: space-between;
+          align-items: center;
+          div {
+            color: white;
+            font-family: $font;
+          }
+        }
+        .get-in-touch {
+          display: flex;
+          flex-direction: row;
+          width: 172px;
+          height: 40px;
+          justify-content: space-between;
+          .calling-logo {
+            display: flex;
+            align-items: center;
+            border: 1px solid black;
+            width: 40px;
+            height: 40px;
+            justify-content: center;
+            background: #febe15;
+            border-radius: 50%;
+          }
+          .phone-number {
+            display: flex;
+            flex-direction: column;
+            color: white;
+          }
+        }
+      }
+      .divider {
+        border-bottom: 1.5px solid white;
+        margin-top: 15px;
+      }
+      .bottom-navbar {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        height: 100px;
+        .select-lang-container {
+          display: flex;
+          flex-direction: row;
+          gap: 20px;
+          align-items: center;
+          color: white;
+          button {
+            color: black;
+            background: #febe15;
+          }
+        }
+        .bottom-navbar-info {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          gap: 30px;
+          justify-content: flex-end;
+          .about-us {
+            div {
+              display: flex;
+              align-items: center;
+              // margin-top: 10px;
+              color: white;
+              gap: 5px;
+            }
+          }
+          .login-user {
+            .navbar-profile-image {
+              width: 70px;
+              height: 70px;
+              border-radius: 50%;
+            }
+          }
+          .join-box {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 10px;
+            //   margin-top: 10px;
+          }
+          .wish-list {
+            display: flex;
+            color: white;
+            align-items: center;
+            gap: 5px;
+          }
+          .cart {
+            display: flex;
+            color: white;
+            align-items: center;
+            gap: 5px;
+          }
+        }
+      }
+    }
+  }
+}

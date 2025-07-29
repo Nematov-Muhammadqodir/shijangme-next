@@ -1,5 +1,6 @@
 import { Stack } from "@mui/material";
 import Head from "next/head";
+import Top from "../Top";
 
 const withLayoutMain = (Component: any) => {
   return (props: any) => {
@@ -9,7 +10,9 @@ const withLayoutMain = (Component: any) => {
           <title>ShijangMe</title>
         </Head>
         <Stack id="pc-wrap">
-          <Stack sx={{ background: "#81c784" }}>Header Home</Stack>
+          <Stack sx={{ background: "#81c784" }}>
+            <Top />
+          </Stack>
 
           <Stack>
             <Component {...props} />
