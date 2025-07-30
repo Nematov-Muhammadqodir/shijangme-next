@@ -1,3 +1,4 @@
+import Advertisement from "@/libs/components/homePage/Advertisement";
 import Banner from "@/libs/components/homePage/Banner";
 import Category from "@/libs/components/homePage/Category";
 import DiscounProductsList from "@/libs/components/homePage/DiscounProductsList";
@@ -16,6 +17,7 @@ const Home: NextPage = () => {
       <DiscounProductsList />
       <NewProductsList />
       <TrendProductsList />
+      <Advertisement />
       <Box className={"container"}>TopProducts</Box>
       <Box className={"container"}>Discounted Products</Box>
     </Stack>

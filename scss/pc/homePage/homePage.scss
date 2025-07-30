@@ -568,5 +568,114 @@
         }
       }
     }
+    .advertisement-main-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #c4e095;
+      width: 100%;
+      height: 500px;
+      .container {
+        display: flex;
+        flex-direction: row;
+        .left {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 40%;
+          img {
+            width: 300px;
+            height: 300px;
+          }
+        }
+        .right {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          width: 60%;
+          .left-intro {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 60%;
+            .title {
+              color: #1f1f1f;
+              font-size: 18px;
+              font-style: normal;
+              font-weight: 500;
+              line-height: normal;
+              letter-spacing: 5.4px;
+              text-transform: uppercase;
+            }
+            .motto {
+              color: #2b4d24;
+              font-family: "Abril Fatface";
+              font-size: 35px;
+              font-style: normal;
+              font-weight: 600;
+              //   line-height: 75px; /* 125% */
+              text-transform: capitalize;
+            }
+            .description {
+              height: 47px;
+              flex-shrink: 0;
+              color: #000;
+              font-size: 14px;
+              font-style: normal;
+              font-weight: 400;
+              line-height: 26px; /* 185.714% */
+              text-transform: capitalize;
+            }
+            .ordering {
+              display: flex;
+              flex-direction: row;
+              justify-content: space-between;
+              padding-top: 25px;
+              align-items: center;
+              .button {
+                width: 164px;
+                height: 50px;
+                flex-shrink: 0;
+                border-radius: 24px;
+                background: #fed700;
+              }
+              .phone-number-container {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                width: 180px;
+                justify-content: space-between;
+                gap: 15px;
+                .call-now {
+                  width: 100%;
+                  .text {
+                    color: #2d2d2d;
+                    font-size: 18px;
+                    font-style: normal;
+                    font-weight: 400;
+                    line-height: normal;
+                    text-transform: capitalize;
+                  }
+                  .number {
+                    color: #151515;
+                    // font-size: 22px;
+                    font-style: normal;
+                    font-weight: 500;
+                    line-height: normal;
+                    text-transform: capitalize;
+                  }
+                }
+              }
+            }
+          }
+          .right-image {
+            display: flex;
+            justify-content: center;
+            width: 40%;
+            align-items: center;
+          }
+        }
+      }
+    }
   }
 }
