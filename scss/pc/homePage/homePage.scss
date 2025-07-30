@@ -464,6 +464,7 @@
             display: flex;
             flex-direction: row;
             align-items: center;
+            margin-bottom: 30px;
             .horizontal-line {
               width: 30%;
               border-bottom: 2px solid black;
@@ -481,6 +482,87 @@
               text-transform: capitalize;
               width: 40%;
               letter-spacing: 4px;
+            }
+          }
+          .trend-product-card-main-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            .trend-products-card {
+              width: 231px;
+              height: 412px;
+              display: flex;
+              flex-direction: column;
+              border-bottom: 1px solid #dce0e5;
+              .trend-products-card-image {
+                display: flex;
+                position: relative;
+                width: 240px;
+                height: 240px;
+                background-color: #dee2e5;
+                border-radius: 10px;
+                align-items: center;
+                justify-content: center;
+                .like {
+                  position: absolute;
+                  right: 10px;
+                  color: red;
+                  top: 10px;
+                }
+                .product-left-count {
+                  position: absolute;
+                  bottom: 10px;
+                  left: 10px;
+                  width: 87px;
+                  height: 21px;
+                  padding: 8px 8px;
+                  display: inline-flex;
+                  justify-content: center;
+                  align-items: center;
+                  background: #f58700;
+                  border-radius: 5px;
+                  span {
+                    font-size: 12px;
+                    color: white;
+                  }
+                }
+              }
+              .card-info {
+                display: flex;
+                height: 142px;
+                padding: 12px 8px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+                .card-info-text {
+                  font-size: 15px;
+                  font-style: normal;
+                  font-weight: 400;
+                  line-height: 140%; /* 21px */
+                  letter-spacing: -0.3px;
+                  height: 42px;
+                }
+                .card-view {
+                  display: flex;
+                  flex-direction: row;
+                  gap: 10px;
+                  align-items: center;
+                }
+                .product-price {
+                  display: flex;
+                  flex-direction: row;
+                  align-items: center;
+                  justify-content: space-between;
+                  width: 100%;
+                  .cart {
+                    width: 34px;
+                    height: 34px;
+                    border-radius: 8px;
+                    border: 1px solid #707070;
+                    padding: 5px;
+                  }
+                }
+              }
             }
           }
         }

@@ -7,7 +7,7 @@ const TrendProductsList = () => {
 
   const [page, setPage] = useState(1);
 
-  const itemsPerPage = 4;
+  const itemsPerPage = 5;
 
   const pageCount = Math.ceil(allProducts.length / itemsPerPage);
 
@@ -30,7 +30,7 @@ const TrendProductsList = () => {
             <div className="horizontal-line"></div>
           </Stack>
           <Stack
-            className={`new-product-card-main-container ${
+            className={`trend-product-card-main-container ${
               productsToDisplay.length < 4 ? "flex-left" : ""
             }`}
           >
