@@ -677,5 +677,135 @@
         }
       }
     }
+    .blogs-main-container {
+      width: 100%;
+      height: 963px;
+      background-color: rgba(229, 246, 202, 0.3);
+      padding-top: 100px;
+      .container {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        .blogs-intro {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          h2 {
+            text-align: center;
+            width: 291px;
+            height: 21px;
+            flex-shrink: 0;
+            color: #3d3d3d;
+            font-size: 26px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 24px; /* 92.308% */
+            text-transform: capitalize;
+          }
+        }
+        .blog-cards-list-container {
+          display: flex;
+          flex-direction: row;
+          gap: 10px;
+          justify-content: center;
+          .blog-card-main-container {
+            .blog-card {
+              display: flex;
+              flex-direction: column;
+              width: 450px;
+              height: 500px;
+              border-radius: 20px;
+              .blog-img-container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 50%;
+                width: 100%;
+                border-radius: 20px;
+                background: #415a77;
+                img {
+                  width: 100%;
+                  height: 100%;
+                  border-radius: 20px;
+                }
+              }
+              .blog-info-container {
+                display: flex;
+                justify-content: space-between;
+                width: 100%;
+                height: 50%;
+                padding: 20px;
+                .blog-intro {
+                  display: flex;
+                  flex-direction: row;
+                  justify-content: space-between;
+                  align-items: center;
+                  .blog-type {
+                    border-radius: 24px;
+                    background: #2b4d24;
+                    width: 140.815px;
+                    height: 41.214px;
+                    flex-shrink: 0;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    color: wheat;
+                  }
+                  .date {
+                    color: #43807b;
+                    font-family: Inter;
+                    font-size: 16px;
+                    font-style: normal;
+                    font-weight: 500;
+                    line-height: 13px; /* 81.25% */
+                    text-transform: capitalize;
+                  }
+                }
+                .blog-title {
+                  width: 450px;
+                  height: 52px;
+                  flex-shrink: 0;
+                  color: #0d0d0d;
+                  font-size: 20px;
+                  font-style: normal;
+                  font-weight: 500;
+                  line-height: 30px; /* 150% */
+                  text-transform: capitalize;
+                }
+                .divider {
+                  width: 100%;
+                  border-bottom: 2px solid #333;
+                }
+                .blog-content {
+                  width: 100%;
+                  height: 81px;
+                  flex-shrink: 0;
+                  color: #626262;
+                  font-family: Inter;
+                  font-size: 15px;
+                  font-style: normal;
+                  font-weight: 400;
+                  line-height: 26px; /* 173.333% */
+                  text-transform: capitalize;
+                  overflow: auto;
+                }
+              }
+            }
+          }
+        }
+        .btn-container {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          button {
+            width: 216px;
+            height: 50px;
+            flex-shrink: 0;
+            border-radius: 24px;
+            background: #fed700;
+          }
+        }
+      }
+    }
   }
 }
