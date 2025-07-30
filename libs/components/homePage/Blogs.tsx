@@ -12,8 +12,8 @@ const Blogs = () => {
           <h2>News & Articles</h2>
         </Stack>
         <Stack className="blog-cards-list-container">
-          {blogs.map((blog) => {
-            return <BlogsCard />;
+          {blogs.map((blog, i) => {
+            return <BlogsCard key={i} />;
           })}
         </Stack>
 

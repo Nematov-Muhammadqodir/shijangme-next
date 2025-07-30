@@ -42,6 +42,7 @@ const Footer = () => {
               </Stack>
             </Stack>
           </Stack>
+          <div className="divider"></div>
           <Stack className="footer-content">
             <Stack className="first-section">
               <Stack className="logo-container">
@@ -99,10 +100,59 @@ const Footer = () => {
                 </a>
               </Stack>
             </Stack>
-            <Stack>Get to Know Us</Stack>
-            <Stack>Legal</Stack>
-            <Stack>Orders & Returns</Stack>
-            <Stack>Let’s Keep in Touch</Stack>
+            <Stack className="second-section">
+              <Box className="intro">
+                <h1>Get To Know Us</h1>
+              </Box>
+              <Stack className="second-section-items-container">
+                <span>Careers</span>
+                <span>About Us</span>
+                <span>Inverstor Relations</span>
+                <span>Devices</span>
+                <span>Customer reviews</span>
+                <span>Social Responsibility</span>
+                <span>Store Locations</span>
+              </Stack>
+            </Stack>
+            <Stack className="third-section">
+              <Box className="intro">
+                <h1>Orders & Returns</h1>
+              </Box>
+              <Stack className="third-section-items-container">
+                <span>Your Orders</span>
+                <span>Returns & Replacements</span>
+                <span>Shipping Rates & Policies</span>
+                <span>Refund and Returns Policy</span>
+                <span>Privacy Policy</span>
+                <span>Terms and Conditions</span>
+                <span>Cookie Settings</span>
+              </Stack>
+            </Stack>
+            <Stack className="forth-section">
+              <Box className="intro">
+                <h1>Legal</h1>
+              </Box>
+              <Stack className="forth-section-items-container">
+                <span>Privacy Policy</span>
+                <span>Terms of use</span>
+                <span>Legal</span>
+                <span>Site Map</span>
+                <span>Tracking Order</span>
+                <span>Investors</span>
+              </Stack>
+            </Stack>
+            <Stack className="fifth-section">
+              <Box className="intro">
+                <h1>Resources</h1>
+              </Box>
+              <Stack className="fifth-section-items-container">
+                <span>FAQ</span>
+                <span>Testimonials</span>
+                <span>Community</span>
+                <span>Refer-A-Friend</span>
+                <span>Statement</span>
+              </Stack>
+            </Stack>
           </Stack>
         </Stack>
       </Stack>

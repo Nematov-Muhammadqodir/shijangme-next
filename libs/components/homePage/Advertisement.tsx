@@ -8,7 +8,10 @@ const Advertisement = () => {
     <div className="advertisement-main-container">
       <Stack className="container">
         <Stack className="left">
-          <img src="" alt="advertising-image" />
+          <img
+            src="/img/homePage/basket-of-products.png"
+            alt="advertising-image"
+          />
         </Stack>
         <Stack className="right">
           <Stack className="left-intro">
@@ -39,7 +42,10 @@ const Advertisement = () => {
             </Stack>
           </Stack>
           <Stack className="right-image">
-            <img src="" alt="advertising-image" />
+            <img
+              src="/img/homePage/basket-holding-girl.png"
+              alt="advertising-image"
+            />
           </Stack>
         </Stack>
       </Stack>

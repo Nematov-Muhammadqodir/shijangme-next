@@ -6,7 +6,7 @@ const BlogsCard = () => {
     <div className="blog-card-main-container">
       <Stack className="blog-card">
         <Stack className="blog-img-container">
-          <img src="" alt="blog-image" />
+          <img src="/img/homePage/article-default.jpg" alt="blog-image" />
         </Stack>
         <Stack className="blog-info-container">
           <Stack className="blog-intro">

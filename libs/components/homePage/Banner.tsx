@@ -28,7 +28,7 @@ const Banner = () => {
           </Stack>
           <Stack className="banner-right">
             <Box className="banner-right-image">
-              <img src="" alt="banner-image" />
+              <img src="/img/homePage/banner-products.png" alt="banner-image" />
             </Box>
             <Box className="banner-discount">
               <p>Save Upto</p>
