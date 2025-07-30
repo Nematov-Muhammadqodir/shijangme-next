@@ -133,4 +133,136 @@
       }
     }
   }
+  .footer-main-container {
+    background: #f1f1f1;
+    .container {
+      .footer {
+        background: khaki;
+        width: 100%;
+        height: 700px;
+        padding-top: 50px;
+        .benefits-list-container {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-around;
+          width: 100%;
+          height: 75px;
+          align-items: center;
+          .benefit {
+            display: flex;
+            flex-direction: row;
+            gap: 15px;
+            align-items: center;
+            .img-container {
+            }
+            .benefit-text {
+              display: flex;
+              flex-direction: column;
+              justify-content: space-between;
+              height: 100%;
+              gap: 8px;
+              align-items: center;
+              justify-content: center;
+              p {
+                color: #434343;
+                font-size: 20px;
+                font-style: normal;
+                font-weight: 600;
+                line-height: normal;
+              }
+              span {
+                color: #434343;
+                font-size: 14px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: normal;
+                text-transform: capitalize;
+              }
+            }
+          }
+        }
+        .footer-content {
+          margin-top: 100px;
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          width: 100%;
+          padding: 0px 30px;
+          .first-section {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            width: 20%;
+            gap: 30px;
+            .logo-container {
+              display: flex;
+              flex-direction: column;
+              gap: 10px;
+              .brand-motto {
+                color: #252525;
+                font-size: 14px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 24px; /* 171.429% */
+                text-transform: capitalize;
+              }
+            }
+            .address {
+              display: flex;
+              gap: 20px;
+              .intro {
+                color: #252525;
+                font-size: 25px;
+                font-style: normal;
+                font-weight: 600;
+                line-height: normal;
+                text-transform: capitalize;
+              }
+              .location-container {
+                display: flex;
+                flex-direction: row;
+                width: 100%;
+                justify-content: space-between;
+                gap: 10px;
+                align-items: center;
+                .location {
+                  font-size: 14px;
+                }
+              }
+              .call-container {
+                display: flex;
+                flex-direction: row;
+                width: 100%;
+                gap: 10px;
+                align-items: center;
+                .phone-number {
+                  font-size: 14px;
+                }
+              }
+              .email-container {
+                display: flex;
+                flex-direction: row;
+                width: 100%;
+                justify-content: space-between;
+                gap: 10px;
+                align-items: center;
+                .email {
+                  font-size: 14px;
+                }
+              }
+            }
+            .social-media-container {
+              padding-top: 20px;
+              display: flex;
+              flex-direction: row;
+              width: 185.391px;
+              height: 25.391px;
+              flex-shrink: 0;
+              justify-content: space-between;
+            }
+          }
+        }
+      }
+    }
+  }
 }

@@ -20,7 +20,6 @@ const Home: NextPage = () => {
       <TrendProductsList />
       <Advertisement />
       <Blogs />
-      <Box className={"container"}>Discounted Products</Box>
     </Stack>
   );
 };
