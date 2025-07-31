@@ -11,7 +11,7 @@ import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import { ProductsInquiry } from "@/libs/types/product/product.input";
 import { useRouter } from "next/router";
-import { ProductFrom } from "@/libs/enums/product.enum";
+import { ProductCollection, ProductFrom } from "@/libs/enums/product.enum";
 
 interface FilterType {
   searchFilter: ProductsInquiry;
@@ -25,6 +25,9 @@ const Filter = (props: FilterType) => {
   const [productOrigin, setProductOrigin] = useState<ProductFrom[]>(
     Object.values(ProductFrom)
   );
+  const [productCollection, setProductCollection] = useState<
+    ProductCollection[]
+  >(Object.values(ProductCollection));
   //TODO: START FROM HERE
   const [searchText, setSearchText] = useState<string>("");
   const [showMore, setShowMore] = useState<boolean>(false);
@@ -33,6 +36,26 @@ const Filter = (props: FilterType) => {
     if (searchFilter?.search?.productOrigin?.length == 0) {
       delete searchFilter.search.productOrigin;
       setShowMore(false);
+      router
+        .push(
+          `/product?input=${JSON.stringify({
+            ...searchFilter,
+            search: {
+              ...searchFilter.search,
+            },
+          })}`,
+          `/product?input=${JSON.stringify({
+            ...searchFilter,
+            search: {
+              ...searchFilter.search,
+            },
+          })}`,
+          { scroll: false }
+        )
+        .then();
+    }
+    if (searchFilter?.search?.productCollection?.length == 0) {
+      delete searchFilter.search.productCollection;
       router
         .push(
           `/product?input=${JSON.stringify({
@@ -125,6 +148,73 @@ const Filter = (props: FilterType) => {
     },
     [searchFilter]
   );
+
+  const productCollectionSelectHandler = useCallback(
+    async (e: any) => {
+      try {
+        const isChecked = e.target.checked;
+        const value = e.target.value;
+        if (isChecked) {
+          await router.push(
+            `/product?input=${JSON.stringify({
+              ...searchFilter,
+              search: {
+                ...searchFilter.search,
+                productCollection: [
+                  ...(searchFilter?.search?.productCollection || []),
+                  value,
+                ],
+              },
+            })}`,
+            `/product?input=${JSON.stringify({
+              ...searchFilter,
+              search: {
+                ...searchFilter.search,
+                productCollection: [
+                  ...(searchFilter?.search?.productCollection || []),
+                  value,
+                ],
+              },
+            })}`,
+            { scroll: false }
+          );
+        } else if (searchFilter?.search?.productCollection?.includes(value)) {
+          await router.push(
+            `/product?input=${JSON.stringify({
+              ...searchFilter,
+              search: {
+                ...searchFilter.search,
+                productCollection:
+                  searchFilter?.search?.productCollection?.filter(
+                    (item: string) => item !== value
+                  ),
+              },
+            })}`,
+            `/product?input=${JSON.stringify({
+              ...searchFilter,
+              search: {
+                ...searchFilter.search,
+                productCollection:
+                  searchFilter?.search?.productCollection?.filter(
+                    (item: string) => item !== value
+                  ),
+              },
+            })}`,
+            { scroll: false }
+          );
+        }
+
+        // if (searchFilter?.search?.productCollection?.length == 0) {
+        //   alert("error");
+        // }
+
+        console.log("productCollectionSelectHandler:", e.target.value);
+      } catch (err: any) {
+        console.log("ERROR, productCollectionSelectHandler:", err);
+      }
+    },
+    [searchFilter]
+  );
   return (
     <Stack className="filter-main-container">
       <Stack className="search-by-text-container">
@@ -154,7 +244,7 @@ const Filter = (props: FilterType) => {
         </Stack>
       </Stack>
 
-      <Stack className="find-by-origin-main">
+      <Stack className="find-by-origin-main" mb={"30px"}>
         <p className="title">Product Origin</p>
         <Stack
           className="product-origin"
@@ -183,6 +273,43 @@ const Filter = (props: FilterType) => {
                 <label htmlFor={origin} style={{ cursor: "pointer" }}>
                   <Typography className="product-origin-item">
                     {origin}
+                  </Typography>
+                </label>
+              </Stack>
+            );
+          })}
+        </Stack>
+      </Stack>
+
+      <Stack className="find-by-collection-main" mb={"30px"}>
+        <p className="title">Product Collection</p>
+        <Stack
+          className="product-collection"
+          style={{ height: showMore ? "310px" : "115px" }}
+          onMouseEnter={() => setShowMore(true)}
+          onMouseLeave={() => {
+            if (!searchFilter?.search?.productCollection) {
+              setShowMore(false);
+            }
+          }}
+        >
+          {productCollection.map((collection) => {
+            return (
+              <Stack className={"input-box"} key={collection}>
+                <Checkbox
+                  id={collection}
+                  className="collection-checkbox"
+                  color="default"
+                  size="small"
+                  value={collection}
+                  checked={(
+                    searchFilter?.search?.productCollection || []
+                  ).includes(collection as ProductCollection)}
+                  onChange={productCollectionSelectHandler}
+                />
+                <label htmlFor={collection} style={{ cursor: "pointer" }}>
+                  <Typography className="product-collection-item">
+                    {collection}
                   </Typography>
                 </label>
               </Stack>

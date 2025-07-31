@@ -58,6 +58,41 @@
             }
           }
         }
+        .find-by-collection-main {
+          display: flex;
+          gap: 10px;
+          .title {
+            font-weight: 600;
+          }
+          .product-collection {
+            gap: 10px;
+            height: 115px;
+            overflow: hidden;
+            transition: 1s;
+            &:hover {
+              height: 310px;
+            }
+            .input-box {
+              display: flex;
+              flex-direction: row;
+              align-items: center;
+              .collection-checkbox {
+                width: 16px;
+                height: 15px;
+                border-radius: 12px;
+                margin-right: 10px;
+              }
+              .product-collection-item {
+                color: #181a20;
+                // font-family: $font;
+                font-size: 14px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 19px;
+              }
+            }
+          }
+        }
       }
       .product-cards-list-container {
         width: 936px;
