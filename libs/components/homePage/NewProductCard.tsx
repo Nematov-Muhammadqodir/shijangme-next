@@ -11,7 +11,7 @@ const NewProductCard = () => {
     <div>
       <Stack className="new-product-card">
         <Stack className="new-product-card-image">
-          <img src="" alt="product-image" />
+          <img src="/img/products/pinapple.png" alt="product-image" />
           <Box className="like">
             {like ? <ThumbUpIcon /> : <ThumbUpOffAltIcon />}
           </Box>
@@ -42,3 +42,8 @@ const NewProductCard = () => {
 };
 
 export default NewProductCard;
+// height: 50%;
+// position: relative;
+// display: flex;
+// justify-content: center;
+// align-items: center;

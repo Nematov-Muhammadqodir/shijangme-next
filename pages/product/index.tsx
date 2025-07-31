@@ -8,8 +8,10 @@ import React, { useEffect, MouseEvent, useState, ChangeEvent } from "react";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import { Direction, Message } from "@/libs/enums/common.enum";
 import { T } from "@/libs/types/common";
+import ProductCard from "@/libs/components/product/ProductCard";
 
 const Products: NextPage = ({ initialInput, ...props }: any) => {
+  const products = [1, 2, 3, 4, 5, 6];
   const router = useRouter();
   const [searchFilter, setSearchFilter] = useState<ProductsInquiry>(
     router?.query?.input
@@ -161,9 +163,11 @@ const Products: NextPage = ({ initialInput, ...props }: any) => {
             setSearchFilter={setSearchFilter}
             initialInput={initialInput}
           />
+
           <Stack className="product-cards-list-container">
-            <Stack className="stort-by"></Stack>
-            <Stack>Product cards</Stack>
+            {products.map((product) => {
+              return <ProductCard />;
+            })}
           </Stack>
         </Stack>
       </Stack>

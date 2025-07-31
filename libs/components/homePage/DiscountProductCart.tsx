@@ -10,7 +10,7 @@ const DiscountProductCart = () => {
     <div>
       <Stack className="discount-card">
         <Box className="card-image">
-          <img src="" alt="product-image" />
+          <img src="/img/products/pinapple.png" alt="product-image" />
           <Stack className="card-features">
             <Box className="discount">15%</Box>
             <Box className="like">

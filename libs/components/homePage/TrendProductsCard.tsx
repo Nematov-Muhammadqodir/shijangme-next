@@ -11,7 +11,10 @@ const TrendProductsCard = () => {
     <div>
       <Stack className="trend-products-card">
         <Stack className="trend-products-card-image">
-          <img src="" alt="trend-products-card-image" />
+          <img
+            src="/img/products/pinapple.png"
+            alt="trend-products-card-image"
+          />
           <Box className="like">
             {like ? <FavoriteIcon /> : <FavoriteBorderIcon />}
           </Box>
