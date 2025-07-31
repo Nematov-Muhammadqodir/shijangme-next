@@ -1,16 +1,20 @@
 import { Box, Button, Stack } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 
 const ProductCard = () => {
+  const [like, setLike] = useState(true);
   return (
     <div className="product-card-container">
       <Stack className="product-card">
         <Box className="image-container">
           <img src="/img/products/banana.png" alt="" />
+          <Box className="like">
+            {like ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+          </Box>
         </Box>
         <Stack className="product-info-container">
           <span className="product-name">
