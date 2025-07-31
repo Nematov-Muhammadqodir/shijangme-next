@@ -28,7 +28,7 @@ const Filter = (props: FilterType) => {
   const [productCollection, setProductCollection] = useState<
     ProductCollection[]
   >(Object.values(ProductCollection));
-  //TODO: START FROM HERE
+
   const [searchText, setSearchText] = useState<string>("");
   const [showMore, setShowMore] = useState<boolean>(false);
 
@@ -79,6 +79,11 @@ const Filter = (props: FilterType) => {
   const refreshHandler = async () => {
     try {
       setSearchText("");
+      await router.push(
+        `/product?input=${JSON.stringify(initialInput)}`,
+        `/product?input=${JSON.stringify(initialInput)}`,
+        { scroll: false }
+      );
     } catch (err: any) {
       console.log("ERROR, refreshHandler:", err);
     }
@@ -221,15 +226,28 @@ const Filter = (props: FilterType) => {
         <Typography className="title">Search product by name</Typography>
         <Stack className="search-details-container">
           <OutlinedInput
+            value={searchText}
             type="text"
             className="search-input"
             placeholder="What are you looking for?"
             onChange={(e: any) => setSearchText(e.target.value)}
+            onKeyDown={(event: any) => {
+              if (event.key == "Enter") {
+                setSearchFilter({
+                  ...searchFilter,
+                  search: { ...searchFilter.search, text: searchText },
+                });
+              }
+            }}
             endAdornment={
               <>
                 <CancelRoundedIcon
                   onClick={() => {
                     setSearchText("");
+                    setSearchFilter({
+                      ...searchFilter,
+                      search: { ...searchFilter.search, text: "" },
+                    });
                   }}
                 />
               </>
@@ -285,7 +303,7 @@ const Filter = (props: FilterType) => {
         <p className="title">Product Collection</p>
         <Stack
           className="product-collection"
-          style={{ height: showMore ? "310px" : "115px" }}
+          style={{ height: showMore ? "195px" : "115px" }}
           onMouseEnter={() => setShowMore(true)}
           onMouseLeave={() => {
             if (!searchFilter?.search?.productCollection) {
@@ -322,3 +340,4 @@ const Filter = (props: FilterType) => {
 };
 
 export default Filter;
+//productDiscountRate

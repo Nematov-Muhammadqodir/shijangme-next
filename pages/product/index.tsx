@@ -24,6 +24,11 @@ const Products: NextPage = ({ initialInput, ...props }: any) => {
 
     setCurrentPage(searchFilter.page === undefined ? 1 : searchFilter.page);
   }, [router]);
+
+  useEffect(() => {
+    console.log("seachFilter", searchFilter);
+    // getPropertiesRefetch({ input: searchFilter });
+  }, [searchFilter]);
   return (
     <Stack sx={{ marginTop: "200px" }} className="all-products-main-container">
       <Stack className="container">
