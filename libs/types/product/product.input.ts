@@ -27,10 +27,10 @@ export interface ProductInput {
 
 export interface PISearch {
   productOwnerId?: string;
-  productCollection?: ProductCollection;
-  productVolume?: ProductVolume;
-  productDiscountRate?: number;
-  productOrigin?: string;
+  productCollection?: ProductCollection[];
+  productVolume?: ProductVolume[];
+  productDiscountRate?: number[];
+  productOrigin?: string[];
   text?: string;
 }
 
