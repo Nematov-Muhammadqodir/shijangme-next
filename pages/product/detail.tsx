@@ -1,5 +1,5 @@
 import withLayoutMain from "@/libs/components/layout/LayoutHome";
-import { Box, Button, Stack } from "@mui/material";
+import { Box, Button, Stack, Typography } from "@mui/material";
 import React, { useState } from "react";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
@@ -7,11 +7,45 @@ import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArro
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import Review from "@/libs/components/product/Review";
 import RateReviewIcon from "@mui/icons-material/RateReview";
+import { CommentGroup } from "@/libs/enums/comment.enum";
+import { CommentInput } from "@/libs/types/comment/comment.input";
+import SendIcon from "@mui/icons-material/Send";
 
 const ProductDetail = () => {
   const [like, setLike] = useState(true);
+  const [insertCommentData, setInsertCommentData] = useState<CommentInput>({
+    commentGroup: CommentGroup.PRODUCT,
+    commentContent: "",
+    commentRefId: "",
+  });
+  const user = {
+    _id: "id_will_be_here",
+  };
   const subImages = [1, 2, 3, 4];
   const productComments = [1, 2, 3, 4];
+
+  /** APOLLO REQUESTS **/
+  //   const [likeTargetProduct] = useMutation(LIKE_TARGET_PRODUCT);
+  //   const [createComment] = useMutation(CREATE_COMMENT);
+
+  const createCommentHandler = async () => {
+    try {
+      //   if (!propertyId) return;
+      //   if (!user._id) throw new Error(Message.NOT_AUTHENTICATED);
+      // execute likeTargetProduct Mutation
+      //   await createComment({
+      //     variables: {
+      //       input: insertCommentData,
+      //     },
+      //   });
+      //   setInsertCommentData({ ...insertCommentData, commentContent: "" });
+      //   await getCommentsRefetch({ input: commentInquiry });
+      //   await sweetTopSmallSuccessAlert("success", 800);
+    } catch (err: any) {
+      console.log("Error, createCommentHandler", err);
+      //   await sweetMixinErrorAlert(err.message).then();
+    }
+  };
   return (
     <div
       className="product-detail-main-container"
@@ -105,6 +139,31 @@ const ProductDetail = () => {
                 return <Review key={index} />;
               })}
             </Stack>
+          </Stack>
+
+          <Stack className="leave-review-section-main">
+            <Typography className="main-title">Leave a Review</Typography>
+            <Typography className="review-title">Review</Typography>
+            <textarea
+              onChange={({ target: { value } }: any) => {
+                setInsertCommentData({
+                  ...insertCommentData,
+                  commentContent: value,
+                });
+              }}
+              value={insertCommentData.commentContent}
+              placeholder="Write a Review"
+            ></textarea>
+            <Button
+              className="submit-review-btn"
+              endIcon={<SendIcon />}
+              disabled={
+                insertCommentData.commentContent === "" || user?._id === ""
+              }
+              onClick={createCommentHandler}
+            >
+              Submit Review
+            </Button>
           </Stack>
 
           <Stack className="product-detail-intro">Section 3</Stack>
