@@ -5,10 +5,13 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
+import Review from "@/libs/components/product/Review";
+import RateReviewIcon from "@mui/icons-material/RateReview";
 
 const ProductDetail = () => {
   const [like, setLike] = useState(true);
   const subImages = [1, 2, 3, 4];
+  const productComments = [1, 2, 3, 4];
   return (
     <div
       className="product-detail-main-container"
@@ -92,7 +95,15 @@ const ProductDetail = () => {
               })}
             </Stack>
           </Stack>
-          <Stack className="product-detail-intro">Section 2</Stack>
+          <Stack className="filter-box">
+            <RateReviewIcon />
+            <span>3 Reviews</span>
+          </Stack>
+          <Stack className="review-list">
+            {productComments?.map((comment, index) => {
+              return <Review key={index} />;
+            })}
+          </Stack>
           <Stack className="product-detail-intro">Section 3</Stack>
         </Stack>
       </Stack>
