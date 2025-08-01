@@ -95,15 +95,18 @@ const ProductDetail = () => {
               })}
             </Stack>
           </Stack>
-          <Stack className="filter-box">
-            <RateReviewIcon />
-            <span>3 Reviews</span>
+          <Stack className="reviews-main-container">
+            <Stack className="filter-box">
+              <RateReviewIcon />
+              <span>3 Reviews</span>
+            </Stack>
+            <Stack className="review-list">
+              {productComments?.map((comment, index) => {
+                return <Review key={index} />;
+              })}
+            </Stack>
           </Stack>
-          <Stack className="review-list">
-            {productComments?.map((comment, index) => {
-              return <Review key={index} />;
-            })}
-          </Stack>
+
           <Stack className="product-detail-intro">Section 3</Stack>
         </Stack>
       </Stack>
