@@ -10,14 +10,17 @@ import RateReviewIcon from "@mui/icons-material/RateReview";
 import { CommentGroup } from "@/libs/enums/comment.enum";
 import { CommentInput } from "@/libs/types/comment/comment.input";
 import SendIcon from "@mui/icons-material/Send";
+import BannerCard from "@/libs/components/product/BannerCard";
 
 const ProductDetail = () => {
   const [like, setLike] = useState(true);
+  const similarProducts = [1, 2, 3];
   const [insertCommentData, setInsertCommentData] = useState<CommentInput>({
     commentGroup: CommentGroup.PRODUCT,
     commentContent: "",
     commentRefId: "",
   });
+
   const user = {
     _id: "id_will_be_here",
   };
@@ -56,7 +59,7 @@ const ProductDetail = () => {
           <Stack className="product-detail-intro">
             <Stack className="product-name">
               <Stack className="product-main-details">
-                <span className="name">Awesome Interior Property</span>
+                <span className="name">Pineapple</span>
                 <Stack className="product-type">
                   <span>SEOUL</span>
                   <span>FRUITS</span>
@@ -166,7 +169,9 @@ const ProductDetail = () => {
             </Button>
           </Stack>
 
-          <Stack className="product-detail-intro">Section 3</Stack>
+          <Stack className="similar-products-list-main">
+            <BannerCard />
+          </Stack>
         </Stack>
       </Stack>
     </div>

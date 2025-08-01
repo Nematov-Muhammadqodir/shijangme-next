@@ -5,7 +5,7 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
-
+        margin-top: 100px;
         .product-detail-intro {
           display: flex;
           flex-direction: column;
@@ -304,6 +304,106 @@
             margin-top: 20px;
           }
         }
+        .similar-products-list-main {
+          display: flex;
+          flex-direction: row;
+          gap: 20px;
+          .banner-card-main {
+            border-radius: 15px;
+            background: linear-gradient(to bottom, #bbcdbe, #c8bcbe);
+            width: 379px;
+            height: 494px;
+            padding-top: 30px;
+            padding-right: 20px;
+            animation: jump 2s ease-in-out infinite;
+            .banner-card-layout {
+              display: flex;
+              flex-direction: column;
+              text-align: end;
+              align-items: flex-end;
+              position: relative;
+              .title-main {
+                color: #000;
+                font-family: "Abril Fatface";
+                font-size: 40px;
+                font-style: normal;
+                font-weight: 600;
+                // line-height: 75px; /* 93.75% */
+                text-transform: capitalize;
+                padding-bottom: 20px;
+              }
+              .title-secondary {
+                color: #000;
+                text-align: right;
+                font-family: "Abril Fatface";
+                font-size: 30px;
+                font-style: normal;
+                font-weight: 500;
+                line-height: normal;
+                padding-bottom: 20px;
+              }
+              .recommendation-text {
+                color: #2c2c2c;
+                text-align: right;
+                font-size: 12px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 20px; /* 166.667% */
+                text-transform: capitalize;
+                width: 324px;
+                height: 35px;
+                flex-shrink: 0;
+              }
+              .banner-tag-container {
+                position: relative;
+                animation: jumpBurst 2s infinite;
+                transform-origin: center;
+                .banner-tag {
+                  position: absolute;
+                  right: 170px;
+                }
+                .tag-detail-container {
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                  justify-content: center;
+                  position: absolute;
+                  right: 205px;
+                  top: 30px;
+                  .tag-intro {
+                    color: #000;
+                    font-family: Inter;
+                    font-size: 7px;
+                    font-style: normal;
+                    font-weight: 400;
+                    line-height: normal;
+                    letter-spacing: 1.05px;
+                    text-transform: capitalize;
+                  }
+                  .tag-price {
+                    color: #000;
+                    font-family: Inter;
+                    font-size: 25px;
+                    font-style: normal;
+                    font-weight: 700;
+                    line-height: normal;
+                    text-transform: capitalize;
+                  }
+                  .tag-text {
+                    color: #000;
+                    font-family: Inter;
+                    font-size: 12px;
+                    font-style: normal;
+                    font-weight: 700;
+                    line-height: normal;
+                    text-transform: capitalize;
+                    text-align: center;
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     }
   }
@@ -317,5 +417,31 @@
 
   50% {
     transform: translateY(-10px);
+  }
+}
+
+@keyframes jumpBurst {
+  0%,
+  50%,
+  100% {
+    transform: translateY(20);
+  }
+  10% {
+    transform: translateY(-50px);
+  }
+  15% {
+    transform: translateY(0);
+  }
+  20% {
+    transform: translateY(-35px);
+  }
+  25% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(-20px);
+  }
+  35% {
+    transform: translateY(0);
   }
 }
