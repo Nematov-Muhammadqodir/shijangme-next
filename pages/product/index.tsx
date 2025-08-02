@@ -19,6 +19,7 @@ import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownR
 import { Direction, Message } from "@/libs/enums/common.enum";
 import { T } from "@/libs/types/common";
 import ProductCard from "@/libs/components/product/ProductCard";
+import MultipleBanner from "@/libs/components/product/MultipleBanner";
 
 const Products: NextPage = ({ initialInput, ...props }: any) => {
   const products = [1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -141,6 +142,7 @@ const Products: NextPage = ({ initialInput, ...props }: any) => {
   return (
     <Stack sx={{ marginTop: "200px" }} className="all-products-main-container">
       <Stack className="container">
+        <MultipleBanner />
         <Box component={"div"} className={"right"}>
           <span>Sort by</span>
           <div>

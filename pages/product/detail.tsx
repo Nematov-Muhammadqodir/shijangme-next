@@ -12,6 +12,7 @@ import { CommentInput } from "@/libs/types/comment/comment.input";
 import SendIcon from "@mui/icons-material/Send";
 import BannerCard from "@/libs/components/product/BannerCard";
 import HorizontalCard from "@/libs/components/product/HorizontalCard";
+import Blogs from "@/libs/components/homePage/Blogs";
 
 const ProductDetail = () => {
   const [like, setLike] = useState(true);
