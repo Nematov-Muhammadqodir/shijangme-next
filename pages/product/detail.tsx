@@ -11,10 +11,11 @@ import { CommentGroup } from "@/libs/enums/comment.enum";
 import { CommentInput } from "@/libs/types/comment/comment.input";
 import SendIcon from "@mui/icons-material/Send";
 import BannerCard from "@/libs/components/product/BannerCard";
+import HorizontalCard from "@/libs/components/product/HorizontalCard";
 
 const ProductDetail = () => {
   const [like, setLike] = useState(true);
-  const similarProducts = [1, 2, 3];
+  const similarProducts = [1, 2, 3, 4, 5, 6, 7, 8];
   const [insertCommentData, setInsertCommentData] = useState<CommentInput>({
     commentGroup: CommentGroup.PRODUCT,
     commentContent: "",
@@ -169,9 +170,16 @@ const ProductDetail = () => {
             </Button>
           </Stack>
 
-          <Stack className="similar-products-list-main">
-            <BannerCard />
-          </Stack>
+          {similarProducts.length !== 0 && (
+            <Stack className="similar-products-list-main">
+              <BannerCard />
+              <Stack className="similar-products-list-container">
+                {similarProducts.map((product) => {
+                  return <HorizontalCard />;
+                })}
+              </Stack>
+            </Stack>
+          )}
         </Stack>
       </Stack>
     </div>
