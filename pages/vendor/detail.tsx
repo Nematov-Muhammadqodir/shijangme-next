@@ -1,22 +1,36 @@
 import withLayoutMain from "@/libs/components/layout/LayoutHome";
-import { Box, Pagination, Stack } from "@mui/material";
+import { Box, Button, Pagination, Stack, Typography } from "@mui/material";
 import PhoneIcon from "@mui/icons-material/Phone";
 import React, { useState } from "react";
 import { useRouter } from "next/router";
 import VendorProductCard from "@/libs/components/common/VendorProductCard";
 import StarIcon from "@mui/icons-material/Star";
 import VendorReviewCard from "@/libs/components/vendor/VendorReviewCard";
+import { CommentGroup } from "@/libs/enums/comment.enum";
+import { CommentInput } from "@/libs/types/comment/comment.input";
+import ArrowOutwardIcon from "@mui/icons-material/ArrowOutward";
+import DoubleCardBanner from "@/libs/components/common/DoubleCardBanner";
 
 const VendorDetail = () => {
   const vendorComments = [1, 2, 3, 4, 5];
   const vendorProducts = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   const [commentTotal, setCommentTotal] = useState<number>(1);
   const [page, setPage] = useState(1);
+  const [insertCommentData, setInsertCommentData] = useState<CommentInput>({
+    commentGroup: CommentGroup.MEMBER,
+    commentContent: "",
+    commentRefId: "",
+  });
   const itemsPerPage = 8;
   const pageCount = Math.ceil(vendorProducts.length / itemsPerPage);
   const router = useRouter();
   const userId = "userId";
   const memberId = "userId";
+
+  /** APOLLO REQUESTS **/
+  //   const [likeTargetProperty] = useMutation(LIKE_TARGET_PRODUCT);
+  //   const [createComment] = useMutation(CREATE_COMMENT);
+
   /** HANDLERS **/
   const redirectToMemberPageHandler = async (memberId: string) => {
     try {
@@ -32,6 +46,24 @@ const VendorDetail = () => {
     setPage(value);
     // Optional: Scroll to top of the list when page changes for better UX
     window.scrollTo({ top: 250, behavior: "smooth" });
+  };
+
+  const createCommentHandler = async () => {
+    try {
+      //   if (!user._id) return;
+      //   if (user._id === agentId)
+      throw new Error("Can not write a review for yourself!");
+      // execute likeTargetMember Mutation
+      //   await createComment({
+      //     variables: {
+      //       input: insertCommentData,
+      //     },
+      //   });
+      setInsertCommentData({ ...insertCommentData, commentContent: "" });
+      //   await getCommentsRefetch({ input: commentInquiry });
+    } catch (err: any) {
+      //   sweetErrorHandling(err).then();
+    }
   };
   return (
     <div
@@ -84,6 +116,8 @@ const VendorDetail = () => {
           )}
         </Stack>
 
+        <DoubleCardBanner />
+
         <Stack className={"review-box"}>
           <Stack className={"main-intro"}>
             <span>Reviews</span>
@@ -104,6 +138,32 @@ const VendorDetail = () => {
               </Stack>
             </Stack>
           )}
+          <Stack className="leave-review-config">
+            <Typography className={"main-title"}>Leave A Review</Typography>
+            <Typography className={"review-title"}>Review</Typography>
+            <textarea
+              onChange={({ target: { value } }: any) => {
+                setInsertCommentData({
+                  ...insertCommentData,
+                  commentContent: value,
+                });
+              }}
+              value={insertCommentData.commentContent}
+              placeholder="Write a Review "
+            ></textarea>
+            <Box className={"submit-btn"} component={"div"}>
+              <Button
+                className={"submit-review"}
+                // disabled={
+                //   insertCommentData.commentContent === "" || user?._id === ""
+                // }
+                onClick={createCommentHandler}
+                endIcon={<ArrowOutwardIcon />}
+              >
+                Submit Review
+              </Button>
+            </Box>
+          </Stack>
         </Stack>
       </Stack>
     </div>
