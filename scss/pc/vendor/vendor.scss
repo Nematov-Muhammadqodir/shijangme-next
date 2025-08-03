@@ -64,6 +64,16 @@
         flex-wrap: wrap;
         justify-content: center;
         justify-content: space-around;
+        .no-data {
+          display: flex;
+          flex-direction: column;
+          gap: 20px;
+          p {
+            font-size: 30px;
+            font-weight: 600;
+            letter-spacing: 3px;
+          }
+        }
         .vendor-card-main {
           display: flex;
           align-items: center;
@@ -81,9 +91,19 @@
               display: flex;
               align-items: center;
               justify-content: center;
+              position: relative;
               img {
                 width: 354.797px;
                 height: 354.797px;
+                border-radius: 10px;
+              }
+              .vendor-product-count {
+                position: absolute;
+                top: 20px;
+                left: 20px;
+                padding: 10px 20px;
+                background-color: #627b5d;
+                color: white;
                 border-radius: 10px;
               }
             }
@@ -93,6 +113,30 @@
               justify-content: center;
               align-items: center;
               gap: 15px;
+              .vendor-name {
+                font-weight: 600;
+                letter-spacing: 1px;
+                font-size: 20px;
+              }
+              .broker-of {
+                font-weight: 500;
+              }
+              .view-like-container {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                padding: 0px 20px;
+                width: 100%;
+                .like {
+                  color: red;
+                }
+                .view {
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  gap: 10px;
+                }
+              }
             }
           }
         }

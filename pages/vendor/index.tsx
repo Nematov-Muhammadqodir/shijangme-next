@@ -179,7 +179,7 @@ const VendorList = ({ initialInput, ...props }: any) => {
           {vendors?.length === 0 ? (
             <div className={"no-data"}>
               <img src="/img/icons/icoAlert.svg" alt="" />
-              <p>No Agents found!</p>
+              <p>No vendors found!</p>
             </div>
           ) : (
             vendors
