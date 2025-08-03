@@ -4,9 +4,13 @@ import PhoneIcon from "@mui/icons-material/Phone";
 import React, { useState } from "react";
 import { useRouter } from "next/router";
 import VendorProductCard from "@/libs/components/common/VendorProductCard";
+import StarIcon from "@mui/icons-material/Star";
+import VendorReviewCard from "@/libs/components/vendor/VendorReviewCard";
 
 const VendorDetail = () => {
+  const vendorComments = [1, 2, 3, 4, 5];
   const vendorProducts = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  const [commentTotal, setCommentTotal] = useState<number>(1);
   const [page, setPage] = useState(1);
   const itemsPerPage = 8;
   const pageCount = Math.ceil(vendorProducts.length / itemsPerPage);
@@ -77,6 +81,28 @@ const VendorDetail = () => {
                 showLastButton
               />
             </Box>
+          )}
+        </Stack>
+
+        <Stack className={"review-box"}>
+          <Stack className={"main-intro"}>
+            <span>Reviews</span>
+            <p>we are glad to see you again</p>
+          </Stack>
+          {commentTotal !== 0 && (
+            <Stack className={"review-wrap"}>
+              <Box component={"div"} className={"title-box"}>
+                <StarIcon />
+                <span>
+                  {commentTotal} review{commentTotal > 1 ? "s" : ""}
+                </span>
+              </Box>
+              <Stack className="reviews-list-container">
+                {vendorComments.map((comment) => {
+                  return <VendorReviewCard />;
+                })}
+              </Stack>
+            </Stack>
           )}
         </Stack>
       </Stack>
