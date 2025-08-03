@@ -1,10 +1,12 @@
 import withLayoutMain from "@/libs/components/layout/LayoutHome";
-import { Box, Button, Menu, MenuItem, Stack } from "@mui/material";
+import { Box, Button, Menu, MenuItem, Pagination, Stack } from "@mui/material";
 import { useRouter } from "next/router";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import React, { ChangeEvent, MouseEvent, useEffect, useState } from "react";
+import VendorCard from "@/libs/components/vendor/VendorCard";
 
 const VendorList = ({ initialInput, ...props }: any) => {
+  const vendors = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   const router = useRouter();
   const [searchFilter, setSearchFilter] = useState<any>(
     router?.query?.input
@@ -16,8 +18,19 @@ const VendorList = ({ initialInput, ...props }: any) => {
   const [filterSortName, setFilterSortName] = useState("Recent");
   const [sortingOpen, setSortingOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [page, setPage] = useState(1);
+  const itemsPerPage = 6;
+  const pageCount = Math.ceil(vendors.length / itemsPerPage);
+
+  /** APOLLO REQUESTS **/
+  // const [likeTargetMember] = useMutation(LIKE_TARGET_MEMBER);
 
   /** HANDLERS **/
+  const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
+    setPage(value);
+    // Optional: Scroll to top of the list when page changes for better UX
+    window.scrollTo({ top: 700, behavior: "smooth" });
+  };
   const sortingClickHandler = (e: MouseEvent<HTMLElement>) => {
     setAnchorEl(e.currentTarget);
     setSortingOpen(true);
@@ -93,6 +106,21 @@ const VendorList = ({ initialInput, ...props }: any) => {
     setSortingOpen(false);
     setAnchorEl2(null);
   };
+
+  // const likeMemberHandler = async (user: any, id: string) => {
+  //   try {
+  //     if (!id) return;
+  //     if (!user) throw new Error(Messages.error2);
+
+  //     await likeTargetMember({ variables: { input: id } });
+
+  //     await getAgentsRefetch({ input: searchFilter });
+  //     await sweetTopSmallSuccessAlert("success", 800);
+  //   } catch (error: any) {
+  //     console.log("Error, likeMemberHandler", error);
+  //     sweetMixinErrorAlert(error.message).then();
+  //   }
+  // };
   return (
     <Stack
       className="agents-list-main-container"
@@ -147,6 +175,33 @@ const VendorList = ({ initialInput, ...props }: any) => {
             </div>
           </Box>
         </Stack>
+        <Stack className={"card-wrap"}>
+          {vendors?.length === 0 ? (
+            <div className={"no-data"}>
+              <img src="/img/icons/icoAlert.svg" alt="" />
+              <p>No Agents found!</p>
+            </div>
+          ) : (
+            vendors
+              .slice((page - 1) * itemsPerPage, page * itemsPerPage)
+              .map((vendor, index) => {
+                return <VendorCard key={index} />;
+              })
+          )}
+        </Stack>
+        {pageCount > 1 && (
+          <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+            <Pagination
+              count={pageCount}
+              page={page}
+              onChange={handleChange}
+              color="primary"
+              size="large"
+              showFirstButton
+              showLastButton
+            />
+          </Box>
+        )}
       </Stack>
     </Stack>
   );
@@ -155,7 +210,7 @@ const VendorList = ({ initialInput, ...props }: any) => {
 VendorList.defaultProps = {
   initialInput: {
     page: 1,
-    limit: 10,
+    limit: 6,
     sort: "memberLikes",
     direction: "DESC",
     search: {},
