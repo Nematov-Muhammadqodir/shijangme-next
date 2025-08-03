@@ -143,6 +143,29 @@ const Products: NextPage = ({ initialInput, ...props }: any) => {
   return (
     <Stack sx={{ marginTop: "200px" }} className="all-products-main-container">
       <Stack className="container">
+        <Stack className="introduction-main">
+          <Stack className="left-side">
+            <span className="main">OUR COLLECTIONS</span>
+            <span className="secondary">
+              Carefully Curated Selections For Every Lifestyle
+            </span>
+          </Stack>
+          <Stack className="right-side">
+            <span className="text">
+              Discover a wide range of premium products crafted to elevate your
+              daily life. From fresh organic produce to artisanal specialties,
+              our collections bring together quality, sustainability, and
+              exceptional taste. Explore items that perfectly complement your
+              unique preferences.
+            </span>
+            <span>
+              From farm-fresh organics to artisanal delights, our premium
+              selections are curated to match the highest standards of quality
+              and elegance. Discover essentials that enrich your lifestyle with
+              purpose and taste.
+            </span>
+          </Stack>
+        </Stack>
         <MultipleBanner />
         <Box component={"div"} className={"right"}>
           <span>Sort by</span>
