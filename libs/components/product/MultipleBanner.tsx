@@ -3,7 +3,7 @@ import React from "react";
 
 const MultipleBanner = () => {
   return (
-    <div className="multiple-banner-main">
+    <div className="multiple-banner-main" style={{ marginBottom: "150px" }}>
       <Stack className="multiple-banner">
         <Stack className="left">
           <img src="img/products/greens.jpg" alt="" />

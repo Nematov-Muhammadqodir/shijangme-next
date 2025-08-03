@@ -20,6 +20,7 @@ import { Direction, Message } from "@/libs/enums/common.enum";
 import { T } from "@/libs/types/common";
 import ProductCard from "@/libs/components/product/ProductCard";
 import MultipleBanner from "@/libs/components/product/MultipleBanner";
+import OurBrands from "@/libs/components/OurBrands";
 
 const Products: NextPage = ({ initialInput, ...props }: any) => {
   const products = [1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -64,7 +65,7 @@ const Products: NextPage = ({ initialInput, ...props }: any) => {
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
     // Optional: Scroll to top of the list when page changes for better UX
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 700, behavior: "smooth" });
   };
 
   const likeProductHandler = async (user: T, id: string) => {
@@ -229,6 +230,7 @@ const Products: NextPage = ({ initialInput, ...props }: any) => {
           </Stack>
         </Stack>
       </Stack>
+      <OurBrands />
     </Stack>
   );
 };

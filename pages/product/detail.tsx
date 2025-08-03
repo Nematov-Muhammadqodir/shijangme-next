@@ -91,6 +91,9 @@ const ProductDetail = () => {
                 <span className="volume">
                   <span className="bold">Volume:</span> 2
                 </span>
+                <span className="volume">
+                  <span className="bold">Vendor:</span> Kevin
+                </span>
               </Stack>
               <Box className="price-container">
                 <span className="price">120.00$</span>
