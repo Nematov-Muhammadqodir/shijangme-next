@@ -56,7 +56,10 @@ const MemberFollowings = (props: MemberFollowingsProps) => {
         search: { followerId: router.query.memberId as string },
       });
     else
-      setFollowInquiry({ ...followInquiry, search: { followerId: user?._id } });
+      setFollowInquiry({
+        ...followInquiry,
+        search: { followerId: "user?._id" },
+      });
   }, [router]);
 
   // useEffect(() => {
