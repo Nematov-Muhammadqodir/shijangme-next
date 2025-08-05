@@ -34,7 +34,10 @@ const Navbar = () => {
     window.addEventListener("scroll", changeNavbarColor);
   }
   return (
-    <Stack className={`navbar-main ${colorChange ? "transparent" : ""}`}>
+    <Stack
+      className={`navbar-main ${colorChange ? "transparent" : ""}`}
+      style={{ height: "100px" }}
+    >
       <Stack className="container">
         <Stack className="top-navbar">
           <Box className="logo-box">
@@ -64,75 +67,7 @@ const Navbar = () => {
             <Link href={"/cs"}>
               <div>CS</div>
             </Link>
-          </Box>
-          <Box>
-            <Stack className="get-in-touch">
-              <Box className="calling-logo">
-                <PhoneInTalkIcon />
-              </Box>
-              <Stack className="phone-number">
-                <span>Get In Touch</span>
-                <span>+58 6548 2365</span>
-              </Stack>
-            </Stack>
-          </Box>
-        </Stack>
-
-        <div className="divider"></div>
-
-        <Stack className="bottom-navbar">
-          <Stack className="select-lang-container">
-            <Button
-              id="basic-button"
-              aria-controls={langOpen ? "basic-menu" : undefined}
-              aria-haspopup="true"
-              aria-expanded={langOpen ? "true" : undefined}
-              onClick={(event: any) => setLanguageAnchor(event.currentTarget)}
-              variant="contained"
-              endIcon={<LanguageIcon />}
-            >
-              English
-            </Button>
-            <Menu
-              id="basic-menu"
-              anchorEl={languageAnchor}
-              open={langOpen}
-              onClose={() => {
-                setLanguageAnchor(null);
-              }}
-            >
-              <MenuItem>English</MenuItem>
-              <MenuItem>Korean</MenuItem>
-              <MenuItem>Uzbek</MenuItem>
-            </Menu>
-            {user && (
-              <Badge badgeContent={4} color="primary">
-                <NotificationsOutlinedIcon className={"notification-icon"} />
-              </Badge>
-            )}
-          </Stack>
-          <Stack className="bottom-navbar-info">
-            <Box className="about-us">
-              <Link href={"/about-us"}>
-                <div>
-                  <StoreIcon />
-                  <div>About Us</div>
-                </div>
-              </Link>
-            </Box>
-            <Box className="wish-list">
-              <Badge badgeContent={4} color="primary">
-                <FavoriteBorderIcon />
-              </Badge>
-              <span>Wish List</span>
-            </Box>
-            <Box className="cart">
-              <Badge badgeContent={4} color="primary">
-                <AddShoppingCartIcon />
-              </Badge>
-              <span>Cart</span>
-            </Box>
-            {user ? (
+            {/* {user ? (
               <>
                 <div
                   className={"login-user"}
@@ -159,13 +94,32 @@ const Navbar = () => {
               </>
             ) : (
               <Link href={"/account/join"}>
-                <div className={"join-box"}>
+                <div
+                  className={"join-box"}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "10px",
+                    color: "white",
+                  }}
+                >
                   <AccountCircleOutlinedIcon />
                   <span>Sign In</span>
                 </div>
               </Link>
-            )}
-          </Stack>
+            )} */}
+          </Box>
+          <Box>
+            <Stack className="get-in-touch">
+              <Box className="calling-logo">
+                <PhoneInTalkIcon />
+              </Box>
+              <Stack className="phone-number">
+                <span>Get In Touch</span>
+                <span>+58 6548 2365</span>
+              </Stack>
+            </Stack>
+          </Box>
         </Stack>
       </Stack>
     </Stack>
