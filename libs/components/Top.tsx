@@ -54,7 +54,7 @@ const Navbar = () => {
               <div>Vendors</div>
             </Link>
             <Link href={"/community?articleCategory=FREE"}>
-              <div>Home</div>
+              <div>Community</div>
             </Link>
             {user && (
               <Link href={"/mypage"}>

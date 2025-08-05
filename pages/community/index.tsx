@@ -5,7 +5,7 @@ import React from "react";
 
 const Community: NextPage = () => {
   return (
-    <Container>
+    <Container sx={{ mt: "200px" }}>
       <Stack>Community Page</Stack>
     </Container>
   );
