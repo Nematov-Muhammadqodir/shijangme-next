@@ -5,14 +5,19 @@ import { light } from "../scss/MaterialTheme";
 import { useState } from "react";
 import "../scss/app.scss";
 import "../scss/pc/main.scss";
+import { useApollo } from "@/apollo/client";
+import { ApolloProvider } from "@apollo/client";
 
 export default function App({ Component, pageProps }: AppProps) {
   // @ts-ignore
   const [theme, setTheme] = useState(createTheme(light));
+  const client = useApollo(pageProps.initialApolloState);
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Component {...pageProps} />
-    </ThemeProvider>
+    <ApolloProvider client={client}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Component {...pageProps} />
+      </ThemeProvider>
+    </ApolloProvider>
   );
 }
