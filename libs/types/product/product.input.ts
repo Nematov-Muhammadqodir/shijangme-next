@@ -12,15 +12,11 @@ export interface ProductInput {
   productName: string;
   productPrice: number;
   productOriginPrice: number;
-  productDiscountRate?: {
-    type: Number;
-  };
-  productOrigin?: {
-    type: String;
-  };
+  productDiscountRate?: number;
+  productOrigin: string;
   productLeftCount: number;
   productVolume?: ProductVolume;
-  productImages?: string[];
+  productImages: string[];
   productDesc?: string;
   productOwnerId?: string;
 }
