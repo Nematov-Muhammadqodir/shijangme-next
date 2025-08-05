@@ -139,6 +139,17 @@
               flex-direction: row;
               flex-wrap: wrap;
               gap: 30px;
+              .no-data {
+                display: flex;
+                width: 100%;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                gap: 10px;
+                font-weight: 600;
+                font-size: 20px;
+                color: red;
+              }
             }
           }
         }

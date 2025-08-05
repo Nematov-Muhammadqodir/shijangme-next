@@ -109,7 +109,7 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
   };
 
   return (
-    <div id="community-list-page">
+    <div id="community-list-page" style={{ marginTop: "150px" }}>
       <div className="container">
         <TabContext value={searchCommunity.search.articleCategory}>
           <Stack className="main-box">
