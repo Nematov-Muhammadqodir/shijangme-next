@@ -1,7 +1,10 @@
+import { userVar } from "@/apollo/store";
 import { logIn, signUp } from "@/libs/auth";
 import withLayoutBasic from "@/libs/components/layout/LayoutBasic";
 import withLayoutMain from "@/libs/components/layout/LayoutHome";
+import { MemberType } from "@/libs/enums/member.enum";
 import { sweetMixinErrorAlert } from "@/libs/types/sweetAlert";
+import { useReactiveVar } from "@apollo/client";
 import {
   Box,
   Button,
@@ -15,6 +18,7 @@ import React, { useCallback, useState } from "react";
 
 const Join = () => {
   const router = useRouter();
+  const user = useReactiveVar(userVar);
   const [input, setInput] = useState({
     nick: "",
     password: "",
@@ -52,7 +56,11 @@ const Join = () => {
     console.warn(input);
     try {
       await logIn(input.nick, input.password);
-      await router.push(`${router.query.referrer ?? "/_admin/users"}`);
+      if (user?.memberType === MemberType.ADMIN) {
+        await router.push(`${router.query.referrer ?? "/_admin/users"}`);
+      } else {
+        await router.push(`${router.query.referrer ?? "/"}`);
+      }
     } catch (err: any) {
       await sweetMixinErrorAlert(err.message);
     }

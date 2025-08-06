@@ -1,6 +1,6 @@
 import { Badge, Box, Button, Link, Menu, MenuItem, Stack } from "@mui/material";
-import { withRouter } from "next/router";
-import { useState } from "react";
+import { useRouter, withRouter } from "next/router";
+import { useEffect, useState } from "react";
 import PhoneInTalkIcon from "@mui/icons-material/PhoneInTalk";
 import React from "react";
 import { Logout } from "@mui/icons-material";
@@ -10,9 +10,13 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import LanguageIcon from "@mui/icons-material/Language";
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
+import { useReactiveVar } from "@apollo/client";
+import { userVar } from "@/apollo/store";
+import { getJwtToken, logOut, updateUserInfo } from "../auth";
 
 const Navbar = () => {
-  const [user, setUser] = useState(false);
+  const user = useReactiveVar(userVar);
+  console.log("top-user", user);
   const [logoutAnchor, setLogoutAnchor] = React.useState<null | HTMLElement>(
     null
   );
@@ -21,6 +25,11 @@ const Navbar = () => {
     React.useState<null | HTMLElement>(null);
   const langOpen = Boolean(languageAnchor);
   const logoutOpen = Boolean(logoutAnchor);
+  const router = useRouter();
+
+  const handleMyPage = async () => {
+    await router.push(`${router.query.referrer ?? "/mypage"}`);
+  };
 
   // const changeNavbarColor = () => {
   //   if (window.scrollY >= 150) {
@@ -33,6 +42,10 @@ const Navbar = () => {
   // if (typeof window !== "undefined") {
   //   window.addEventListener("scroll", changeNavbarColor);
   // }
+  useEffect(() => {
+    const jwt = getJwtToken();
+    if (jwt) updateUserInfo(jwt);
+  }, []);
   return (
     <Stack className={`navbar-main ${colorChange ? "transparent" : ""}`}>
       <Stack className="container">
@@ -56,7 +69,7 @@ const Navbar = () => {
             <Link href={"/community?articleCategory=FREE"}>
               <div>Community</div>
             </Link>
-            {user && (
+            {user?._id && (
               <Link href={"/mypage"}>
                 <div> My Page </div>
               </Link>
@@ -105,7 +118,7 @@ const Navbar = () => {
               <MenuItem>Korean</MenuItem>
               <MenuItem>Uzbek</MenuItem>
             </Menu>
-            {user && (
+            {user?._id && (
               <Badge badgeContent={4} color="primary">
                 <NotificationsOutlinedIcon className={"notification-icon"} />
               </Badge>
@@ -120,19 +133,26 @@ const Navbar = () => {
                 </div>
               </Link>
             </Box>
-            <Box className="wish-list">
-              <Badge badgeContent={4} color="primary">
-                <FavoriteBorderIcon />
-              </Badge>
-              <span>Wish List</span>
-            </Box>
-            <Box className="cart">
-              <Badge badgeContent={4} color="primary">
-                <AddShoppingCartIcon />
-              </Badge>
-              <span>Cart</span>
-            </Box>
-            {user ? (
+
+            {user?._id && (
+              <Box className="wish-list">
+                <Badge badgeContent={4} color="primary">
+                  <FavoriteBorderIcon />
+                </Badge>
+                <span>Wish List</span>
+              </Box>
+            )}
+
+            {user?._id && (
+              <Box className="cart">
+                <Badge badgeContent={4} color="primary">
+                  <AddShoppingCartIcon />
+                </Badge>
+                <span>Cart</span>
+              </Box>
+            )}
+
+            {user?._id ? (
               <>
                 <div
                   className={"login-user"}
@@ -152,9 +172,8 @@ const Navbar = () => {
                     setLogoutAnchor(null);
                   }}
                 >
-                  <MenuItem>Profile</MenuItem>
-                  <MenuItem>My account</MenuItem>
-                  <MenuItem>Logout</MenuItem>
+                  <MenuItem onClick={() => handleMyPage()}>My Page</MenuItem>
+                  <MenuItem onClick={() => logOut()}>Logout</MenuItem>
                 </Menu>
               </>
             ) : (

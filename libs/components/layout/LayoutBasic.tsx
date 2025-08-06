@@ -3,8 +3,14 @@ import Head from "next/head";
 import Top from "../Top";
 import Footer from "../Footer";
 import SmalTop from "./SmalTop";
+import { useEffect } from "react";
+import { getJwtToken, updateUserInfo } from "@/libs/auth";
 
 const withLayoutBasic = (Component: any) => {
+  useEffect(() => {
+    const jwt = getJwtToken();
+    if (jwt) updateUserInfo(jwt);
+  }, []);
   return (props: any) => {
     return (
       <>
