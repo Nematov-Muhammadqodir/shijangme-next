@@ -1,11 +1,17 @@
 import { Box, Stack, Pagination, Fade } from "@mui/material"; // Import Pagination and Box
 import React, { useState } from "react";
 import DiscountProductCart from "./DiscountProductCart";
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { GET_PRODUCTS } from "@/apollo/user/query";
 import { Product } from "@/libs/types/product/product";
 import { ProductsInquiry } from "@/libs/types/product/product.input";
 import { T } from "@/libs/types/common";
+import { LIKE_TARGET_PRODUCT } from "@/apollo/user/mutation";
+import { Message } from "@/libs/enums/common.enum";
+import {
+  sweetMixinErrorAlert,
+  sweetTopSmallSuccessAlert,
+} from "@/libs/types/sweetAlert";
 
 interface DiscountProductsProps {
   initialInput: ProductsInquiry;
@@ -20,6 +26,9 @@ const DiscounProductsList = ({ initialInput }: DiscountProductsProps) => {
     search: {},
   };
   const [discountedProducts, setDiscountedProducts] = useState<Product[]>([]);
+
+  /** APOLLO REQUESTS **/
+  const [likeTargetProduct] = useMutation(LIKE_TARGET_PRODUCT);
 
   console.log("QUERY INPUT", initialInput);
   const {
@@ -38,6 +47,26 @@ const DiscounProductsList = ({ initialInput }: DiscountProductsProps) => {
       setDiscountedProducts(data?.getProducts?.list);
     },
   });
+
+  /** HANDLERS **/
+  const likeProductHandler = async (user: T, id: string) => {
+    console.log("likeRefid", user._id);
+    try {
+      if (!id) return;
+      if (!user._id) throw new Error(Message.NOT_AUTHENTICATED);
+
+      // execute likeTargetProperty Mutation
+      await likeTargetProduct({ variables: { input: id } });
+      // execute getPropertiesRefetch
+      await getDiscountedProductsRefetch({ input: finalInput });
+
+      await sweetTopSmallSuccessAlert("success", 800);
+    } catch (err: any) {
+      console.log("Error, likeProductHandler", err);
+      sweetMixinErrorAlert(err.message).then();
+    }
+  };
+
   //& PAGINATION START
   const [page, setPage] = useState(initialInput.page);
   const itemsPerPage = initialInput.limit;
@@ -73,7 +102,10 @@ const DiscounProductsList = ({ initialInput }: DiscountProductsProps) => {
               productsToDisplay.map((product: Product) => (
                 <Fade in={true} timeout={1000} key={product._id}>
                   <Box>
-                    <DiscountProductCart product={product} />
+                    <DiscountProductCart
+                      product={product}
+                      likeProductHandler={likeProductHandler}
+                    />
                   </Box>
                 </Fade>
               ))
