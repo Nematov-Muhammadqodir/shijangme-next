@@ -47,15 +47,10 @@ function createIsomorphicLink() {
       return forward(operation);
     });
 
-    console.log(
-      "NEXT_PUBLIC_API_GRAPHQL_URLss",
-      process.env.NEXT_PUBLIC_API_GRAPHQL_URL
-    );
     // @ts-ignore
     const link = new createUploadLink({
       uri: process.env.NEXT_PUBLIC_API_GRAPHQL_URL,
     });
-    console.log("link", link);
 
     /* WEBSOCKET SUBSCRIPTION LINK */
     // const wsLink = new WebSocketLink({
@@ -99,13 +94,11 @@ function createApolloClient() {
 }
 
 export function initializeApollo(initialState = null) {
-  console.log("initialState result", initialState);
-  console.log("createApolloClient result", createApolloClient);
   const _apolloClient = apolloClient ?? createApolloClient();
   if (initialState) _apolloClient.cache.restore(initialState);
   if (typeof window === "undefined") return _apolloClient;
   if (!apolloClient) apolloClient = _apolloClient;
-  console.log("_apolloClient result", _apolloClient);
+
   return _apolloClient;
 }
 

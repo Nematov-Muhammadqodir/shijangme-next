@@ -1,41 +1,55 @@
 import { Box, Stack, Pagination, Fade } from "@mui/material"; // Import Pagination and Box
 import React, { useState } from "react";
 import DiscountProductCart from "./DiscountProductCart";
+import { useQuery } from "@apollo/client";
+import { GET_PRODUCTS } from "@/apollo/user/query";
+import { Product } from "@/libs/types/product/product";
+import { ProductsInquiry } from "@/libs/types/product/product.input";
+import { T } from "@/libs/types/common";
 
-const DiscounProductsList = () => {
-  const allProducts = [
-    { id: 1, name: "Product 1" },
-    { id: 2, name: "Product 2" },
-    { id: 3, name: "Product 3" },
-    { id: 4, name: "Product 4" },
-    { id: 5, name: "Product 5" },
-    { id: 6, name: "Product 6" },
-    { id: 7, name: "Product 7" },
-    { id: 8, name: "Product 8" },
-    { id: 9, name: "Product 9" },
-    { id: 10, name: "Product 10" },
-    { id: 11, name: "Product 11" },
-    { id: 12, name: "Product 12" },
-    // Add more products here to clearly see pagination in action
-  ];
+interface DiscountProductsProps {
+  initialInput: ProductsInquiry;
+}
 
-  const [page, setPage] = useState(1);
+const DiscounProductsList = ({ initialInput }: DiscountProductsProps) => {
+  const finalInput = initialInput ?? {
+    page: 1,
+    limit: 4,
+    sort: "productDiscountRate",
+    direction: "DESC",
+    search: {},
+  };
+  const [discountedProducts, setDiscountedProducts] = useState<Product[]>([]);
 
-  const itemsPerPage = 4;
-
-  // Calculate the total number of pages
-  const pageCount = Math.ceil(allProducts.length / itemsPerPage);
-
+  console.log("QUERY INPUT", initialInput);
+  const {
+    loading: getDiscountedProductsLoading,
+    data: getDiscountedProductsData,
+    error: getDiscountedProductsError,
+    refetch: getDiscountedProductsRefetch,
+  } = useQuery(GET_PRODUCTS, {
+    fetchPolicy: "cache-and-network",
+    variables: {
+      input: finalInput,
+    },
+    notifyOnNetworkStatusChange: true,
+    onCompleted: (data: T) => {
+      console.log("discountedPrpductsData", data?.getProducts?.list);
+      setDiscountedProducts(data?.getProducts?.list);
+    },
+  });
+  //& PAGINATION START
+  const [page, setPage] = useState(initialInput.page);
+  const itemsPerPage = initialInput.limit;
+  const pageCount = Math.ceil(discountedProducts.length / itemsPerPage);
   const startIndex = (page - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const productsToDisplay = allProducts.slice(startIndex, endIndex);
-
-  // Handle page change
+  const productsToDisplay = discountedProducts.slice(startIndex, endIndex);
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
-    // Optional: Scroll to top of the list when page changes for better UX
-    // window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
+  //& PAGINATION END
 
   return (
     <div className="discount-products-list-main-countainer">
@@ -56,10 +70,10 @@ const DiscounProductsList = () => {
                 No Discounted Products Available
               </Box>
             ) : (
-              productsToDisplay.map((product) => (
-                <Fade in={true} timeout={1000} key={product.id}>
+              productsToDisplay.map((product: Product) => (
+                <Fade in={true} timeout={1000} key={product._id}>
                   <Box>
-                    <DiscountProductCart />
+                    <DiscountProductCart product={product} />
                   </Box>
                 </Fade>
               ))
@@ -85,6 +99,16 @@ const DiscounProductsList = () => {
       </Stack>
     </div>
   );
+};
+
+DiscounProductsList.defaultProps = {
+  initialInput: {
+    page: 1,
+    limit: 4,
+    sort: "productDiscountRate",
+    direction: "DESC",
+    search: {},
+  },
 };
 
 export default DiscounProductsList;

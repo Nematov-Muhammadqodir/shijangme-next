@@ -3,34 +3,43 @@ import React, { useState } from "react";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
+import { Product } from "@/libs/types/product/product";
+import { REACT_APP_API_URL } from "@/libs/types/config";
 
-const DiscountProductCart = () => {
+interface DiscountProductCartProps {
+  product: Product;
+}
+const DiscountProductCart = (props: DiscountProductCartProps) => {
+  const { product } = props;
   const [like, setLike] = useState(true);
+  const discountPrice =
+    Number(product.productPrice) -
+    (Number(product.productPrice) / 100) * product.productDiscountRate;
+  const imgPath = `${REACT_APP_API_URL}/${product?.productImages[0]}`;
   return (
     <div>
       <Stack className="discount-card">
         <Box className="card-image">
-          <img src="/img/products/pinapple.png" alt="product-image" />
+          <img src={"/img/products/pinapple.png"} alt="product-image" />
           <Stack className="card-features">
-            <Box className="discount">15%</Box>
+            <Box className="discount">{product.productDiscountRate}%</Box>
             <Box className="like">
               {like ? <FavoriteIcon /> : <FavoriteBorderIcon />}
             </Box>
           </Stack>
         </Box>
         <Stack className="card-info">
-          <span className="product-name">
-            cabbage Organic Trimmed Greens leaf Organic Vegetable..
-          </span>
+          <span className="product-name">{product.productName}</span>
+          <span className="product-desc">{product.productDesc}</span>
           <Stack className="product-price">
-            <span className="discount-price">$120.00</span>
-            <span className="original-price">$150.00</span>
+            <span className="discount-price">￦{discountPrice.toFixed(0)}</span>
+            <span className="original-price">{product.productPrice}</span>
             <span className="discount-amount">
-              <span>-15%</span>
+              <span>-{product.productDiscountRate}%</span>
             </span>
           </Stack>
           <Box className="product-weight">
-            <span>500gm</span>
+            <span>{product.productVolume} kg</span>
           </Box>
           <Button className="add-to-cart-btn" variant="contained">
             <AddShoppingCartIcon />
