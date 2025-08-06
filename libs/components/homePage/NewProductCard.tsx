@@ -4,8 +4,14 @@ import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
 import FiberNewIcon from "@mui/icons-material/FiberNew";
 import AddIcon from "@mui/icons-material/Add";
+import { Product } from "@/libs/types/product/product";
 
-const NewProductCard = () => {
+interface NewProductCardProps {
+  product: Product;
+}
+
+const NewProductCard = (props: NewProductCardProps) => {
+  const { product } = props;
   const [like, setLike] = useState(true);
   return (
     <div>
@@ -19,22 +25,23 @@ const NewProductCard = () => {
             <FiberNewIcon />
           </Box>
           <Stack className="product-volume">
-            <Box>220gm</Box>
+            <Box>{product.productVolume} Kg</Box>
           </Stack>
         </Stack>
         <Stack className="card-info">
           <Box className="product-origin">
-            <span>Origin: KOREA</span>
+            <span>Origin: {product.productOrigin}</span>
           </Box>
           <Stack className="product-price">
-            <span>$120.00</span>
+            <span>${product.productPrice}</span>
             <Button className="add-btn">
               <AddIcon />
             </Button>
           </Stack>
-          <span className="product-name">
-            B Natural Mango Juice, Goodness of fiber, 1 litre (Pack of 2)
-          </span>
+          <div className="product-name-wrapper">
+            <span className="product-name">{product.productName}</span>
+            <span className="product-desc">{product.productDesc}</span>
+          </div>
         </Stack>
       </Stack>
     </div>

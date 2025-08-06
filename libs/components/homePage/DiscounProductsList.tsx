@@ -30,7 +30,6 @@ const DiscounProductsList = ({ initialInput }: DiscountProductsProps) => {
   /** APOLLO REQUESTS **/
   const [likeTargetProduct] = useMutation(LIKE_TARGET_PRODUCT);
 
-  console.log("QUERY INPUT", initialInput);
   const {
     loading: getDiscountedProductsLoading,
     data: getDiscountedProductsData,

@@ -1,25 +1,67 @@
 import { Box, Fade, Pagination, Stack } from "@mui/material";
 import React, { useState } from "react";
 import NewProductCard from "./NewProductCard";
+import { ProductsInquiry } from "@/libs/types/product/product.input";
+import { Product } from "@/libs/types/product/product";
+import { useQuery } from "@apollo/client";
+import { GET_PRODUCTS } from "@/apollo/user/query";
+import { T } from "@/libs/types/common";
 
-const NewProductsList = () => {
-  const allProducts = [1, 2, 3, 4, 5, 6];
+interface NewProductsListProps {
+  initialInput: ProductsInquiry;
+}
 
-  const [page, setPage] = useState(1);
+const NewProductsList = ({ initialInput }: NewProductsListProps) => {
+  const finalInput = initialInput ?? {
+    page: 1,
+    limit: 4,
+    sort: "productDiscountRate",
+    direction: "DESC",
+    search: {},
+  };
 
-  const itemsPerPage = 4;
+  const [newProducts, setNewProducts] = useState<Product[]>([]);
+  const [totalProducts, setTotalProducts] = useState(0);
 
-  const pageCount = Math.ceil(allProducts.length / itemsPerPage);
+  const {
+    loading: getNewProductsLoading,
+    data: getNewProductsData,
+    error: getNewProductsError,
+    refetch: getNewProductsRefetch,
+  } = useQuery(GET_PRODUCTS, {
+    fetchPolicy: "cache-and-network",
+    variables: {
+      input: finalInput,
+    },
+    notifyOnNetworkStatusChange: true,
+    onCompleted: (data: T) => {
+      console.log("newProductsData", data?.getProducts?.list);
+      setNewProducts(data?.getProducts?.list);
+      setTotalProducts(data?.getProducts?.metaCounter?.[0]?.total || 0);
+    },
+  });
 
+  //& PAGINATION START
+  const [page, setPage] = useState(finalInput.page);
+  const itemsPerPage = finalInput.limit;
+  const pageCount = Math.ceil(totalProducts / itemsPerPage);
   const startIndex = (page - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const productsToDisplay = allProducts.slice(startIndex, endIndex);
-
-  const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
+  const productsToDisplay = newProducts;
+  const handleChange = async (
+    event: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
     setPage(value);
-    // Optional: Scroll to top of the list when page changes for better UX
-    // window.scrollTo({ top: 0, behavior: "smooth" });
+    await getNewProductsRefetch({
+      input: {
+        ...finalInput,
+        page: value,
+      },
+    });
+    // Optional: window.scrollTo({ top: 0, behavior: "smooth" });
   };
+  //& PAGINATION END
   return (
     <div className="new-products-list-main-container">
       <Stack className="container">
@@ -46,7 +88,7 @@ const NewProductsList = () => {
               productsToDisplay.map((product, key) => (
                 <Fade in={true} timeout={1000} key={key}>
                   <Box>
-                    <NewProductCard />
+                    <NewProductCard product={product} />
                   </Box>
                 </Fade>
               ))
@@ -70,6 +112,16 @@ const NewProductsList = () => {
       </Stack>
     </div>
   );
+};
+
+NewProductsList.defaultProps = {
+  initialInput: {
+    page: 1,
+    limit: 4,
+    sort: "createdAt",
+    direction: "DESC",
+    search: {},
+  },
 };
 
 export default NewProductsList;
