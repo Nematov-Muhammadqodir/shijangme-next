@@ -26,6 +26,7 @@ const DiscounProductsList = ({ initialInput }: DiscountProductsProps) => {
     search: {},
   };
   const [discountedProducts, setDiscountedProducts] = useState<Product[]>([]);
+  const [totalProducts, setTotalProducts] = useState(0);
 
   /** APOLLO REQUESTS **/
   const [likeTargetProduct] = useMutation(LIKE_TARGET_PRODUCT);
@@ -44,6 +45,7 @@ const DiscounProductsList = ({ initialInput }: DiscountProductsProps) => {
     onCompleted: (data: T) => {
       console.log("discountedPrpductsData", data?.getProducts?.list);
       setDiscountedProducts(data?.getProducts?.list);
+      setTotalProducts(data?.getProducts?.metaCounter?.[0]?.total || 0);
     },
   });
 
@@ -69,13 +71,22 @@ const DiscounProductsList = ({ initialInput }: DiscountProductsProps) => {
   //& PAGINATION START
   const [page, setPage] = useState(initialInput.page);
   const itemsPerPage = initialInput.limit;
-  const pageCount = Math.ceil(discountedProducts.length / itemsPerPage);
+  const pageCount = Math.ceil(totalProducts / itemsPerPage);
   const startIndex = (page - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const productsToDisplay = discountedProducts.slice(startIndex, endIndex);
-  const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
+  const productsToDisplay = discountedProducts;
+  const handleChange = async (
+    event: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
     setPage(value);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    await getDiscountedProductsRefetch({
+      input: {
+        ...finalInput,
+        page: value,
+      },
+    });
+    // Optional: window.scrollTo({ top: 0, behavior: "smooth" });
   };
   //& PAGINATION END
 
@@ -98,16 +109,18 @@ const DiscounProductsList = ({ initialInput }: DiscountProductsProps) => {
                 No Discounted Products Available
               </Box>
             ) : (
-              productsToDisplay.map((product: Product) => (
-                <Fade in={true} timeout={1000} key={product._id}>
-                  <Box>
-                    <DiscountProductCart
-                      product={product}
-                      likeProductHandler={likeProductHandler}
-                    />
-                  </Box>
-                </Fade>
-              ))
+              productsToDisplay
+                .filter((product) => product.productDiscountRate > 0)
+                .map((product: Product) => (
+                  <Fade in={true} timeout={1000} key={product._id}>
+                    <Box>
+                      <DiscountProductCart
+                        product={product}
+                        likeProductHandler={likeProductHandler}
+                      />
+                    </Box>
+                  </Fade>
+                ))
             )}
           </Stack>
 

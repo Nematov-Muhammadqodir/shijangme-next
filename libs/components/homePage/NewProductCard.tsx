@@ -5,21 +5,32 @@ import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
 import FiberNewIcon from "@mui/icons-material/FiberNew";
 import AddIcon from "@mui/icons-material/Add";
 import { Product } from "@/libs/types/product/product";
+import { useReactiveVar } from "@apollo/client";
+import { userVar } from "@/apollo/store";
 
 interface NewProductCardProps {
   product: Product;
+  likeProductHandler: any;
 }
 
 const NewProductCard = (props: NewProductCardProps) => {
-  const { product } = props;
+  const { product, likeProductHandler } = props;
   const [like, setLike] = useState(true);
+  const user = useReactiveVar(userVar);
   return (
     <div>
       <Stack className="new-product-card">
         <Stack className="new-product-card-image">
           <img src="/img/products/pinapple.png" alt="product-image" />
-          <Box className="like">
-            {like ? <ThumbUpIcon /> : <ThumbUpOffAltIcon />}
+          <Box
+            className="like"
+            onClick={() => likeProductHandler(user, product._id)}
+          >
+            {product.meLiked && product.meLiked[0]?.myFavorite ? (
+              <ThumbUpIcon />
+            ) : (
+              <ThumbUpOffAltIcon />
+            )}
           </Box>
           <Box className="new">
             <FiberNewIcon />

@@ -3,9 +3,15 @@ import React, { useState } from "react";
 import NewProductCard from "./NewProductCard";
 import { ProductsInquiry } from "@/libs/types/product/product.input";
 import { Product } from "@/libs/types/product/product";
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { GET_PRODUCTS } from "@/apollo/user/query";
 import { T } from "@/libs/types/common";
+import { LIKE_TARGET_PRODUCT } from "@/apollo/user/mutation";
+import { Message } from "@/libs/enums/common.enum";
+import {
+  sweetMixinErrorAlert,
+  sweetTopSmallSuccessAlert,
+} from "@/libs/types/sweetAlert";
 
 interface NewProductsListProps {
   initialInput: ProductsInquiry;
@@ -19,10 +25,11 @@ const NewProductsList = ({ initialInput }: NewProductsListProps) => {
     direction: "DESC",
     search: {},
   };
-
   const [newProducts, setNewProducts] = useState<Product[]>([]);
   const [totalProducts, setTotalProducts] = useState(0);
 
+  /** APOLLO REQUESTS **/
+  const [likeTargetProduct] = useMutation(LIKE_TARGET_PRODUCT);
   const {
     loading: getNewProductsLoading,
     data: getNewProductsData,
@@ -40,6 +47,25 @@ const NewProductsList = ({ initialInput }: NewProductsListProps) => {
       setTotalProducts(data?.getProducts?.metaCounter?.[0]?.total || 0);
     },
   });
+
+  /** HANDLERS **/
+  const likeProductHandler = async (user: T, id: string) => {
+    console.log("likeRefid", user._id);
+    try {
+      if (!id) return;
+      if (!user._id) throw new Error(Message.NOT_AUTHENTICATED);
+
+      // execute likeTargetProperty Mutation
+      await likeTargetProduct({ variables: { input: id } });
+      // execute getPropertiesRefetch
+      await getNewProductsRefetch({ input: finalInput });
+
+      await sweetTopSmallSuccessAlert("success", 800);
+    } catch (err: any) {
+      console.log("Error, likeProductHandler", err);
+      sweetMixinErrorAlert(err.message).then();
+    }
+  };
 
   //& PAGINATION START
   const [page, setPage] = useState(finalInput.page);
@@ -88,7 +114,10 @@ const NewProductsList = ({ initialInput }: NewProductsListProps) => {
               productsToDisplay.map((product, key) => (
                 <Fade in={true} timeout={1000} key={key}>
                   <Box>
-                    <NewProductCard product={product} />
+                    <NewProductCard
+                      product={product}
+                      likeProductHandler={likeProductHandler}
+                    />
                   </Box>
                 </Fade>
               ))
