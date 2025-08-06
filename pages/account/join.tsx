@@ -149,7 +149,7 @@ const Join = () => {
                         control={
                           <Checkbox
                             size="small"
-                            name={"AGENT"}
+                            name={"VENDOR"}
                             onChange={checkUserTypeHandler}
                             checked={input?.type == "VENDOR"}
                           />

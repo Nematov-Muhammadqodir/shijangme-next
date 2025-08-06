@@ -8,13 +8,11 @@ import {
   NormalizedCacheObject,
 } from "@apollo/client";
 import createUploadLink from "apollo-upload-client/public/createUploadLink.js";
-import { onError } from "@apollo/client/link/error";
-import { getJwtToken } from "@/libs/auth";
-import { getMainDefinition } from "@apollo/client/utilities";
-import { TokenRefreshLink } from "apollo-link-token-refresh";
 import { WebSocketLink } from "@apollo/client/link/ws";
-import { socketVar } from "./store";
-import { sweetErrorAlert } from "@/libs/types/sweetAlert";
+import { getMainDefinition } from "@apollo/client/utilities";
+import { onError } from "@apollo/client/link/error";
+import { getJwtToken } from "../libs/auth";
+import { TokenRefreshLink } from "apollo-link-token-refresh";
 let apolloClient: ApolloClient<NormalizedCacheObject>;
 
 function getHeaders() {
@@ -36,37 +34,6 @@ const tokenRefreshLink = new TokenRefreshLink({
   },
 });
 
-// class LoggingWebSocket {
-//   private socket: WebSocket;
-
-//   constructor(url: string) {
-//     this.socket = new WebSocket(`${url}?token=${getJwtToken()}`);
-//     socketVar(this.socket);
-
-//     this.socket.onopen = () => {
-//       console.log("WebSocket connection!");
-//     };
-
-//     this.socket.onmessage = (msg) => {
-//       console.log("WebSocket message:", msg.data);
-//     };
-
-//     this.socket.onerror = (error) => {
-//       console.log("WebSocket error", error);
-//     };
-//   }
-
-//   send(
-//     data: string | ArrayBuffer | SharedArrayBuffer | Blob | ArrayBufferView
-//   ) {
-//     this.socket.send(data);
-//   }
-
-//   close() {
-//     this.socket.close();
-//   }
-// }
-
 function createIsomorphicLink() {
   if (typeof window !== "undefined") {
     const authLink = new ApolloLink((operation, forward) => {
@@ -79,18 +46,20 @@ function createIsomorphicLink() {
       console.warn("requesting.. ", operation);
       return forward(operation);
     });
+
     console.log(
-      "REACT_APP_API_GRAPHQL_URL",
+      "NEXT_PUBLIC_API_GRAPHQL_URLss",
       process.env.NEXT_PUBLIC_API_GRAPHQL_URL
     );
     // @ts-ignore
     const link = new createUploadLink({
       uri: process.env.NEXT_PUBLIC_API_GRAPHQL_URL,
     });
+    console.log("link", link);
 
     /* WEBSOCKET SUBSCRIPTION LINK */
     // const wsLink = new WebSocketLink({
-    //   uri: process.env.REACT_APP_API_WS ?? "ws://127.0.0.1:3003",
+    //   uri: process.env.REACT_APP_API_WS ?? "ws://127.0.0.1:3007",
     //   options: {
     //     reconnect: false,
     //     timeout: 30000,
@@ -98,17 +67,15 @@ function createIsomorphicLink() {
     //       return { headers: getHeaders() };
     //     },
     //   },
-    //   webSocketImpl: LoggingWebSocket,
     // });
 
     const errorLink = onError(({ graphQLErrors, networkError, response }) => {
       if (graphQLErrors) {
-        graphQLErrors.map(({ message, locations, path, extensions }) => {
+        graphQLErrors.map(({ message, locations, path, extensions }) =>
           console.log(
             `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
-          );
-          if (!message.includes("input")) sweetErrorAlert(message);
-        });
+          )
+        );
       }
       if (networkError) console.log(`[Network error]: ${networkError}`);
       // @ts-ignore
@@ -116,15 +83,9 @@ function createIsomorphicLink() {
       }
     });
 
-    const splitLink = split(({ query }) => {
-      const definition = getMainDefinition(query);
-      return (
-        definition.kind === "OperationDefinition" &&
-        definition.operation === "subscription"
-      );
-    }, authLink.concat(link));
+    const httpLink = authLink.concat(link);
 
-    return from([errorLink, tokenRefreshLink, splitLink]);
+    return from([errorLink, tokenRefreshLink, httpLink]);
   }
 }
 
@@ -138,11 +99,13 @@ function createApolloClient() {
 }
 
 export function initializeApollo(initialState = null) {
+  console.log("initialState result", initialState);
+  console.log("createApolloClient result", createApolloClient);
   const _apolloClient = apolloClient ?? createApolloClient();
   if (initialState) _apolloClient.cache.restore(initialState);
   if (typeof window === "undefined") return _apolloClient;
   if (!apolloClient) apolloClient = _apolloClient;
-
+  console.log("_apolloClient result", _apolloClient);
   return _apolloClient;
 }
 

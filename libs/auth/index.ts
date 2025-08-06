@@ -117,6 +117,8 @@ const requestSignUpJwtToken = async ({
       fetchPolicy: "network-only",
     });
 
+    console.log("result1", result);
+
     console.log("---------- login ----------");
     const { accessToken } = result?.data?.signup;
 
@@ -144,6 +146,7 @@ export const updateUserInfo = (jwtToken: any) => {
   if (!jwtToken) return false;
 
   const claims = decodeJWT<CustomJwtPayload>(jwtToken);
+  console.log("claims", claims);
   userVar({
     _id: claims._id ?? "",
     memberType: claims.memberType ?? "",
