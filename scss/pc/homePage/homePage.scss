@@ -223,7 +223,7 @@
                 .product-name {
                   width: 100%;
                   color: #3d3d3d;
-                  font-size: 14px;
+                  font-size: 18px;
                   font-style: normal;
                   font-weight: 500;
                   line-height: 22px; /* 157.143% */
@@ -473,7 +473,7 @@
                     height: 49px;
                     flex-shrink: 0;
                     color: #3d3d3d;
-                    font-size: 14px;
+                    font-size: 18px;
                     font-style: normal;
                     font-weight: 500;
                     line-height: 22px; /* 157.143% */
@@ -535,7 +535,7 @@
             justify-content: space-between;
             .trend-products-card {
               width: 231px;
-              height: 412px;
+              height: 422px;
               display: flex;
               flex-direction: column;
               border-bottom: 1px solid #dce0e5;
@@ -563,7 +563,7 @@
                   bottom: 10px;
                   left: 10px;
                   width: 87px;
-                  height: 21px;
+                  height: 30px;
                   padding: 8px 8px;
                   display: inline-flex;
                   justify-content: center;
@@ -573,6 +573,7 @@
                   span {
                     font-size: 12px;
                     color: white;
+                    font-weight: 600;
                   }
                 }
               }
@@ -583,7 +584,16 @@
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 10px;
-                .card-info-text {
+                .card-info-name {
+                  font-size: 18px;
+                  font-style: normal;
+                  font-weight: 400;
+                  line-height: 140%; /* 21px */
+                  height: 42px;
+                  font-weight: 600;
+                  letter-spacing: 2px;
+                }
+                .card-info-desc {
                   font-size: 15px;
                   font-style: normal;
                   font-weight: 400;
@@ -608,7 +618,8 @@
                     height: 34px;
                     border-radius: 8px;
                     border: 1px solid #707070;
-                    padding: 5px;
+                    padding: 10px;
+                    padding-bottom: 10px;
                   }
                 }
               }

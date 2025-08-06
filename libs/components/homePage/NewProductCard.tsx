@@ -44,7 +44,7 @@ const NewProductCard = (props: NewProductCardProps) => {
             <span>Origin: {product.productOrigin}</span>
           </Box>
           <Stack className="product-price">
-            <span>${product.productPrice}</span>
+            <span>￦{product.productPrice}</span>
             <Button className="add-btn">
               <AddIcon />
             </Button>

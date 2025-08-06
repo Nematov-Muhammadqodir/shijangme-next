@@ -1,25 +1,99 @@
 import { Box, Fade, Pagination, Stack } from "@mui/material";
 import React, { useState } from "react";
 import TrendProductsCard from "./TrendProductsCard";
+import { ProductsInquiry } from "@/libs/types/product/product.input";
+import { Product } from "@/libs/types/product/product";
+import { useMutation, useQuery } from "@apollo/client";
+import { LIKE_TARGET_PRODUCT } from "@/apollo/user/mutation";
+import { GET_PRODUCTS } from "@/apollo/user/query";
+import { T } from "@/libs/types/common";
 
-const TrendProductsList = () => {
+import {
+  sweetMixinErrorAlert,
+  sweetTopSmallSuccessAlert,
+} from "@/libs/types/sweetAlert";
+import { Message } from "@/libs/enums/common.enum";
+
+interface TrendProductsListProps {
+  initialInput: ProductsInquiry;
+}
+
+const TrendProductsList = ({ initialInput }: TrendProductsListProps) => {
+  const finalInput = initialInput ?? {
+    page: 1,
+    limit: 4,
+    sort: "productLikes",
+    direction: "DESC",
+    search: {},
+  };
+  const [trendProducts, setTrendProducts] = useState<Product[]>([]);
+  const [totalProducts, setTotalProducts] = useState(0);
   const allProducts = [1, 2, 3, 4, 5, 6];
 
-  const [page, setPage] = useState(1);
+  /** APOLLO REQUESTS **/
+  const [likeTargetProduct] = useMutation(LIKE_TARGET_PRODUCT);
+  const {
+    loading: getNewProductsLoading,
+    data: getNewProductsData,
+    error: getNewProductsError,
+    refetch: getNewProductsRefetch,
+  } = useQuery(GET_PRODUCTS, {
+    fetchPolicy: "cache-and-network",
+    variables: {
+      input: finalInput,
+    },
+    notifyOnNetworkStatusChange: true,
+    onCompleted: (data: T) => {
+      console.log("trendProductsData", data?.getProducts?.list);
+      setTrendProducts(data?.getProducts?.list);
+      setTotalProducts(data?.getProducts?.metaCounter?.[0]?.total || 0);
+    },
+  });
 
-  const itemsPerPage = 5;
+  /** HANDLERS **/
+  const likeProductHandler = async (user: T, id: string) => {
+    console.log("likeRefid", user._id);
+    try {
+      if (!id) return;
+      if (!user._id) throw new Error(Message.NOT_AUTHENTICATED);
 
-  const pageCount = Math.ceil(allProducts.length / itemsPerPage);
+      // execute likeTargetProperty Mutation
+      await likeTargetProduct({ variables: { input: id } });
+      // execute getPropertiesRefetch
+      await getNewProductsRefetch({ input: finalInput });
 
+      await sweetTopSmallSuccessAlert("success", 800);
+    } catch (err: any) {
+      console.log("Error, likeProductHandler", err);
+      sweetMixinErrorAlert(err.message).then();
+    }
+  };
+
+  //& PAGINATION START
+  const [page, setPage] = useState(finalInput.page);
+  const itemsPerPage = finalInput.limit;
+  const pageCount = Math.ceil(totalProducts / itemsPerPage);
   const startIndex = (page - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const productsToDisplay = allProducts.slice(startIndex, endIndex);
-
-  const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
+  const productsToDisplay = trendProducts;
+  const paginate = productsToDisplay.filter(
+    (product: Product) => product.productLikes > 0
+  );
+  console.log("paginate", paginate);
+  const handleChange = async (
+    event: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
     setPage(value);
-    // Optional: Scroll to top of the list when page changes for better UX
-    // window.scrollTo({ top: 0, behavior: "smooth" });
+    await getNewProductsRefetch({
+      input: {
+        ...finalInput,
+        page: value,
+      },
+    });
+    // Optional: window.scrollTo({ top: 0, behavior: "smooth" });
   };
+  //& PAGINATION END
   return (
     <div className="trend-products-list-main-container">
       <Stack className="container">
@@ -43,16 +117,21 @@ const TrendProductsList = () => {
                 No Discounted Products Available
               </Box>
             ) : (
-              productsToDisplay.map((product, key) => (
-                <Fade in={true} timeout={1000} key={key}>
-                  <Box>
-                    <TrendProductsCard />
-                  </Box>
-                </Fade>
-              ))
+              productsToDisplay
+                .filter((product: Product) => product.productLikes > 0)
+                .map((product, key) => (
+                  <Fade in={true} timeout={1000} key={key}>
+                    <Box>
+                      <TrendProductsCard
+                        product={product}
+                        likeProductHandler={likeProductHandler}
+                      />
+                    </Box>
+                  </Fade>
+                ))
             )}
           </Stack>
-          {pageCount > 1 && (
+          {paginate.length && (
             <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
               <Pagination
                 count={pageCount}
@@ -69,6 +148,16 @@ const TrendProductsList = () => {
       </Stack>
     </div>
   );
+};
+
+TrendProductsList.defaultProps = {
+  initialInput: {
+    page: 1,
+    limit: 4,
+    sort: "productLikes",
+    direction: "DESC",
+    search: {},
+  },
 };
 
 export default TrendProductsList;
