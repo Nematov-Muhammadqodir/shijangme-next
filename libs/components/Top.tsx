@@ -22,17 +22,17 @@ const Navbar = () => {
   const langOpen = Boolean(languageAnchor);
   const logoutOpen = Boolean(logoutAnchor);
 
-  const changeNavbarColor = () => {
-    if (window.scrollY >= 150) {
-      setColorChange(true);
-    } else {
-      setColorChange(false);
-    }
-  };
+  // const changeNavbarColor = () => {
+  //   if (window.scrollY >= 150) {
+  //     setColorChange(true);
+  //   } else {
+  //     setColorChange(false);
+  //   }
+  // };
 
-  if (typeof window !== "undefined") {
-    window.addEventListener("scroll", changeNavbarColor);
-  }
+  // if (typeof window !== "undefined") {
+  //   window.addEventListener("scroll", changeNavbarColor);
+  // }
   return (
     <Stack className={`navbar-main ${colorChange ? "transparent" : ""}`}>
       <Stack className="container">

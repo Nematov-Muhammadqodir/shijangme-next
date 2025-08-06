@@ -28,7 +28,6 @@ export const SIGN_UP = gql`
       memberRank
       memberWarnings
       memberBlocks
-      vendorNumber
       deletedAt
       createdAt
       updatedAt
@@ -125,7 +124,6 @@ export const LIKE_TARGET_MEMBER = gql`
       memberRank
       memberWarnings
       memberBlocks
-      vendorNumber
       deletedAt
       createdAt
       updatedAt

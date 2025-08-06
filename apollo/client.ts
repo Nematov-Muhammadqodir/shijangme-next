@@ -36,36 +36,36 @@ const tokenRefreshLink = new TokenRefreshLink({
   },
 });
 
-class LoggingWebSocket {
-  private socket: WebSocket;
+// class LoggingWebSocket {
+//   private socket: WebSocket;
 
-  constructor(url: string) {
-    this.socket = new WebSocket(`${url}?token=${getJwtToken()}`);
-    socketVar(this.socket);
+//   constructor(url: string) {
+//     this.socket = new WebSocket(`${url}?token=${getJwtToken()}`);
+//     socketVar(this.socket);
 
-    this.socket.onopen = () => {
-      console.log("WebSocket connection!");
-    };
+//     this.socket.onopen = () => {
+//       console.log("WebSocket connection!");
+//     };
 
-    this.socket.onmessage = (msg) => {
-      console.log("WebSocket message:", msg.data);
-    };
+//     this.socket.onmessage = (msg) => {
+//       console.log("WebSocket message:", msg.data);
+//     };
 
-    this.socket.onerror = (error) => {
-      console.log("WebSocket error", error);
-    };
-  }
+//     this.socket.onerror = (error) => {
+//       console.log("WebSocket error", error);
+//     };
+//   }
 
-  send(
-    data: string | ArrayBuffer | SharedArrayBuffer | Blob | ArrayBufferView
-  ) {
-    this.socket.send(data);
-  }
+//   send(
+//     data: string | ArrayBuffer | SharedArrayBuffer | Blob | ArrayBufferView
+//   ) {
+//     this.socket.send(data);
+//   }
 
-  close() {
-    this.socket.close();
-  }
-}
+//   close() {
+//     this.socket.close();
+//   }
+// }
 
 function createIsomorphicLink() {
   if (typeof window !== "undefined") {
@@ -79,24 +79,27 @@ function createIsomorphicLink() {
       console.warn("requesting.. ", operation);
       return forward(operation);
     });
-
+    console.log(
+      "REACT_APP_API_GRAPHQL_URL",
+      process.env.NEXT_PUBLIC_API_GRAPHQL_URL
+    );
     // @ts-ignore
     const link = new createUploadLink({
-      uri: process.env.REACT_APP_API_GRAPHQL_URL,
+      uri: process.env.NEXT_PUBLIC_API_GRAPHQL_URL,
     });
 
     /* WEBSOCKET SUBSCRIPTION LINK */
-    const wsLink = new WebSocketLink({
-      uri: process.env.REACT_APP_API_WS ?? "ws://127.0.0.1:3003",
-      options: {
-        reconnect: false,
-        timeout: 30000,
-        connectionParams: () => {
-          return { headers: getHeaders() };
-        },
-      },
-      webSocketImpl: LoggingWebSocket,
-    });
+    // const wsLink = new WebSocketLink({
+    //   uri: process.env.REACT_APP_API_WS ?? "ws://127.0.0.1:3003",
+    //   options: {
+    //     reconnect: false,
+    //     timeout: 30000,
+    //     connectionParams: () => {
+    //       return { headers: getHeaders() };
+    //     },
+    //   },
+    //   webSocketImpl: LoggingWebSocket,
+    // });
 
     const errorLink = onError(({ graphQLErrors, networkError, response }) => {
       if (graphQLErrors) {
@@ -113,17 +116,13 @@ function createIsomorphicLink() {
       }
     });
 
-    const splitLink = split(
-      ({ query }) => {
-        const definition = getMainDefinition(query);
-        return (
-          definition.kind === "OperationDefinition" &&
-          definition.operation === "subscription"
-        );
-      },
-      wsLink,
-      authLink.concat(link)
-    );
+    const splitLink = split(({ query }) => {
+      const definition = getMainDefinition(query);
+      return (
+        definition.kind === "OperationDefinition" &&
+        definition.operation === "subscription"
+      );
+    }, authLink.concat(link));
 
     return from([errorLink, tokenRefreshLink, splitLink]);
   }

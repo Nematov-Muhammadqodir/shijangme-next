@@ -29,7 +29,6 @@ export const GET_VENDORS = gql`
         memberRank
         memberWarnings
         memberBlocks
-        vendorNumber
         deletedAt
         createdAt
         updatedAt
@@ -76,7 +75,6 @@ export const GET_MEMBER = gql`
       memberRank
       memberWarnings
       memberBlocks
-      vendorNumber
       deletedAt
       createdAt
       updatedAt
@@ -145,7 +143,6 @@ export const GET_PRODUCT = gql`
         memberRank
         memberWarnings
         memberBlocks
-        vendorNumber
         deletedAt
         createdAt
         updatedAt
@@ -207,7 +204,6 @@ export const GET_PRODUCTS = gql`
           memberRank
           memberWarnings
           memberBlocks
-          vendorNumber
           deletedAt
           createdAt
           updatedAt
@@ -273,7 +269,6 @@ export const GET_VENDOR_PRODUCTS = gql`
           memberRank
           memberWarnings
           memberBlocks
-          vendorNumber
           deletedAt
           createdAt
           updatedAt
@@ -339,7 +334,6 @@ export const GET_FAVORITES = gql`
           memberRank
           memberWarnings
           memberBlocks
-          vendorNumber
           deletedAt
           createdAt
           updatedAt
@@ -405,7 +399,6 @@ export const GET_VISITED = gql`
           memberRank
           memberWarnings
           memberBlocks
-          vendorNumber
           deletedAt
           createdAt
           updatedAt
@@ -465,7 +458,6 @@ export const GET_BOARD_ARTICLE = gql`
         memberRank
         memberWarnings
         memberBlocks
-        vendorNumber
         deletedAt
         createdAt
         updatedAt
@@ -518,7 +510,6 @@ export const GET_BOARD_ARTICLES = gql`
           memberRank
           memberWarnings
           memberBlocks
-          vendorNumber
           deletedAt
           createdAt
           updatedAt
@@ -575,7 +566,6 @@ export const GET_COMMENTS = gql`
           memberRank
           memberWarnings
           memberBlocks
-          vendorNumber
           deletedAt
           createdAt
           updatedAt
@@ -633,7 +623,6 @@ export const GET_MEMBER_FOLLOWERS = gql`
           memberRank
           memberWarnings
           memberBlocks
-          vendorNumber
           deletedAt
           createdAt
           updatedAt
@@ -688,7 +677,6 @@ export const GET_MEMBER_FOLLOWINGS = gql`
           memberRank
           memberWarnings
           memberBlocks
-          vendorNumber
           deletedAt
           createdAt
           updatedAt

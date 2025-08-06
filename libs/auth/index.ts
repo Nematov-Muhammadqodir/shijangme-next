@@ -26,7 +26,7 @@ export const logIn = async (nick: string, password: string): Promise<void> => {
   } catch (err) {
     console.warn("login err", err);
     logOut();
-    // throw new Error('Login Err');
+    throw new Error("Login Err");
   }
 };
 
@@ -38,6 +38,7 @@ const requestJwtToken = async ({
   password: string;
 }): Promise<{ jwtToken: string }> => {
   const apolloClient = await initializeApollo();
+  console.log("inputs", nick, password);
 
   try {
     const result = await apolloClient.mutate({
@@ -85,7 +86,7 @@ export const signUp = async (
   } catch (err) {
     console.warn("login err", err);
     logOut();
-    // throw new Error('Login Err');
+    throw new Error("Login Err");
   }
 };
 const requestSignUpJwtToken = async ({
@@ -100,7 +101,8 @@ const requestSignUpJwtToken = async ({
   type: string;
 }): Promise<{ jwtToken: string }> => {
   const apolloClient = await initializeApollo();
-
+  console.log("apolloClint", apolloClient);
+  // console.log('inputs', nick, password, phone, type);
   try {
     const result = await apolloClient.mutate({
       mutation: SIGN_UP,

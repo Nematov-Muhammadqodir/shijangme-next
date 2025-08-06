@@ -1,5 +1,7 @@
+import { logIn, signUp } from "@/libs/auth";
 import withLayoutBasic from "@/libs/components/layout/LayoutBasic";
 import withLayoutMain from "@/libs/components/layout/LayoutHome";
+import { sweetMixinErrorAlert } from "@/libs/types/sweetAlert";
 import {
   Box,
   Button,
@@ -11,7 +13,7 @@ import {
 import { useRouter } from "next/router";
 import React, { useCallback, useState } from "react";
 
-const join = () => {
+const Join = () => {
   const router = useRouter();
   const [input, setInput] = useState({
     nick: "",
@@ -45,6 +47,26 @@ const join = () => {
       return { ...prev, [name]: value };
     });
   }, []);
+
+  const doLogin = useCallback(async () => {
+    console.warn(input);
+    try {
+      await logIn(input.nick, input.password);
+      await router.push(`${router.query.referrer ?? "/_admin/users"}`);
+    } catch (err: any) {
+      await sweetMixinErrorAlert(err.message);
+    }
+  }, [input]);
+
+  const doSignUp = useCallback(async () => {
+    console.log("signup", input);
+    try {
+      await signUp(input.nick, input.password, input.phone, input.type);
+      await router.push(`${router.query.referrer ?? "/"}`);
+    } catch (err: any) {
+      await sweetMixinErrorAlert(err.message);
+    }
+  }, [input]);
   return (
     <div className="join-main-container" style={{ marginTop: "200px" }}>
       <Stack className="container">
@@ -68,10 +90,10 @@ const join = () => {
                     placeholder={"Enter Nickname"}
                     onChange={(e) => handleInput("nick", e.target.value)}
                     required={true}
-                    //   onKeyDown={(event) => {
-                    //     if (event.key == "Enter" && loginView) doLogin();
-                    //     if (event.key == "Enter" && !loginView) doSignUp();
-                    //   }}
+                    onKeyDown={(event) => {
+                      if (event.key == "Enter" && loginView) doLogin();
+                      if (event.key == "Enter" && !loginView) doSignUp();
+                    }}
                   />
                 </div>
                 <div className={"input-box"}>
@@ -81,10 +103,10 @@ const join = () => {
                     placeholder={"Enter Password"}
                     onChange={(e) => handleInput("password", e.target.value)}
                     required={true}
-                    //   onKeyDown={(event) => {
-                    //     if (event.key == "Enter" && loginView) doLogin();
-                    //     if (event.key == "Enter" && !loginView) doSignUp();
-                    //   }}
+                    onKeyDown={(event) => {
+                      if (event.key == "Enter" && loginView) doLogin();
+                      if (event.key == "Enter" && !loginView) doSignUp();
+                    }}
                   />
                 </div>
                 {!loginView && (
@@ -95,9 +117,9 @@ const join = () => {
                       placeholder={"Enter Phone"}
                       onChange={(e) => handleInput("phone", e.target.value)}
                       required={true}
-                      // onKeyDown={(event) => {
-                      //   if (event.key == "Enter") doSignUp();
-                      // }}
+                      onKeyDown={(event) => {
+                        if (event.key == "Enter") doSignUp();
+                      }}
                     />
                   </div>
                 )}
@@ -129,10 +151,10 @@ const join = () => {
                             size="small"
                             name={"AGENT"}
                             onChange={checkUserTypeHandler}
-                            checked={input?.type == "AGENT"}
+                            checked={input?.type == "VENDOR"}
                           />
                         }
-                        label="Agent"
+                        label="Vendor"
                       />
                     </FormGroup>
                   </div>
@@ -154,9 +176,8 @@ const join = () => {
               {loginView ? (
                 <Button
                   variant="contained"
-                  endIcon={<img src="/img/icons/rightup.svg" alt="" />}
                   disabled={input.nick == "" || input.password == ""}
-                  //   onClick={doLogin}
+                  onClick={doLogin}
                 >
                   LOGIN
                 </Button>
@@ -169,8 +190,7 @@ const join = () => {
                     input.phone == "" ||
                     input.type == ""
                   }
-                  //   onClick={doSignUp}
-                  endIcon={<img src="/img/icons/rightup.svg" alt="" />}
+                  onClick={doSignUp}
                 >
                   SIGNUP
                 </Button>
@@ -211,4 +231,4 @@ const join = () => {
   );
 };
 
-export default withLayoutBasic(join);
+export default withLayoutMain(Join);
