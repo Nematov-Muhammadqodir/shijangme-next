@@ -7,6 +7,8 @@ import { Following } from "../../types/follow/follow";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { T } from "../../types/common";
+import { GET_MEMBER_FOLLOWINGS } from "@/apollo/user/query";
+import { userVar } from "@/apollo/store";
 
 interface MemberFollowingsProps {
   initialInput: FollowInquiry;
@@ -30,23 +32,24 @@ const MemberFollowings = (props: MemberFollowingsProps) => {
   const [followInquiry, setFollowInquiry] =
     useState<FollowInquiry>(initialInput);
   const [memberFollowings, setMemberFollowings] = useState<Following[]>([]);
+  const user = useReactiveVar(userVar);
 
   /** APOLLO REQUESTS **/
-  // const {
-  //   loading: getMemberFollowingsLoading,
-  //   data: getMemberFollowingsData,
-  //   error: getMemberFollowingsError,
-  //   refetch: getMemberFollowingsRefetch,
-  // } = useQuery(GET_MEMBER_FOLLOWINGS, {
-  //   fetchPolicy: "network-only",
-  //   variables: { input: followInquiry },
-  //   skip: !followInquiry?.search?.followerId,
-  //   notifyOnNetworkStatusChange: true,
-  //   onCompleted: (data: T) => {
-  //     setMemberFollowings(data?.getMemberFollowings?.list);
-  //     setTotal(data?.getMemberFollowings?.metaCounter[0]?.total);
-  //   },
-  // });
+  const {
+    loading: getMemberFollowingsLoading,
+    data: getMemberFollowingsData,
+    error: getMemberFollowingsError,
+    refetch: getMemberFollowingsRefetch,
+  } = useQuery(GET_MEMBER_FOLLOWINGS, {
+    fetchPolicy: "network-only",
+    variables: { input: followInquiry },
+    skip: !followInquiry?.search?.followerId,
+    notifyOnNetworkStatusChange: true,
+    onCompleted: (data: T) => {
+      setMemberFollowings(data?.getMemberFollowings?.list);
+      setTotal(data?.getMemberFollowings?.metaCounter[0]?.total);
+    },
+  });
 
   /** LIFECYCLES **/
   useEffect(() => {
@@ -58,13 +61,13 @@ const MemberFollowings = (props: MemberFollowingsProps) => {
     else
       setFollowInquiry({
         ...followInquiry,
-        search: { followerId: "user?._id" },
+        search: { followerId: user?._id },
       });
   }, [router]);
 
-  // useEffect(() => {
-  //   getMemberFollowingsRefetch({ input: followInquiry });
-  // }, [followInquiry]);
+  useEffect(() => {
+    getMemberFollowingsRefetch({ input: followInquiry });
+  }, [followInquiry]);
 
   /** HANDLERS **/
   const paginationHandler = async (
