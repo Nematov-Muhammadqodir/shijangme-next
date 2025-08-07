@@ -8,6 +8,8 @@ import IconButton from "@mui/material/IconButton";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import { userVar } from "@/apollo/store";
+import { REACT_APP_API_URL } from "@/libs/types/config";
 
 interface CommunityCardProps {
   boardArticle: BoardArticle;
@@ -17,10 +19,12 @@ interface CommunityCardProps {
 
 const CommunityCard = (props: CommunityCardProps) => {
   const { boardArticle, size = "normal", likeArticleHandler } = props;
-
+  const user = useReactiveVar(userVar);
   const router = useRouter();
-
-  const imagePath: string = "/img/homePage/article-default.jpg";
+  const imagePath: string = boardArticle?.articleImage
+    ? `${REACT_APP_API_URL}/${boardArticle?.articleImage}`
+    : "/img/homePage/article-default.jpg";
+  console.log("imagePath", boardArticle);
 
   /** HANDLERS **/
   const chooseArticleHandler = (
@@ -41,9 +45,8 @@ const CommunityCard = (props: CommunityCardProps) => {
   };
 
   const goMemberPage = (id: string) => {
-    // if (id === user?._id) router.push("/mypage");
-    // else router.push(`/member?memberId=${id}`);
-    router.push(`/member?memberId=${id}`);
+    if (id === user?._id) router.push("/mypage");
+    else router.push(`/member?memberId=${id}`);
   };
 
   return (
@@ -79,9 +82,7 @@ const CommunityCard = (props: CommunityCardProps) => {
           </Typography>
           <IconButton
             color={"default"}
-            onClick={(e: any) =>
-              likeArticleHandler(e, "user", boardArticle?._id)
-            }
+            onClick={(e: any) => likeArticleHandler(e, user, boardArticle?._id)}
           >
             {boardArticle?.meLiked && boardArticle?.meLiked[0]?.myFavorite ? (
               <FavoriteIcon color={"primary"} />

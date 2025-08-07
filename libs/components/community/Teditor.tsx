@@ -69,7 +69,7 @@ const TuiEditor = () => {
       formData.append("0", image);
 
       const response = await axios.post(
-        `${process.env.REACT_APP_API_GRAPHQL_URL}`,
+        `${process.env.NEXT_PUBLIC_API_GRAPHQL_URL}`,
         formData,
         {
           headers: {
@@ -83,6 +83,8 @@ const TuiEditor = () => {
       const responseImage = response.data.data.imageUploader;
       console.log("=responseImage: ", responseImage);
       memoizedValues.articleImage = responseImage;
+
+      console.log("responseImage TuiEditor", responseImage);
 
       return `${REACT_APP_API_URL}/${responseImage}`;
     } catch (err) {
