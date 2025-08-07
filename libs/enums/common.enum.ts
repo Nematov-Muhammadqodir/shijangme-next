@@ -21,7 +21,7 @@ export enum Message {
   SELF_SUBSCRIPTION_DENIED = "Self subscription is denied!",
   BLOCKED_USER = "You have been blocked, contact restaurant!",
   TOKEN_CRAETION_FAILED = "Token creation error!",
-
+  INSERT_ALL_INPUTS = "Please provide all inputs",
   VENDOR_EXISTS = "Vendor under this number already exists!",
 }
 
