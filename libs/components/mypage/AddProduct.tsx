@@ -1,3 +1,7 @@
+import { userVar } from "@/apollo/store";
+import { CREATE_PRODUCT, UPDATE_PRODUCT } from "@/apollo/user/mutation";
+import { GET_PRODUCT } from "@/apollo/user/query";
+import { getJwtToken } from "@/libs/auth";
 import { ProductCollection, ProductVolume } from "@/libs/enums/product.enum";
 import { ProductInput } from "@/libs/types/product/product.input";
 import {
@@ -5,25 +9,84 @@ import {
   sweetMixinErrorAlert,
   sweetMixinSuccessAlert,
 } from "@/libs/types/sweetAlert";
+import { useMutation, useQuery, useReactiveVar } from "@apollo/client";
 import { Button, Stack, Typography } from "@mui/material";
+import axios from "axios";
 import { useRouter } from "next/router";
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 const AddProduct = ({ initialValues, ...props }: any) => {
-  const inputRef = useRef<any>(null);
   const router = useRouter();
+  const inputRef = useRef<any>(null);
+  const token = getJwtToken();
   const [insertProductData, setInsertProductData] =
     useState<ProductInput>(initialValues);
   const [productCollection, setProductCollection] = useState<
     ProductCollection[]
   >(Object.values(ProductCollection));
   useState<ProductInput>(initialValues);
-
+  const user = useReactiveVar(userVar);
   const [productVolume, setProductVolume] = useState<ProductVolume[]>(
     Object.values(ProductVolume).filter(
       (v) => typeof v === "number"
     ) as ProductVolume[]
   );
+
+  /** APOLLO REQUESTS **/
+  const [createProduct] = useMutation(CREATE_PRODUCT);
+  const [updateProduct] = useMutation(UPDATE_PRODUCT);
+
+  const {
+    loading: getProductLoading,
+    data: getProductData,
+    error: getProductError,
+    refetch: getProductRefetch,
+  } = useQuery(GET_PRODUCT, {
+    fetchPolicy: "network-only",
+    variables: {
+      input: router.query.productId,
+    },
+  });
+
+  /** LIFECYCLES **/
+  useEffect(() => {
+    console.log(
+      "productVolume from server:",
+      getProductData?.getProduct?.productVolume
+    );
+    setInsertProductData({
+      ...insertProductData,
+      productName: getProductData?.getProduct
+        ? getProductData?.getProduct?.productName
+        : "",
+      productPrice: getProductData?.getProduct
+        ? getProductData?.getProduct?.productPrice
+        : 0,
+      productOriginPrice: getProductData?.getProduct
+        ? getProductData?.getProduct?.productOriginPrice
+        : 0,
+      productLeftCount: getProductData?.getProduct
+        ? getProductData?.getProduct?.productLeftCount
+        : 0,
+      productVolume: getProductData?.getProduct?.productVolume as ProductVolume,
+
+      productDiscountRate: getProductData?.getProduct
+        ? getProductData?.getProduct?.productDiscountRate
+        : 0,
+      productCollection: getProductData?.getProduct
+        ? getProductData?.getProduct?.productCollection
+        : "",
+      productDesc: getProductData?.getProduct
+        ? getProductData?.getProduct?.productDesc
+        : "",
+      productImages: getProductData?.getProduct
+        ? getProductData?.getProduct?.productImages
+        : [],
+      productOrigin: getProductData?.getProduct
+        ? getProductData?.getProduct?.productOrigin
+        : "",
+    });
+  }, [getProductLoading, getProductData]);
 
   /** HANDLERS **/
   async function uploadImages() {
@@ -43,7 +106,7 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 				  }`,
           variables: {
             files: [null, null, null, null, null],
-            target: "property",
+            target: "product",
           },
         })
       );
@@ -61,25 +124,25 @@ const AddProduct = ({ initialValues, ...props }: any) => {
         if (/^\d+$/.test(key)) formData.append(`${key}`, selectedFiles[key]);
       }
 
-      // const response = await axios.post(
-      //   `${process.env.REACT_APP_API_GRAPHQL_URL}`,
-      //   formData,
-      //   {
-      //     headers: {
-      //       "Content-Type": "multipart/form-data",
-      //       "apollo-require-preflight": true,
-      //       Authorization: `Bearer ${token}`,
-      //     },
-      //   }
-      // );
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_GRAPHQL_URL}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            "apollo-require-preflight": true,
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-      // const responseImages = response.data.data.imagesUploader;
+      const responseImages = response.data.data.imagesUploader;
 
-      // console.log("+responseImages: ", responseImages);
-      // setInsertProductData({
-      //   ...insertProductData,
-      //   productImages: responseImages,
-      // });
+      console.log("+responseImages: ", responseImages);
+      setInsertProductData({
+        ...insertProductData,
+        productImages: responseImages,
+      });
     } catch (err: any) {
       console.log("err: ", err.message);
       await sweetMixinErrorAlert(err.message);
@@ -90,6 +153,8 @@ const AddProduct = ({ initialValues, ...props }: any) => {
     if (
       insertProductData.productName === "" ||
       insertProductData.productPrice === 0 || // @ts-ignore
+      insertProductData.productOriginPrice === 0 || // @ts-ignore
+      insertProductData.productVolume === 0 || // @ts-ignore
       insertProductData.productCollection === "" || // @ts-ignore
       insertProductData.productDesc === "" ||
       insertProductData.productImages.length === 0 ||
@@ -102,7 +167,9 @@ const AddProduct = ({ initialValues, ...props }: any) => {
   };
   const insertProductHandler = useCallback(async () => {
     try {
-      // const result = await createProduct({ variables: { input: insertProductData } });
+      const result = await createProduct({
+        variables: { input: insertProductData },
+      });
 
       await sweetMixinSuccessAlert(
         "This product has been created successfully!"
@@ -110,7 +177,7 @@ const AddProduct = ({ initialValues, ...props }: any) => {
       await router.push({
         pathname: "/mypage",
         query: {
-          category: "myProperties",
+          category: "myProducts",
         },
       });
     } catch (err: any) {
@@ -123,9 +190,9 @@ const AddProduct = ({ initialValues, ...props }: any) => {
       //@ts-ignore
       insertProductData._id = getProductData?.getProduct?._id;
       //^ We have to add the _id because of the backend requirements, whithout _id backend server has no idea which property to update
-      // const result = await updateProduct({
-      //   variables: { input: insertProductData },
-      // });
+      const result = await updateProduct({
+        variables: { input: insertProductData },
+      });
 
       await sweetMixinSuccessAlert(
         "This property has been updated successfully!"
@@ -133,7 +200,7 @@ const AddProduct = ({ initialValues, ...props }: any) => {
       await router.push({
         pathname: "/mypage",
         query: {
-          category: "myProperties",
+          category: "myProducts",
         },
       });
     } catch (err: any) {
@@ -471,13 +538,15 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 AddProduct.defaultProps = {
   initialValues: {
     productName: "",
-    productPrice: 0,
+    productOrigin: "",
     productOriginPrice: 0,
+    productPrice: 0,
+    productLeftCount: 0,
+    productVolume: ProductVolume.TWO,
+    productCollection: "",
+    productDiscountRate: 0,
     productDesc: "",
     productImages: [],
-    productCollection: "",
-    productVolume: ProductVolume.TWO,
-    productOrigin: "",
   },
 };
 
