@@ -1,10 +1,15 @@
-import { topProductRank } from "@/libs/types/config";
+import { REACT_APP_API_URL, topProductRank } from "@/libs/types/config";
 import { Product } from "@/libs/types/product/product";
 import product from "@/pages/product";
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, Button, Stack, Typography } from "@mui/material";
 import Link from "next/link";
 import React from "react";
 import AutoAwesomeOutlinedIcon from "@mui/icons-material/AutoAwesomeOutlined";
+import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
+import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
+import AddShoppingCartOutlinedIcon from "@mui/icons-material/AddShoppingCartOutlined";
+import { useReactiveVar } from "@apollo/client";
+import { userVar } from "@/apollo/store";
 
 interface MyPageFavoriteCard {
   product: Product;
@@ -14,45 +19,52 @@ interface MyPageFavoriteCard {
 }
 
 const MyPageFavoriteCard = (props: MyPageFavoriteCard) => {
+  const user = useReactiveVar(userVar);
   const { product, likeProductHandler, myFavorites, recentlyVisited } = props;
+  const imagePath: string = product?.productImages[0]
+    ? `${REACT_APP_API_URL}/${product?.productImages[0]}`
+    : "/img/products/mango.png";
+  const discountPrice =
+    Number(product.productPrice) -
+    (Number(product.productPrice) / 100) * product.productDiscountRate;
+
   return (
     <Stack className="card-config">
       <Stack className="top">
-        <Link
-          href={{
-            pathname: "/product/detail",
-            query: { id: product?._id },
-          }}
-        >
-          <img src={"/img/products/pinapple.png"} alt="" />
-        </Link>
-        {product && product?.productRank > topProductRank && (
-          <Box component={"div"} className={"top-badge"}>
-            <AutoAwesomeOutlinedIcon className="badge-img" />
-            <Typography>TOP</Typography>
+        <div className="img-container">
+          <img src={imagePath} alt="" />
+          <Box
+            className="like-btn-container"
+            onClick={() => likeProductHandler(user, product._id)}
+          >
+            {myFavorites ? (
+              <FavoriteOutlinedIcon />
+            ) : (
+              <FavoriteBorderOutlinedIcon />
+            )}
           </Box>
-        )}
-        <Box component={"div"} className={"price-box"}>
-          <Typography>${product?.productPrice}</Typography>
-          <Typography>{product?.productVolume}KG</Typography>
-        </Box>
+          <Box className="volume">{product.productVolume}Kg</Box>
+        </div>
       </Stack>
       <Stack className="bottom">
-        <Stack className="name-address">
-          <Stack className="name">
-            <Link
-              href={{
-                pathname: "/product/detail",
-                query: { id: product?._id },
-              }}
-            >
-              <Typography>{product.productName}</Typography>
-            </Link>
-          </Stack>
-          <Stack className="address">
-            <Typography>{product.productDesc}</Typography>
-          </Stack>
-        </Stack>
+        <span className="name">{product.productName}</span>
+        <span className="desc">{product.productDesc}</span>
+        <div className="price-container">
+          <span className="discounted-price">￦{discountPrice.toFixed(0)}</span>
+          <span className="origin-price">
+            ￦{Number(product.productPrice).toFixed(0)}
+          </span>
+          <span className="discount-amount">
+            <p>-{product.productDiscountRate}%</p>
+          </span>
+        </div>
+        <Button
+          variant="contained"
+          className="add-to-cart-btn"
+          endIcon={<AddShoppingCartOutlinedIcon />}
+        >
+          Add To Cart
+        </Button>
       </Stack>
     </Stack>
   );

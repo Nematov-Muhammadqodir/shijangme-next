@@ -192,7 +192,7 @@ const AddProduct = ({ initialValues, ...props }: any) => {
     try {
       //@ts-ignore
       insertProductData._id = getProductData?.getProduct?._id;
-      //^ We have to add the _id because of the backend requirements, whithout _id backend server has no idea which property to update
+      //^ We have to add the _id because of the backend requirements, whithout _id backend server has no idea which product to update
       const result = await updateProduct({
         variables: { input: insertProductData },
       });
