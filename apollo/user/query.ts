@@ -601,7 +601,7 @@ export const GET_MEMBER_FOLLOWERS = gql`
           followerId
           myFollowing
         }
-        followingData {
+        followerData {
           _id
           memberType
           memberStatus
