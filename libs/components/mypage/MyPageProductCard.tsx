@@ -54,7 +54,10 @@ export const MyPageProductCard = (props: ProductCardProps) => {
         className="image-box"
         onClick={() => pushProductDetail(product?._id)}
       >
-        <img src={"/img/products/pinapple.png"} alt="" />
+        <img
+          src={`${process.env.NEXT_PUBLIC_API_URL}/${product.productImages[0]}`}
+          alt=""
+        />
       </Stack>
       <Stack
         className="information-box"
@@ -112,7 +115,7 @@ export const MyPageProductCard = (props: ProductCardProps) => {
                   updateProductHandler(ProductStatus.SOLD, product?._id);
                 }}
               >
-                Sold
+                SOLD
               </MenuItem>
             </>
           )}

@@ -11,12 +11,14 @@ import { useRouter } from "next/router";
 import PortraitIcon from "@mui/icons-material/Portrait";
 import React from "react";
 import { sweetConfirmAlert } from "@/libs/types/sweetAlert";
+import { useReactiveVar } from "@apollo/client";
+import { userVar } from "@/apollo/store";
 
 const MyMenu = () => {
   const router = useRouter();
   const pathname = router.query.category ?? "myProfile";
   const category: any = router.query?.category ?? "myProfile";
-  const memberType = "VENDOR";
+  const user = useReactiveVar(userVar);
 
   /** HANDLERS **/
   const logoutHandler = async () => {
@@ -30,30 +32,33 @@ const MyMenu = () => {
           <img src={"/img/profile/defaultImg.jpg"} alt={"member-photo"} />
         </Box>
         <Stack className={"user-info"}>
-          <Typography className={"user-name"}>Natsuki Kawai</Typography>
+          <Typography className={"user-name"}>{user?.memberNick}</Typography>
+
           <Box component={"div"} className={"user-phone"}>
             <img src={"/img/icons/call.svg"} alt={"icon"} />
-            <Typography className={"p-number"}>01080940023</Typography>
+            <Typography className={"p-number"}>{user?.memberPhone}</Typography>
           </Box>
-          {memberType === "ADMIN" ? (
+          {user?.memberType === "vendor" ? (
             <a href="/_admin/users" target={"_blank"}>
-              <Typography className={"view-list"}>{memberType}</Typography>
+              <Typography className={"view-list"}>
+                {user?.memberType}
+              </Typography>
             </a>
           ) : (
-            <Typography className={"view-list"}>{memberType}</Typography>
+            <Typography className={"view-list"}>{user?.memberType}</Typography>
           )}
         </Stack>
       </Stack>
       <Stack className={"sections"}>
         <Stack
           className={"section"}
-          style={{ height: memberType === "VENDOR" ? "228px" : "153px" }}
+          style={{ height: user?.memberType === "VENDOR" ? "228px" : "153px" }}
         >
           <Typography className="title" variant={"h5"}>
             MANAGE LISTINGS
           </Typography>
           <List className={"sub-section"}>
-            {memberType === "VENDOR" && (
+            {user?.memberType === "VENDOR" && (
               <>
                 <ListItem className={pathname === "addProduct" ? "focus" : ""}>
                   <Link

@@ -21,10 +21,13 @@ const AddProduct = ({ initialValues, ...props }: any) => {
   const token = getJwtToken();
   const [insertProductData, setInsertProductData] =
     useState<ProductInput>(initialValues);
+
   const [productCollection, setProductCollection] = useState<
     ProductCollection[]
   >(Object.values(ProductCollection));
+
   useState<ProductInput>(initialValues);
+
   const user = useReactiveVar(userVar);
   const [productVolume, setProductVolume] = useState<ProductVolume[]>(
     Object.values(ProductVolume).filter(
@@ -195,7 +198,7 @@ const AddProduct = ({ initialValues, ...props }: any) => {
       });
 
       await sweetMixinSuccessAlert(
-        "This property has been updated successfully!"
+        "This product has been updated successfully!"
       );
       await router.push({
         pathname: "/mypage",
@@ -208,9 +211,9 @@ const AddProduct = ({ initialValues, ...props }: any) => {
     }
   }, [insertProductData]);
 
-  // if (user?.memberType !== "VENDOR") {
-  //   router.back();
-  // }
+  if (user?.memberType !== "VENDOR") {
+    router.back();
+  }
   return (
     <div id="add-product-page">
       <Stack className="main-title-box">
@@ -511,7 +514,7 @@ const AddProduct = ({ initialValues, ...props }: any) => {
           </Stack>
 
           <Stack className="buttons-row">
-            {router.query.propertyId ? (
+            {router.query.productId ? (
               <Button
                 className="next-button"
                 disabled={doDisabledCheck()}
