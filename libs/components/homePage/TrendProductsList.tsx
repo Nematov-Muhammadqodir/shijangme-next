@@ -76,6 +76,9 @@ const TrendProductsList = ({ initialInput }: TrendProductsListProps) => {
   const startIndex = (page - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const productsToDisplay = trendProducts;
+  const likedProducts = productsToDisplay.filter(
+    (product: Product) => product.productLikes > 0
+  );
   const paginate = productsToDisplay.filter(
     (product: Product) => product.productLikes > 0
   );
@@ -131,7 +134,7 @@ const TrendProductsList = ({ initialInput }: TrendProductsListProps) => {
                 ))
             )}
           </Stack>
-          {paginate.length && (
+          {likedProducts.length > 5 && (
             <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
               <Pagination
                 count={pageCount}
@@ -153,7 +156,7 @@ const TrendProductsList = ({ initialInput }: TrendProductsListProps) => {
 TrendProductsList.defaultProps = {
   initialInput: {
     page: 1,
-    limit: 4,
+    limit: 5,
     sort: "productLikes",
     direction: "DESC",
     search: {},
