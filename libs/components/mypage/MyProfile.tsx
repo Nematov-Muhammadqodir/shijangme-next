@@ -2,35 +2,35 @@ import React, { useCallback, useEffect, useState } from "react";
 import { NextPage } from "next";
 import { Button, Stack, Typography } from "@mui/material";
 import axios from "axios";
-import { Messages } from "@/libs/types/config";
-// import { getJwtToken, updateStorage, updateUserInfo } from "../../auth";
+import { Messages, REACT_APP_API_URL } from "@/libs/types/config";
+import { getJwtToken, updateStorage, updateUserInfo } from "../../auth";
 import { useMutation, useReactiveVar } from "@apollo/client";
-// import { userVar } from "../../../apollo/store";
+import { userVar } from "../../../apollo/store";
 import { MemberUpdate } from "../../types/member/member.update";
-// import { UPDATE_MEMBER } from "../../../apollo/user/mutation";
+import { UPDATE_MEMBER } from "../../../apollo/user/mutation";
 import {
   sweetErrorHandling,
   sweetMixinSuccessAlert,
 } from "@/libs/types/sweetAlert";
 
 const MyProfile: NextPage = ({ initialValues, ...props }: any) => {
-  // const token = getJwtToken();
-  // const user = useReactiveVar(userVar);
+  const token = getJwtToken();
+  const user = useReactiveVar(userVar);
   const [updateData, setUpdateData] = useState<MemberUpdate>(initialValues);
 
   /** APOLLO REQUESTS **/
-  // const [updateMember] = useMutation(UPDATE_MEMBER);
+  const [updateMember] = useMutation(UPDATE_MEMBER);
 
   /** LIFECYCLES **/
-  // useEffect(() => {
-  //   setUpdateData({
-  //     ...updateData,
-  //     memberNick: user.memberNick,
-  //     memberPhone: user.memberPhone,
-  //     memberAddress: user.memberAddress,
-  //     memberImage: user.memberImage,
-  //   });
-  // }, [user]);
+  useEffect(() => {
+    setUpdateData({
+      ...updateData,
+      memberNick: user.memberNick,
+      memberPhone: user.memberPhone,
+      memberAddress: user.memberAddress,
+      memberImage: user.memberImage,
+    });
+  }, [user]);
 
   /** HANDLERS **/
   const uploadImage = async (e: any) => {
@@ -60,13 +60,13 @@ const MyProfile: NextPage = ({ initialValues, ...props }: any) => {
       formData.append("0", image);
 
       const response = await axios.post(
-        `${process.env.REACT_APP_API_GRAPHQL_URL}`,
+        `${process.env.NEXT_PUBLIC_API_GRAPHQL_URL}`,
         formData,
         {
           headers: {
             "Content-Type": "multipart/form-data",
             "apollo-require-preflight": true,
-            // Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -76,43 +76,44 @@ const MyProfile: NextPage = ({ initialValues, ...props }: any) => {
       updateData.memberImage = responseImage;
       setUpdateData({ ...updateData });
 
-      // return `${REACT_APP_API_URL}/${responseImage}`;
+      return `${REACT_APP_API_URL}/${responseImage}`;
     } catch (err) {
       console.log("Error, uploadImage:", err);
     }
   };
 
-  // const updatePropertyHandler = useCallback(async () => {
-  //   try {
-  // if (!user._id) throw new Error(Messages.error2);
-  // updateData._id = user._id;
-  // const result = await updateMember({
-  //   variables: {
-  //     input: updateData,
-  //   },
-  //     });
+  const updateProductHandler = useCallback(async () => {
+    try {
+      if (!user._id) throw new Error(Messages.error2);
+      updateData._id = user._id;
+      console.log("updateData updateProductHandler", updateData);
+      const result = await updateMember({
+        variables: {
+          input: updateData,
+        },
+      });
 
-  //@ts-ignore
-  //     const jwtToken = result.data.updateMember?.accessToken;
-  //     await updateStorage({ jwtToken });
-  //     updateUserInfo(result.data.updateMember?.accessToken);
-  //     await sweetMixinSuccessAlert("Information uodated successfully!");
-  //   } catch (err: any) {
-  //     console.log("Error, updateProfileHandler", err);
-  //     sweetErrorHandling(err).then();
-  //   }
-  // }, [updateData]);
+      // @ts-ignore
+      const jwtToken = result.data.updateMember?.accessToken;
+      await updateStorage({ jwtToken });
+      updateUserInfo(result.data.updateMember?.accessToken);
+      await sweetMixinSuccessAlert("Information uodated successfully!");
+    } catch (err: any) {
+      console.log("Error, updateProfileHandler", err);
+      sweetErrorHandling(err).then();
+    }
+  }, [updateData]);
 
-  // const doDisabledCheck = () => {
-  //   if (
-  //     updateData.memberNick === "" ||
-  //     updateData.memberPhone === "" ||
-  //     updateData.memberAddress === "" ||
-  //     updateData.memberImage === ""
-  //   ) {
-  //     return true;
-  //   }
-  // };
+  const doDisabledCheck = () => {
+    if (
+      updateData.memberNick === "" ||
+      updateData.memberPhone === "" ||
+      updateData.memberAddress === "" ||
+      updateData.memberImage === ""
+    ) {
+      return true;
+    }
+  };
 
   console.log("+updateData", updateData);
 
@@ -131,7 +132,14 @@ const MyProfile: NextPage = ({ initialValues, ...props }: any) => {
           <Typography className="title">Photo</Typography>
           <Stack className="image-big-box">
             <Stack className="image-box">
-              <img src={`/img/profile/defaultImg.jpg`} alt="" />
+              <img
+                src={
+                  updateData?.memberImage
+                    ? `${REACT_APP_API_URL}/${updateData?.memberImage}`
+                    : `/img/profile/defaultImg.jpg`
+                }
+                alt=""
+              />
             </Stack>
             <Stack className="upload-big-box">
               <input
@@ -156,7 +164,7 @@ const MyProfile: NextPage = ({ initialValues, ...props }: any) => {
             <input
               type="text"
               placeholder="Your username"
-              // value={updateData.memberNick}
+              value={updateData.memberNick}
               onChange={({ target: { value } }) =>
                 setUpdateData({ ...updateData, memberNick: value })
               }
@@ -167,7 +175,7 @@ const MyProfile: NextPage = ({ initialValues, ...props }: any) => {
             <input
               type="text"
               placeholder="Your Phone"
-              // value={updateData.memberPhone}
+              value={updateData.memberPhone}
               onChange={({ target: { value } }) =>
                 setUpdateData({ ...updateData, memberPhone: value })
               }
@@ -179,7 +187,7 @@ const MyProfile: NextPage = ({ initialValues, ...props }: any) => {
           <input
             type="text"
             placeholder="Your address"
-            // value={updateData.memberAddress}
+            value={updateData.memberAddress}
             onChange={({ target: { value } }) =>
               setUpdateData({ ...updateData, memberAddress: value })
             }
@@ -188,8 +196,8 @@ const MyProfile: NextPage = ({ initialValues, ...props }: any) => {
         <Stack className="about-me-box">
           <Button
             className="update-button"
-            // onClick={updatePropertyHandler}
-            // disabled={doDisabledCheck()}
+            onClick={updateProductHandler}
+            disabled={doDisabledCheck()}
           >
             <Typography>Update Profile</Typography>
             <svg

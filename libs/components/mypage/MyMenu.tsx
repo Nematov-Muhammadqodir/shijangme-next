@@ -14,6 +14,7 @@ import { sweetConfirmAlert } from "@/libs/types/sweetAlert";
 import { useReactiveVar } from "@apollo/client";
 import { userVar } from "@/apollo/store";
 import { logOut } from "@/libs/auth";
+import { REACT_APP_API_URL } from "@/libs/types/config";
 
 const MyMenu = () => {
   const router = useRouter();
@@ -30,7 +31,14 @@ const MyMenu = () => {
     <Stack width={"100%"} padding={"30px 24px"}>
       <Stack className={"profile"}>
         <Box component={"div"} className={"profile-img"}>
-          <img src={"/img/profile/defaultImg.jpg"} alt={"member-photo"} />
+          <img
+            src={
+              user?.memberImage
+                ? `${REACT_APP_API_URL}/${user?.memberImage}`
+                : `/img/profile/defaultImg.jpg`
+            }
+            alt={"member-photo"}
+          />
         </Box>
         <Stack className={"user-info"}>
           <Typography className={"user-name"}>{user?.memberNick}</Typography>
