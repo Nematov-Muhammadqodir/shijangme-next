@@ -1,8 +1,14 @@
 #pc-wrap {
   #my-page {
     background: #f6f6f6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     .container {
       .my-page {
+        display: flex;
+        justify-content: center;
+        align-items: center;
         position: relative;
         width: 100%;
         flex-direction: row;
