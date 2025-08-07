@@ -13,6 +13,7 @@ import React from "react";
 import { sweetConfirmAlert } from "@/libs/types/sweetAlert";
 import { useReactiveVar } from "@apollo/client";
 import { userVar } from "@/apollo/store";
+import { logOut } from "@/libs/auth";
 
 const MyMenu = () => {
   const router = useRouter();
@@ -23,7 +24,7 @@ const MyMenu = () => {
   /** HANDLERS **/
   const logoutHandler = async () => {
     await sweetConfirmAlert("Do you want to logout?");
-    // logOut();
+    logOut();
   };
   return (
     <Stack width={"100%"} padding={"30px 24px"}>
@@ -426,6 +427,7 @@ const MyMenu = () => {
                   className={"sub-title"}
                   variant={"subtitle1"}
                   component={"p"}
+                  onClick={logoutHandler}
                 >
                   Logout
                 </Typography>

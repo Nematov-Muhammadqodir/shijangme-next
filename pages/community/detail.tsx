@@ -269,7 +269,7 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
   };
 
   return (
-    <div id="community-detail-page">
+    <div id="community-detail-page" style={{ marginTop: "200px" }}>
       <div className="container">
         <Stack className="main-box">
           <Stack className="left-config">
