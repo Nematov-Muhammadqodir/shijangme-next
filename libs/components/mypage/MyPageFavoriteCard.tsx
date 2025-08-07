@@ -33,16 +33,19 @@ const MyPageFavoriteCard = (props: MyPageFavoriteCard) => {
       <Stack className="top">
         <div className="img-container">
           <img src={imagePath} alt="" />
-          <Box
-            className="like-btn-container"
-            onClick={() => likeProductHandler(user, product._id)}
-          >
-            {myFavorites ? (
-              <FavoriteOutlinedIcon />
-            ) : (
-              <FavoriteBorderOutlinedIcon />
-            )}
-          </Box>
+          {!recentlyVisited && (
+            <Box
+              className="like-btn-container"
+              onClick={() => likeProductHandler(user, product._id)}
+            >
+              {myFavorites ? (
+                <FavoriteOutlinedIcon />
+              ) : (
+                <FavoriteBorderOutlinedIcon />
+              )}
+            </Box>
+          )}
+
           <Box className="volume">{product.productVolume}Kg</Box>
         </div>
       </Stack>

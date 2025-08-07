@@ -6,38 +6,41 @@ import { useMutation, useQuery } from "@apollo/client";
 import { Message } from "../../enums/common.enum";
 import { Product } from "@/libs/types/product/product";
 import MyPageFavoriteCard from "./MyPageFavoriteCard";
+import { LIKE_TARGET_PRODUCT } from "@/apollo/user/mutation";
+import { GET_VISITED } from "@/apollo/user/query";
 
-const MyFavorites: NextPage = () => {
-  const [myFavorites, setMyFavorites] = useState<Product[]>([]);
+const RecentlyVisited: NextPage = () => {
+  const [recentlyVisited, setRecentlyVisited] = useState<Product[]>([]);
   const [total, setTotal] = useState<number>(0);
   const [searchFavorites, setSearchFavorites] = useState<T>({
     page: 1,
     limit: 6,
   });
+  console.log("total visited", total);
 
   /** APOLLO REQUESTS **/
-  // const [likeTargetProduct] = useMutation(LIKE_TARGET_PRODUCT);
-  // const {
-  //   loading: loadingFavorites,
-  //   error: errorFavorites,
-  //   data: dataFavorites,
-  //   refetch: refetchFavorites,
-  // } = useQuery(GET_FAVORITES, {
-  //   fetchPolicy: "network-only",
-  //   variables: {
-  //     input: {
-  //       page: searchFavorites.page,
-  //       limit: searchFavorites.limit,
-  //     },
-  //   },
-  //   notifyOnNetworkStatusChange: true,
-  //   onCompleted: (data: T) => {
-  //     if (data?.getFavorites) {
-  //       setMyFavorites(data.getFavorites.list);
-  //       setTotal(data.getFavorites.metaCounter[0].count);
-  //     }
-  //   },
-  // });
+  const [likeTargetProduct] = useMutation(LIKE_TARGET_PRODUCT);
+  const {
+    loading: loadingFavorites,
+    error: errorFavorites,
+    data: dataFavorites,
+    refetch: refetchFavorites,
+  } = useQuery(GET_VISITED, {
+    fetchPolicy: "network-only",
+    variables: {
+      input: {
+        page: searchFavorites.page,
+        limit: searchFavorites.limit,
+      },
+    },
+    notifyOnNetworkStatusChange: true,
+    onCompleted: (data: T) => {
+      if (data?.getVisited) {
+        setRecentlyVisited(data.getVisited.list);
+        setTotal(data.getVisited.metaCounter[0].total);
+      }
+    },
+  });
 
   /** HANDLERS **/
   const paginationHandler = (e: T, value: number) => {
@@ -46,13 +49,13 @@ const MyFavorites: NextPage = () => {
 
   const likeProductHandler = async (user: any, productId: string) => {
     try {
-      // if (!user) throw new Error(Message.NOT_AUTHENTICATED);
-      // await likeTargetProduct({
-      //   variables: {
-      //     input: productId,
-      //   },
-      // });
-      // await refetchFavorites();
+      if (!user) throw new Error(Message.NOT_AUTHENTICATED);
+      await likeTargetProduct({
+        variables: {
+          input: productId,
+        },
+      });
+      await refetchFavorites();
       console.log("likeProductHandler");
     } catch (err: any) {
       console.error("Error liking product:", err);
@@ -70,9 +73,15 @@ const MyFavorites: NextPage = () => {
         </Stack>
       </Stack>
       <Stack className="favorites-list-box">
-        {myFavorites?.length ? (
-          myFavorites?.map((product: Product) => {
-            return <MyPageFavoriteCard product={product} />;
+        {recentlyVisited?.length ? (
+          recentlyVisited?.map((product: Product) => {
+            return (
+              <MyPageFavoriteCard
+                product={product}
+                recentlyVisited={true}
+                key={product._id}
+              />
+            );
           })
         ) : (
           <div className={"no-data"}>
@@ -81,7 +90,7 @@ const MyFavorites: NextPage = () => {
           </div>
         )}
       </Stack>
-      {myFavorites?.length ? (
+      {recentlyVisited?.length ? (
         <Stack className="pagination-config">
           <Stack className="pagination-box">
             <Pagination
@@ -94,7 +103,7 @@ const MyFavorites: NextPage = () => {
           </Stack>
           <Stack className="total-result">
             <Typography>
-              Total {total} favorite product{total > 1 ? "s" : ""}
+              Total {total} recently visited product{total > 1 ? "s" : ""}
             </Typography>
           </Stack>
         </Stack>
@@ -103,4 +112,4 @@ const MyFavorites: NextPage = () => {
   );
 };
 
-export default MyFavorites;
+export default RecentlyVisited;

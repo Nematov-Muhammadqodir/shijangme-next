@@ -36,7 +36,7 @@ const MyFavorites: NextPage = () => {
     onCompleted: (data: T) => {
       if (data?.getFavorites) {
         setMyFavorites(data.getFavorites.list);
-        setTotal(data.getFavorites.metaCounter[0].count);
+        setTotal(data.getFavorites.metaCounter[0].total);
       }
     },
   });
@@ -81,6 +81,7 @@ const MyFavorites: NextPage = () => {
                 product={product}
                 likeProductHandler={likeProductHandler}
                 myFavorites={true}
+                key={product._id}
               />
             );
           })
