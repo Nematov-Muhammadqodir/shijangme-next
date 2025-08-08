@@ -3,8 +3,18 @@ import React from "react";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
+import { Product } from "@/libs/types/product/product";
+import { useReactiveVar } from "@apollo/client";
+import { userVar } from "@/apollo/store";
 
-const HorizontalCard = () => {
+interface HorizontalCardProps {
+  product: Product;
+  likeProductHandler: any;
+}
+
+const HorizontalCard = (props: HorizontalCardProps) => {
+  const user = useReactiveVar(userVar);
+  const { product, likeProductHandler } = props;
   const like = true;
   return (
     <div className="horizontal-card-main">
@@ -13,14 +23,19 @@ const HorizontalCard = () => {
           <img src="/img/products/pinapple.png" alt="" />
         </Stack>
         <Stack className="card-detail-container">
-          <span className="product-description">
-            Cadbury Bournville Rich Cocoa 70%
-          </span>
-          <span className="product-name">Dark Chocolate Bar</span>
+          <span className="product-description">{product.productDesc}</span>
+          <span className="product-name">{product.productName}</span>
           <div className="like-price-container">
-            <span className="product-price">$120.00</span>
-            <div className="like-btn-container">
-              {like ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+            <span className="product-price">￦{product.productPrice}</span>
+            <div
+              className="like-btn-container"
+              onClick={() => likeProductHandler(user, product._id)}
+            >
+              {product?.meLiked && product?.meLiked[0]?.myFavorite ? (
+                <FavoriteIcon />
+              ) : (
+                <FavoriteBorderIcon />
+              )}
             </div>
           </div>
           <Button

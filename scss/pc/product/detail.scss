@@ -126,6 +126,7 @@
                 font-size: 40px;
                 line-height: 50px;
                 font-weight: 400;
+                height: 180px;
               }
               .description-btn {
                 width: 155.641px;
@@ -157,9 +158,12 @@
                   height: 200px;
                 }
                 .tag-price {
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
                   position: absolute;
                   top: 100px;
-                  left: 50px;
+                  left: 52px;
                   font-size: 30px;
                   color: white;
                 }
