@@ -10,6 +10,7 @@ import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
 import AddShoppingCartOutlinedIcon from "@mui/icons-material/AddShoppingCartOutlined";
 import { useReactiveVar } from "@apollo/client";
 import { userVar } from "@/apollo/store";
+import { useRouter } from "next/router";
 
 interface MyPageFavoriteCard {
   product: Product;
@@ -19,6 +20,7 @@ interface MyPageFavoriteCard {
 }
 
 const MyPageFavoriteCard = (props: MyPageFavoriteCard) => {
+  const router = useRouter();
   const user = useReactiveVar(userVar);
   const { product, likeProductHandler, myFavorites, recentlyVisited } = props;
   const imagePath: string = product?.productImages[0]
@@ -28,15 +30,26 @@ const MyPageFavoriteCard = (props: MyPageFavoriteCard) => {
     Number(product.productPrice) -
     (Number(product.productPrice) / 100) * product.productDiscountRate;
 
+  const handleProductDetail = async () => {
+    await router.push({
+      pathname: "/product/detail",
+      query: { id: product._id },
+    });
+  };
+
   return (
     <Stack className="card-config">
       <Stack className="top">
-        <div className="img-container">
+        <div className="img-container" onClick={handleProductDetail}>
           <img src={imagePath} alt="" />
           {!recentlyVisited && (
             <Box
               className="like-btn-container"
-              onClick={() => likeProductHandler(user, product._id)}
+              onClick={(e: React.MouseEvent<HTMLDivElement>) => {
+                e.preventDefault();
+                e.stopPropagation();
+                likeProductHandler(user, product._id);
+              }}
             >
               {myFavorites ? (
                 <FavoriteOutlinedIcon />
