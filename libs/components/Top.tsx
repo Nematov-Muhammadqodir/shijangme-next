@@ -10,13 +10,23 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import LanguageIcon from "@mui/icons-material/Language";
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
-import { useReactiveVar } from "@apollo/client";
+import { useQuery, useReactiveVar } from "@apollo/client";
 import { userVar } from "@/apollo/store";
 import { getJwtToken, logOut, updateUserInfo } from "../auth";
+import { Product } from "../types/product/product";
+import { GET_FAVORITES } from "@/apollo/user/query";
+import { T } from "../types/common";
 
 const Navbar = () => {
   const user = useReactiveVar(userVar);
   console.log("top-user", user);
+  const [myFavorites, setMyFavorites] = useState<Product[]>([]);
+  const [total, setTotal] = useState<number>(0);
+  const [searchFavorites, setSearchFavorites] = useState<T>({
+    page: 1,
+    limit: 6,
+  });
+
   const [logoutAnchor, setLogoutAnchor] = React.useState<null | HTMLElement>(
     null
   );
@@ -30,6 +40,32 @@ const Navbar = () => {
   const handleMyPage = async () => {
     await router.push(`${router.query.referrer ?? "/mypage"}`);
   };
+
+  const handleWishList = async () => {
+    await router.push({ pathname: "/mypage", query: "category=myFavorites" });
+  };
+
+  const {
+    loading: loadingFavorites,
+    error: errorFavorites,
+    data: dataFavorites,
+    refetch: refetchFavorites,
+  } = useQuery(GET_FAVORITES, {
+    fetchPolicy: "network-only",
+    variables: {
+      input: {
+        page: searchFavorites.page,
+        limit: searchFavorites.limit,
+      },
+    },
+    notifyOnNetworkStatusChange: true,
+    onCompleted: (data: T) => {
+      if (data?.getFavorites) {
+        setMyFavorites(data.getFavorites.list);
+        setTotal(data.getFavorites.metaCounter[0].total);
+      }
+    },
+  });
 
   // const changeNavbarColor = () => {
   //   if (window.scrollY >= 150) {
@@ -135,8 +171,8 @@ const Navbar = () => {
             </Box>
 
             {user?._id && (
-              <Box className="wish-list">
-                <Badge badgeContent={4} color="primary">
+              <Box className="wish-list" onClick={handleWishList}>
+                <Badge badgeContent={total} color="primary">
                   <FavoriteBorderIcon />
                 </Badge>
                 <span>Wish List</span>
