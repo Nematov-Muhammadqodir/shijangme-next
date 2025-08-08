@@ -4,21 +4,32 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import { Box } from "@mui/material";
 import Link from "next/link";
+import { Member } from "@/libs/types/member/member";
+import { useReactiveVar } from "@apollo/client";
+import { userVar } from "@/apollo/store";
 
-const VendorCard = () => {
-  const like = true;
+interface VendorCardProps {
+  vendor: Member;
+  likeMemberHandler: any;
+}
+
+const VendorCard = (props: VendorCardProps) => {
+  const { vendor, likeMemberHandler } = props;
+  const user = useReactiveVar(userVar);
   return (
     <div className="vendor-card-main">
       <div className="vendor-card">
         <Link
           href={{
-            pathname: "/agent/detail",
-            query: { agentId: "jghbuhku" },
+            pathname: "/vendor/detail",
+            query: { vendorId: vendor._id },
           }}
         >
           <Box className="vendor-img-container" component={"div"}>
             <img src="/img/profile/defaultImg.jpg" alt="" />
-            <div className="vendor-product-count">4 products</div>
+            <div className="vendor-product-count">
+              {vendor.memberProducts} products
+            </div>
           </Box>
         </Link>
 
@@ -29,19 +40,26 @@ const VendorCard = () => {
               query: { agentId: "jghbuhku" },
             }}
           >
-            <span className="vendor-name">Kevin Nematov</span>
+            <span className="vendor-name">{vendor.memberNick}</span>
           </Link>
 
           <span className="broker-of">
-            Broker of: <span className="section">Meats</span>
+            Vendor of: <span className="section">Meats</span>
           </span>
           <div className="view-like-container">
-            <div className="like">
-              {like ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+            <div
+              className="like"
+              onClick={() => likeMemberHandler(user, vendor._id)}
+            >
+              {vendor.meLiked && vendor.meLiked[0]?.myFavorite ? (
+                <FavoriteIcon />
+              ) : (
+                <FavoriteBorderIcon />
+              )}
             </div>
             <div className="view">
               <RemoveRedEyeIcon />
-              <span>12</span>
+              <span>{vendor.memberViews}</span>
             </div>
           </div>
         </div>

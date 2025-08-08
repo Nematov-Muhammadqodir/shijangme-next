@@ -4,15 +4,26 @@ import { useRouter } from "next/router";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import React, { ChangeEvent, MouseEvent, useEffect, useState } from "react";
 import VendorCard from "@/libs/components/vendor/VendorCard";
+import { Member } from "@/libs/types/member/member";
+import { LIKE_TARGET_MEMBER } from "@/apollo/user/mutation";
+import { useMutation, useQuery } from "@apollo/client";
+import { GET_VENDORS } from "@/apollo/user/query";
+import { T } from "@/libs/types/common";
+import { Messages } from "@/libs/types/config";
+import {
+  sweetMixinErrorAlert,
+  sweetTopSmallSuccessAlert,
+} from "@/libs/types/sweetAlert";
 
 const VendorList = ({ initialInput, ...props }: any) => {
-  const vendors = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   const router = useRouter();
   const [searchFilter, setSearchFilter] = useState<any>(
     router?.query?.input
       ? JSON.parse(router?.query?.input as string)
       : initialInput
   );
+  const [vendors, setVendors] = useState<Member[]>([]);
+  const [total, setTotal] = useState<number>(0);
   const [anchorEl2, setAnchorEl2] = useState<null | HTMLElement>(null);
   const [searchText, setSearchText] = useState<string>("");
   const [filterSortName, setFilterSortName] = useState("Recent");
@@ -21,9 +32,41 @@ const VendorList = ({ initialInput, ...props }: any) => {
   const [page, setPage] = useState(1);
   const itemsPerPage = 6;
   const pageCount = Math.ceil(vendors.length / itemsPerPage);
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   /** APOLLO REQUESTS **/
-  // const [likeTargetMember] = useMutation(LIKE_TARGET_MEMBER);
+  const [likeTargetMember] = useMutation(LIKE_TARGET_MEMBER);
+  console.log("searchFilter get_vendors", searchFilter);
+  const {
+    loading: getVendorsLoading,
+    data: getVendorsData,
+    error: getVendorsError,
+    refetch: getVendorsRefetch,
+  } = useQuery(GET_VENDORS, {
+    fetchPolicy: "network-only",
+    variables: { input: searchFilter },
+    notifyOnNetworkStatusChange: true,
+    onCompleted: (data: T) => {
+      console.log("data?.getVendors?.list", data?.getVendors?.list);
+      setVendors(data?.getVendors?.list);
+      setTotal(data?.getVendors?.metaCounter[0].total);
+    },
+  });
+
+  /** LIFECYCLES **/
+  useEffect(() => {
+    if (!router.isReady) return;
+    if (router.query.input) {
+      const input_obj = JSON.parse(router?.query?.input as string);
+      setSearchFilter(input_obj);
+    } else
+      router.replace(
+        `/vendor?input=${JSON.stringify(searchFilter)}`,
+        `/vendor?input=${JSON.stringify(searchFilter)}`
+      );
+
+    setCurrentPage(searchFilter.page === undefined ? 1 : searchFilter.page);
+  }, [router.isReady, router.query.input]);
 
   /** HANDLERS **/
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
@@ -45,12 +88,12 @@ const VendorList = ({ initialInput, ...props }: any) => {
     const value = e.currentTarget.id;
     if (e.currentTarget.id === "recent") {
       await router.push(
-        `/agent?input=${JSON.stringify({
+        `/vendor?input=${JSON.stringify({
           ...searchFilter,
           sort: "createdAt",
           direction: "DESC",
         })}`,
-        `/agent?input=${JSON.stringify({
+        `/vendor?input=${JSON.stringify({
           ...searchFilter,
           search: {
             ...searchFilter.search,
@@ -62,12 +105,12 @@ const VendorList = ({ initialInput, ...props }: any) => {
       );
     } else if (e.currentTarget.id === "old") {
       await router.push(
-        `/agent?input=${JSON.stringify({
+        `/vendor?input=${JSON.stringify({
           ...searchFilter,
           sort: "createdAt",
           direction: "ASC",
         })}`,
-        `/agent?input=${JSON.stringify({
+        `/vendor?input=${JSON.stringify({
           ...searchFilter,
           sort: "createdAt",
           direction: "ASC",
@@ -76,12 +119,12 @@ const VendorList = ({ initialInput, ...props }: any) => {
       );
     } else if (e.currentTarget.id === "likes") {
       await router.push(
-        `/agent?input=${JSON.stringify({
+        `/vendor?input=${JSON.stringify({
           ...searchFilter,
           sort: "memberLikes",
           direction: "DESC",
         })}`,
-        `/agent?input=${JSON.stringify({
+        `/vendor?input=${JSON.stringify({
           ...searchFilter,
           sort: "memberLikes",
           direction: "DESC",
@@ -90,12 +133,12 @@ const VendorList = ({ initialInput, ...props }: any) => {
       );
     } else if (e.currentTarget.id === "views") {
       await router.push(
-        `/agent?input=${JSON.stringify({
+        `/vendor?input=${JSON.stringify({
           ...searchFilter,
           sort: "memberViews",
           direction: "DESC",
         })}`,
-        `/agent?input=${JSON.stringify({
+        `/vendor?input=${JSON.stringify({
           ...searchFilter,
           sort: "memberViews",
           direction: "DESC",
@@ -107,20 +150,20 @@ const VendorList = ({ initialInput, ...props }: any) => {
     setAnchorEl2(null);
   };
 
-  // const likeMemberHandler = async (user: any, id: string) => {
-  //   try {
-  //     if (!id) return;
-  //     if (!user) throw new Error(Messages.error2);
+  const likeMemberHandler = async (user: any, id: string) => {
+    try {
+      if (!id) return;
+      if (!user) throw new Error(Messages.error2);
 
-  //     await likeTargetMember({ variables: { input: id } });
+      await likeTargetMember({ variables: { input: id } });
 
-  //     await getAgentsRefetch({ input: searchFilter });
-  //     await sweetTopSmallSuccessAlert("success", 800);
-  //   } catch (error: any) {
-  //     console.log("Error, likeMemberHandler", error);
-  //     sweetMixinErrorAlert(error.message).then();
-  //   }
-  // };
+      await getVendorsRefetch({ input: searchFilter });
+      await sweetTopSmallSuccessAlert("success", 800);
+    } catch (error: any) {
+      console.log("Error, likeMemberHandler", error);
+      sweetMixinErrorAlert(error.message).then();
+    }
+  };
   return (
     <Stack
       className="agents-list-main-container"
@@ -185,7 +228,13 @@ const VendorList = ({ initialInput, ...props }: any) => {
             vendors
               .slice((page - 1) * itemsPerPage, page * itemsPerPage)
               .map((vendor, index) => {
-                return <VendorCard key={index} />;
+                return (
+                  <VendorCard
+                    key={index}
+                    vendor={vendor}
+                    likeMemberHandler={likeMemberHandler}
+                  />
+                );
               })
           )}
         </Stack>
@@ -211,8 +260,6 @@ VendorList.defaultProps = {
   initialInput: {
     page: 1,
     limit: 6,
-    sort: "memberLikes",
-    direction: "DESC",
     search: {},
   },
 };
