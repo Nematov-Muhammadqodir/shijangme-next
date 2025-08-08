@@ -23,9 +23,9 @@ export interface ProductInput {
 
 export interface PISearch {
   productOwnerId?: string;
-  productCollection?: ProductCollection[];
-  productVolume?: ProductVolume[];
-  productDiscountRate?: number[];
+  productCollection?: ProductCollection[]; // not array
+  productVolume?: ProductVolume[]; // not array
+  productDiscountRate?: number; // not array
   productOrigin?: string[];
   text?: string;
 }

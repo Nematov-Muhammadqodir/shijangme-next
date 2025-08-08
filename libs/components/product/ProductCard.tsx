@@ -4,23 +4,64 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import { Product } from "@/libs/types/product/product";
+import { useReactiveVar } from "@apollo/client";
+import { userVar } from "@/apollo/store";
+import { REACT_APP_API_URL } from "@/libs/types/config";
+import Link from "next/link";
 
-const ProductCard = () => {
+interface ProductCardProps {
+  likeProductHandler: any;
+  product: Product;
+}
+
+const ProductCard = (props: ProductCardProps) => {
+  const user = useReactiveVar(userVar);
+  const { likeProductHandler, product } = props;
   const [like, setLike] = useState(true);
+  const productImage = product?.productImages[0]
+    ? `${REACT_APP_API_URL}/${product?.productImages[0]}`
+    : "/img/products/mango.png";
   return (
     <div className="product-card-container">
       <Stack className="product-card">
-        <Box className="image-container">
-          <img src="/img/products/banana.png" alt="" />
-          <Box className="like">
-            {like ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+        <Link
+          href={{
+            pathname: "/product/detail",
+            query: { id: product?._id },
+          }}
+        >
+          <Box className="image-container">
+            <img src={productImage} alt="" />
+            <Box
+              className="like"
+              onClick={(e: React.MouseEvent<HTMLDivElement>) => {
+                e.preventDefault();
+                e.stopPropagation();
+                likeProductHandler(user, product._id);
+              }}
+            >
+              {/* @ts-ignore */}
+              {product?.meLiked[0]?.myFavorite ? (
+                <FavoriteIcon />
+              ) : (
+                <FavoriteBorderIcon />
+              )}
+            </Box>
           </Box>
-        </Box>
+        </Link>
+
         <Stack className="product-info-container">
-          <span className="product-name">
-            Borges Super blend of Extra virgin Olive oil & Sunflower oil
-          </span>
-          <span className="product-price">$120.00</span>
+          <Link
+            href={{
+              pathname: "/product/detail",
+              query: { id: product?._id },
+            }}
+          >
+            <span className="product-name">{product?.productName}</span>
+          </Link>
+          <span className="product-desc">{product?.productDesc}</span>
+          <span className="product-price">${product?.productPrice}</span>
           <Button className="add-btn" variant="contained">
             <AddIcon />
           </Button>

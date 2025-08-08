@@ -21,14 +21,13 @@ interface TrendProductsListProps {
 const TrendProductsList = ({ initialInput }: TrendProductsListProps) => {
   const finalInput = initialInput ?? {
     page: 1,
-    limit: 4,
+    limit: 5,
     sort: "productLikes",
     direction: "DESC",
     search: {},
   };
   const [trendProducts, setTrendProducts] = useState<Product[]>([]);
   const [totalProducts, setTotalProducts] = useState(0);
-  const allProducts = [1, 2, 3, 4, 5, 6];
 
   /** APOLLO REQUESTS **/
   const [likeTargetProduct] = useMutation(LIKE_TARGET_PRODUCT);

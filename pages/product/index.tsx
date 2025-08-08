@@ -21,33 +21,65 @@ import { T } from "@/libs/types/common";
 import ProductCard from "@/libs/components/product/ProductCard";
 import MultipleBanner from "@/libs/components/product/MultipleBanner";
 import OurBrands from "@/libs/components/OurBrands";
+import { useMutation, useQuery } from "@apollo/client";
+import { LIKE_TARGET_PRODUCT } from "@/apollo/user/mutation";
+import { GET_PRODUCTS } from "@/apollo/user/query";
+import { Product } from "@/libs/types/product/product";
+import {
+  sweetMixinErrorAlert,
+  sweetTopSmallSuccessAlert,
+} from "@/libs/types/sweetAlert";
+import { ProductFrom } from "@/libs/enums/product.enum";
 
-const Products: NextPage = ({ initialInput, ...props }: any) => {
-  const products = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+interface ProductsProps {
+  initialInput: ProductsInquiry;
+}
+
+const Products = ({ initialInput }: ProductsProps) => {
+  const finalInput = initialInput ?? {
+    page: 1,
+    limit: 4,
+    sort: "productLikes",
+    direction: "DESC",
+    search: {},
+  };
   const router = useRouter();
   const [searchFilter, setSearchFilter] = useState<ProductsInquiry>(
     router?.query?.input
       ? JSON.parse(router?.query?.input as string)
       : initialInput
   );
+  //*PAGINATION START
   const [total, setTotal] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [sortingOpen, setSortingOpen] = useState(false);
   const [filterSortName, setFilterSortName] = useState("New");
-
+  const [products, setProducts] = useState<Product[]>([]);
   const [page, setPage] = useState(1);
-
   const itemsPerPage = 6;
-
-  const pageCount = Math.ceil(products.length / itemsPerPage);
-
   const startIndex = (page - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const productsToDisplay = products.slice(startIndex, endIndex);
-  /** APOLLO REQUESTS **/
-  //! const [likeTargetProduct] = useMutation(LIKE_TARGET_PRODUCT);
+  //*PAGINATION FINISH
 
+  /** APOLLO REQUESTS **/
+  const [likeTargetProduct] = useMutation(LIKE_TARGET_PRODUCT);
+
+  const {
+    loading: getProductsLoading,
+    data: getProductsData,
+    error: getProductsError,
+    refetch: getProductsRefetch,
+  } = useQuery(GET_PRODUCTS, {
+    fetchPolicy: "network-only",
+    variables: { input: searchFilter },
+    notifyOnNetworkStatusChange: true,
+    onCompleted: (data: T) => {
+      setProducts(data?.getProducts?.list);
+      setTotal(data?.getProducts?.metaCounter[0]?.total);
+    },
+  });
   /** LIFECYCLES **/
   useEffect(() => {
     if (router.query.input) {
@@ -60,14 +92,10 @@ const Products: NextPage = ({ initialInput, ...props }: any) => {
 
   useEffect(() => {
     console.log("seachFilter", searchFilter);
-    //! getProductsRefetch({ input: searchFilter });
+    getProductsRefetch({ input: searchFilter });
   }, [searchFilter]);
-  const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
-    setPage(value);
-    // Optional: Scroll to top of the list when page changes for better UX
-    window.scrollTo({ top: 700, behavior: "smooth" });
-  };
 
+  /** HANDLERS **/
   const likeProductHandler = async (user: T, id: string) => {
     console.log("likeRefId", id);
     try {
@@ -75,14 +103,14 @@ const Products: NextPage = ({ initialInput, ...props }: any) => {
       if (!user._id) throw new Error(Message.NOT_AUTHENTICATED);
 
       //executeLikeProductsMutation
-      //! await likeTargetProduct({ variables: { input: id } });
+      await likeTargetProduct({ variables: { input: id } });
       //execute getProductsRefetch
-      //! await getProductsRefetch({ input: searchFilter });
+      await getProductsRefetch({ input: searchFilter });
 
-      //! await sweetTopSmallSuccessAlert('success', 800);
+      await sweetTopSmallSuccessAlert("success", 800);
     } catch (err: any) {
       console.log("Error, likePropertyHandler", err);
-      //! sweetMixinErrorAlert(err.message).then();
+      sweetMixinErrorAlert(err.message).then();
     }
   };
 
@@ -230,26 +258,37 @@ const Products: NextPage = ({ initialInput, ...props }: any) => {
                 productsToDisplay.map((product, key) => (
                   <Fade in={true} timeout={1000} key={key}>
                     <Box>
-                      <ProductCard />
+                      <ProductCard
+                        likeProductHandler={likeProductHandler}
+                        product={product}
+                      />
                     </Box>
                   </Fade>
                 ))
               )}
             </Stack>
 
-            {pageCount > 1 && (
-              <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
-                <Pagination
-                  count={pageCount}
-                  page={page}
-                  onChange={handleChange}
-                  color="primary"
-                  size="large"
-                  showFirstButton
-                  showLastButton
-                />
-              </Box>
-            )}
+            <Stack className="pagination-config">
+              {products.length !== 0 && (
+                <Stack className="pagination-box">
+                  <Pagination
+                    page={currentPage}
+                    count={Math.ceil(total / searchFilter.limit)}
+                    onChange={handlePaginationChange}
+                    shape="circular"
+                    color="primary"
+                  />
+                </Stack>
+              )}
+
+              {products.length !== 0 && (
+                <Stack className="total-result">
+                  <Typography>
+                    Total {total} product{total > 1 ? "s" : ""} available
+                  </Typography>
+                </Stack>
+              )}
+            </Stack>
           </Stack>
         </Stack>
       </Stack>
