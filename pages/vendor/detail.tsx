@@ -1,44 +1,149 @@
 import withLayoutMain from "@/libs/components/layout/LayoutHome";
 import { Box, Button, Pagination, Stack, Typography } from "@mui/material";
 import PhoneIcon from "@mui/icons-material/Phone";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import VendorProductCard from "@/libs/components/common/VendorProductCard";
 import StarIcon from "@mui/icons-material/Star";
 import VendorReviewCard from "@/libs/components/vendor/VendorReviewCard";
 import { CommentGroup } from "@/libs/enums/comment.enum";
-import { CommentInput } from "@/libs/types/comment/comment.input";
+import {
+  CommentInput,
+  CommentsInquiry,
+} from "@/libs/types/comment/comment.input";
 import ArrowOutwardIcon from "@mui/icons-material/ArrowOutward";
 import DoubleCardBanner from "@/libs/components/common/DoubleCardBanner";
+import { useMutation, useQuery, useReactiveVar } from "@apollo/client";
+import { CREATE_COMMENT, LIKE_TARGET_PRODUCT } from "@/apollo/user/mutation";
+import { GET_COMMENTS, GET_MEMBER, GET_PRODUCTS } from "@/apollo/user/query";
+import { userVar } from "@/apollo/store";
+import { Member } from "@/libs/types/member/member";
+import { ProductsInquiry } from "@/libs/types/product/product.input";
+import { NextPage } from "next";
+import { Product } from "@/libs/types/product/product";
+import { T } from "@/libs/types/common";
+import {
+  sweetErrorHandling,
+  sweetMixinErrorAlert,
+  sweetTopSmallSuccessAlert,
+} from "@/libs/types/sweetAlert";
+import { Messages } from "@/libs/types/config";
 
-const VendorDetail = () => {
-  const vendorComments = [1, 2, 3, 4, 5];
-  const vendorProducts = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+const VendorDetail: NextPage = ({
+  initialInput,
+  initialComment,
+  ...props
+}: any) => {
+  const router = useRouter();
+  const user = useReactiveVar(userVar);
+  const [vendorId, setVendorId] = useState<string | null>(null);
+  const [vendor, setVendor] = useState<Member | null>(null);
+  const [searchFilter, setSearchFilter] =
+    useState<ProductsInquiry>(initialInput);
+  const [vendorProducts, setVendorProducts] = useState<Product[]>([]);
+  const [productTotal, setProductTotal] = useState<number>(0);
+  const [commentInquiry, setCommentInquiry] =
+    useState<CommentsInquiry>(initialComment);
+  const [vendorComments, setVendorComments] = useState<Comment[]>([]);
   const [commentTotal, setCommentTotal] = useState<number>(1);
-  const [page, setPage] = useState(1);
   const [insertCommentData, setInsertCommentData] = useState<CommentInput>({
     commentGroup: CommentGroup.MEMBER,
     commentContent: "",
     commentRefId: "",
   });
+
+  const [page, setPage] = useState(1);
   const itemsPerPage = 8;
   const pageCount = Math.ceil(vendorProducts.length / itemsPerPage);
-  const router = useRouter();
-  const userId = "userId";
-  const memberId = "userId";
 
   /** APOLLO REQUESTS **/
-  //   const [likeTargetProperty] = useMutation(LIKE_TARGET_PRODUCT);
-  //   const [createComment] = useMutation(CREATE_COMMENT);
+  const [likeTargetProduct] = useMutation(LIKE_TARGET_PRODUCT);
+  const [createComment] = useMutation(CREATE_COMMENT);
 
+  const {
+    loading: getMemberLoading,
+    data: getMemberData,
+    error: getMemberError,
+    refetch: getMemberRefetch,
+  } = useQuery(GET_MEMBER, {
+    fetchPolicy: "network-only",
+    variables: { input: vendorId },
+    skip: !vendorId,
+    onCompleted(data: T) {
+      setVendor(data?.getMember);
+      setSearchFilter({
+        ...searchFilter,
+        search: {
+          productOwnerId: data?.getMember?._id,
+        },
+      });
+      setCommentInquiry({
+        ...commentInquiry,
+        search: {
+          commentRefId: data?.getMember?._id,
+        },
+      });
+      setInsertCommentData({
+        ...insertCommentData,
+        commentRefId: data?.getMember?._id,
+      });
+    },
+  });
+
+  const {
+    loading: getProductsLoading,
+    data: getProductsData,
+    error: getProductsError,
+    refetch: getProductsRefetch,
+  } = useQuery(GET_PRODUCTS, {
+    fetchPolicy: "network-only",
+    variables: { input: searchFilter },
+    notifyOnNetworkStatusChange: true,
+    onCompleted: (data: T) => {
+      setVendorProducts(data?.getProducts?.list);
+      setProductTotal(data?.getProducts?.metaCounter[0]?.total);
+    },
+  });
+  const {
+    loading: getCommentsLoading,
+    data: getCommentsData,
+    error: getCommentsError,
+    refetch: getCommentsRefetch,
+  } = useQuery(GET_COMMENTS, {
+    fetchPolicy: "network-only",
+    variables: { input: commentInquiry },
+    skip: !commentInquiry?.search.commentRefId,
+    notifyOnNetworkStatusChange: true,
+    onCompleted: (data: T) => {
+      setVendorComments(data?.getComments?.list);
+      setCommentTotal(data?.getComments?.metaCounter[0]?.total ?? 0);
+    },
+  });
+
+  /** LIFECYCLES **/
+  useEffect(() => {
+    if (router.query.vendorId) setVendorId(router.query.vendorId as string);
+  }, [router]);
+
+  useEffect(() => {
+    if (searchFilter.search.productOwnerId) {
+      getProductsRefetch({ variables: { input: searchFilter } }).then();
+    }
+  }, [searchFilter]);
+
+  useEffect(() => {
+    if (commentInquiry.search.commentRefId) {
+      getCommentsRefetch({ variables: { input: commentInquiry } }).then();
+    }
+  }, [commentInquiry]);
   /** HANDLERS **/
   const redirectToMemberPageHandler = async (memberId: string) => {
     try {
-      if (memberId === userId)
+      if (memberId === user._id)
         await router.push(`/mypage?memberId=${memberId}`);
       else await router.push(`/member?memberId=${memberId}`);
     } catch (error) {
-      //   await sweetErrorHandling(error);
+      await sweetErrorHandling(error);
     }
   };
 
@@ -50,19 +155,34 @@ const VendorDetail = () => {
 
   const createCommentHandler = async () => {
     try {
-      //   if (!user._id) return;
-      //   if (user._id === agentId)
-      throw new Error("Can not write a review for yourself!");
+      if (!user._id) return;
+      if (user._id === vendorId)
+        throw new Error("Can not write a review for yourself!");
       // execute likeTargetMember Mutation
-      //   await createComment({
-      //     variables: {
-      //       input: insertCommentData,
-      //     },
-      //   });
+      await createComment({
+        variables: {
+          input: insertCommentData,
+        },
+      });
       setInsertCommentData({ ...insertCommentData, commentContent: "" });
-      //   await getCommentsRefetch({ input: commentInquiry });
+      await getCommentsRefetch({ input: commentInquiry });
     } catch (err: any) {
-      //   sweetErrorHandling(err).then();
+      sweetErrorHandling(err).then();
+    }
+  };
+
+  const likeProductHandler = async (user: any, id: string) => {
+    try {
+      if (!id) return;
+      if (!user) throw new Error(Messages.error2);
+
+      await likeTargetProduct({ variables: { input: id } });
+
+      await getProductsRefetch({ input: searchFilter });
+      await sweetTopSmallSuccessAlert("success", 800);
+    } catch (error: any) {
+      console.log("Error, likePropertyHandler", error);
+      sweetMixinErrorAlert(error.message).then();
     }
   };
   return (
@@ -79,10 +199,10 @@ const VendorDetail = () => {
             className="vendor-details"
             onClick={() => redirectToMemberPageHandler("agentId" as string)}
           >
-            <span className="vendor-name">Natsuki Kawai</span>
+            <span className="vendor-name">{vendor?.memberNick}</span>
             <div className="vendor-phone">
               <PhoneIcon />
-              <span>010 80940023</span>
+              <span>{vendor?.memberPhone}</span>
             </div>
           </Stack>
         </Stack>
@@ -96,8 +216,14 @@ const VendorDetail = () => {
             ) : (
               vendorProducts
                 .slice((page - 1) * itemsPerPage, page * itemsPerPage)
-                .map((vendor, index) => {
-                  return <VendorProductCard key={index} />;
+                .map((product) => {
+                  return (
+                    <VendorProductCard
+                      key={product._id}
+                      likeProductHandler={likeProductHandler}
+                      product={product}
+                    />
+                  );
                 })
             )}
           </Stack>
