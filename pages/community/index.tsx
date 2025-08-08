@@ -20,6 +20,8 @@ import {
 import { Message } from "../../libs/enums/common.enum";
 import withLayoutMain from "@/libs/components/layout/LayoutHome";
 import DiamondOutlinedIcon from "@mui/icons-material/DiamondOutlined";
+import { GET_BOARD_ARTICLES } from "@/apollo/user/query";
+import { LIKE_TARGET_BOARD_ARTICLE } from "@/apollo/user/mutation";
 
 const Community: NextPage = ({ initialInput, ...props }: T) => {
   const router = useRouter();
@@ -32,24 +34,24 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
   if (articleCategory) initialInput.search.articleCategory = articleCategory;
 
   /** APOLLO REQUESTS **/
-  // const [likeTargetBoardArticle] = useMutation(LIKE_TARGET_BOARD_ARTICLE);
+  const [likeTargetBoardArticle] = useMutation(LIKE_TARGET_BOARD_ARTICLE);
 
-  // const {
-  //   loading: boardArticlesLoading,
-  //   data: boardArticlesData,
-  //   error: boardArticlesError,
-  //   refetch: boardArticlesRefetch,
-  // } = useQuery(GET_BOARD_ARTICLES, {
-  //   fetchPolicy: "network-only",
-  //   variables: {
-  //     input: searchCommunity,
-  //   },
-  //   notifyOnNetworkStatusChange: true,
-  //   onCompleted: (data: T) => {
-  //     setBoardArticles(data?.getBoardArticles?.list);
-  //     setTotalCount(data?.getBoardArticles?.metaCounter[0]?.total);
-  //   },
-  // });
+  const {
+    loading: boardArticlesLoading,
+    data: boardArticlesData,
+    error: boardArticlesError,
+    refetch: boardArticlesRefetch,
+  } = useQuery(GET_BOARD_ARTICLES, {
+    fetchPolicy: "network-only",
+    variables: {
+      input: searchCommunity,
+    },
+    notifyOnNetworkStatusChange: true,
+    onCompleted: (data: T) => {
+      setBoardArticles(data?.getBoardArticles?.list);
+      setTotalCount(data?.getBoardArticles?.metaCounter[0]?.total);
+    },
+  });
 
   /** LIFECYCLES **/
   useEffect(() => {
@@ -98,9 +100,9 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
       if (!user._id) throw new Error(Message.NOT_AUTHENTICATED);
 
       //executeLikePropertyMutation
-      // await likeTargetBoardArticle({ variables: { input: id } });
+      await likeTargetBoardArticle({ variables: { input: id } });
       //execute getPropertiesRefetch
-      // await boardArticlesRefetch({ input: searchCommunity });
+      await boardArticlesRefetch({ input: searchCommunity });
       await sweetTopSmallSuccessAlert("success", 800);
     } catch (err: any) {
       console.log("Error, likeArticleHandler", err);

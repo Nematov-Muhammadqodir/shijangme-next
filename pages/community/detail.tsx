@@ -47,6 +47,8 @@ import {
   sweetTopSmallSuccessAlert,
 } from "@/libs/types/sweetAlert";
 import withLayoutMain from "@/libs/components/layout/LayoutHome";
+import DiamondOutlinedIcon from "@mui/icons-material/DiamondOutlined";
+
 const ToastViewerComponent = dynamic(
   () => import("../../libs/components/community/TViewer"),
   { ssr: false }
@@ -70,7 +72,7 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
     ...initialInput,
   });
   const [memberImage, setMemberImage] = useState<string>(
-    "/img/community/articleImg.png"
+    "/img/profile/defaultImg.jpg"
   );
   const [anchorEl, setAnchorEl] = useState<any | null>(null);
   const open = Boolean(anchorEl);
@@ -274,7 +276,7 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
         <Stack className="main-box">
           <Stack className="left-config">
             <Stack className={"image-info"}>
-              <img src={"/img/logo/logoText.svg"} />
+              <DiamondOutlinedIcon className="logo" />
               <Stack className={"community-name"}>
                 <Typography className={"name"}>
                   Community Board Article
