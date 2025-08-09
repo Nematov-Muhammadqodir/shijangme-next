@@ -23,6 +23,8 @@
 @import "/scss/pc/community/community.scss";
 @import "/scss/pc/community/detail.scss";
 @import "/scss/pc/account/join.scss";
+@import "/scss/pc/cart/cart.scss";
+@import "/scss/pc/cart/cartItem.scss";
 
 #pc-wrap {
   .navbar-main {
@@ -151,6 +153,7 @@
             color: white;
             align-items: center;
             gap: 5px;
+            cursor: pointer;
           }
         }
       }

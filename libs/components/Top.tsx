@@ -44,6 +44,9 @@ const Navbar = () => {
   const handleWishList = async () => {
     await router.push({ pathname: "/mypage", query: "category=myFavorites" });
   };
+  const handleCart = async () => {
+    await router.push({ pathname: "cart" });
+  };
 
   const {
     loading: loadingFavorites,
@@ -180,7 +183,7 @@ const Navbar = () => {
             )}
 
             {user?._id && (
-              <Box className="cart">
+              <Box className="cart" onClick={handleCart}>
                 <Badge badgeContent={4} color="primary">
                   <AddShoppingCartIcon />
                 </Badge>
