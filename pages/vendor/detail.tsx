@@ -29,6 +29,7 @@ import {
 } from "@/libs/types/sweetAlert";
 import { Messages } from "@/libs/types/config";
 import { Comment } from "@/libs/types/comment/comment";
+import { useDispatch } from "react-redux";
 
 const VendorDetail: NextPage = ({
   initialInput,

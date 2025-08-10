@@ -8,17 +8,20 @@ import { Product } from "@/libs/types/product/product";
 import { useReactiveVar } from "@apollo/client";
 import { userVar } from "@/apollo/store";
 import { REACT_APP_API_URL } from "@/libs/types/config";
+import { useDispatch } from "react-redux";
+import { addItem } from "@/slices/cartSlice";
 
 interface VendorProductCardProps {
   product: Product;
   likeProductHandler: any;
 }
 const VendorProductCard = (props: VendorProductCardProps) => {
+  const dispatch = useDispatch();
   const { product, likeProductHandler } = props;
   const user = useReactiveVar(userVar);
-  const productImage = product.productImages
-    ? `${REACT_APP_API_URL}/${product?.productImages?.[0]}`
-    : "/img/products/pinapple.png";
+  const productImage = product?.productImages[0]
+    ? `${REACT_APP_API_URL}/${product?.productImages[0]}`
+    : "/img/products/mango.png";
   return (
     <div className="vendor-product-card">
       <Box className="product-img">
@@ -45,7 +48,22 @@ const VendorProductCard = (props: VendorProductCardProps) => {
           <span className="price">￦{product.productPrice}</span>
           <span className="product-name">{product.productName}</span>
         </div>
-        <Button endIcon={<AddIcon />} className="add-btn">
+        <Button
+          endIcon={<AddIcon />}
+          className="add-btn"
+          onClick={() =>
+            dispatch(
+              addItem({
+                _id: product._id,
+                quantity: 1,
+                price: Number(product.productPrice),
+                name: product.productName,
+                image: productImage,
+                discountRate: product.productDiscountRate,
+              })
+            )
+          }
+        >
           Add To Cart
         </Button>
       </Stack>

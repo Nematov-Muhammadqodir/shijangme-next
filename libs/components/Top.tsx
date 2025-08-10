@@ -49,7 +49,7 @@ const Navbar = () => {
     await router.push({ pathname: "/mypage", query: "category=myFavorites" });
   };
   const handleCart = async () => {
-    await router.push({ pathname: "cart" });
+    await router.push({ pathname: "/cart" });
   };
 
   const {

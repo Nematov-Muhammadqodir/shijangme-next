@@ -86,7 +86,7 @@ const MyPageFavoriteCard = (props: MyPageFavoriteCard) => {
               addItem({
                 _id: product._id,
                 quantity: 1,
-                price: discountPrice,
+                price: Number(product.productPrice),
                 name: product.productName,
                 image: product.productImages[0],
                 discountRate: product.productDiscountRate,
