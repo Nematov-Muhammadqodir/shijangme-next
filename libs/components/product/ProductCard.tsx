@@ -9,6 +9,8 @@ import { useReactiveVar } from "@apollo/client";
 import { userVar } from "@/apollo/store";
 import { REACT_APP_API_URL } from "@/libs/types/config";
 import Link from "next/link";
+import { useDispatch } from "react-redux";
+import { addItem } from "@/slices/cartSlice";
 
 interface ProductCardProps {
   likeProductHandler: any;
@@ -16,9 +18,9 @@ interface ProductCardProps {
 }
 
 const ProductCard = (props: ProductCardProps) => {
+  const dispatch = useDispatch();
   const user = useReactiveVar(userVar);
   const { likeProductHandler, product } = props;
-  const [like, setLike] = useState(true);
   const productImage = product?.productImages[0]
     ? `${REACT_APP_API_URL}/${product?.productImages[0]}`
     : "/img/products/mango.png";
@@ -62,7 +64,22 @@ const ProductCard = (props: ProductCardProps) => {
           </Link>
           <span className="product-desc">{product?.productDesc}</span>
           <span className="product-price">${product?.productPrice}</span>
-          <Button className="add-btn" variant="contained">
+          <Button
+            className="add-btn"
+            variant="contained"
+            onClick={() =>
+              dispatch(
+                addItem({
+                  _id: product._id,
+                  quantity: 1,
+                  price: Number(product.productPrice),
+                  name: product.productName,
+                  image: product?.productImages[0],
+                  discountRate: product.productDiscountRate,
+                })
+              )
+            }
+          >
             <AddIcon />
           </Button>
         </Stack>
