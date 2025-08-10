@@ -11,6 +11,8 @@ import AddShoppingCartOutlinedIcon from "@mui/icons-material/AddShoppingCartOutl
 import { useReactiveVar } from "@apollo/client";
 import { userVar } from "@/apollo/store";
 import { useRouter } from "next/router";
+import { useDispatch } from "react-redux";
+import { addItem } from "@/slices/cartSlice";
 
 interface MyPageFavoriteCard {
   product: Product;
@@ -29,6 +31,7 @@ const MyPageFavoriteCard = (props: MyPageFavoriteCard) => {
   const discountPrice =
     Number(product.productPrice) -
     (Number(product.productPrice) / 100) * product.productDiscountRate;
+  const dispatch = useDispatch();
 
   const handleProductDetail = async () => {
     await router.push({
@@ -78,6 +81,18 @@ const MyPageFavoriteCard = (props: MyPageFavoriteCard) => {
           variant="contained"
           className="add-to-cart-btn"
           endIcon={<AddShoppingCartOutlinedIcon />}
+          onClick={() =>
+            dispatch(
+              addItem({
+                _id: product._id,
+                quantity: 1,
+                price: discountPrice,
+                name: product.productName,
+                image: product.productImages[0],
+                discountRate: product.productDiscountRate,
+              })
+            )
+          }
         >
           Add To Cart
         </Button>

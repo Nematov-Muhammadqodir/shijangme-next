@@ -1,9 +1,16 @@
 import { Box, Stack } from "@mui/material";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
+import { Comment } from "@/libs/types/comment/comment";
 import React from "react";
+import { formatDate } from "@/libs/types/config";
 
-const VendorReviewCard = () => {
+interface VendorReviewCardProps {
+  vendorComment: Comment;
+}
+
+const VendorReviewCard = (props: VendorReviewCardProps) => {
+  const { vendorComment } = props;
   const like = true;
   return (
     <div className="vendor-review-card-main">
@@ -11,17 +18,14 @@ const VendorReviewCard = () => {
         <Stack className="user-detail">
           <img src="/img/profile/defaultImg.jpg" alt="" />
           <Stack className="user-info">
-            <span className="user-name">Natsuki Kawai</span>
-            <span className="date">12 March 2022</span>
+            <span className="user-name">
+              {vendorComment.memberData?.memberNick}
+            </span>
+            {/* @ts-ignore */}
+            <span className="date">{formatDate(vendorComment.createdAt)}</span>
           </Stack>
         </Stack>
-        <span className="review-content">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis
-          libero eligendi ex non sunt alias vero numquam et necessitatibus. Qui
-          maiores provident animi suscipit alias fuga nesciunt reiciendis
-          voluptas culpa.
-        </span>
-        <Box>{like ? <ThumbUpIcon /> : <ThumbUpOffAltIcon />}</Box>
+        <span className="review-content">{vendorComment.commentContent}</span>
         <div className="divider"></div>
       </Stack>
     </div>

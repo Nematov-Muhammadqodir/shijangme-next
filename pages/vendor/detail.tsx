@@ -28,6 +28,7 @@ import {
   sweetTopSmallSuccessAlert,
 } from "@/libs/types/sweetAlert";
 import { Messages } from "@/libs/types/config";
+import { Comment } from "@/libs/types/comment/comment";
 
 const VendorDetail: NextPage = ({
   initialInput,
@@ -258,8 +259,13 @@ const VendorDetail: NextPage = ({
                 </span>
               </Box>
               <Stack className="reviews-list-container">
-                {vendorComments.map((comment) => {
-                  return <VendorReviewCard />;
+                {vendorComments.map((vendorComment: Comment) => {
+                  return (
+                    <VendorReviewCard
+                      vendorComment={vendorComment}
+                      key={vendorComment._id}
+                    />
+                  );
                 })}
               </Stack>
             </Stack>
