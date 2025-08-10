@@ -3,17 +3,29 @@ import { Box, Button, Stack, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import ArrowRightAltOutlinedIcon from "@mui/icons-material/ArrowRightAltOutlined";
 import CreditScoreOutlinedIcon from "@mui/icons-material/CreditScoreOutlined";
-import { useSelector } from "react-redux";
 import { cartItemsValue } from "@/slices/cartSlice";
 import CartItemCard from "@/libs/components/cart/CartItem";
+import { useMutation } from "@apollo/client";
+import { LIKE_TARGET_PRODUCT } from "@/apollo/user/mutation";
+import { T } from "@/libs/types/common";
+import { useSelector, useDispatch } from "react-redux";
+import { Message } from "@/libs/enums/common.enum";
+import {
+  wishListDecrement,
+  wishListIncrement,
+  resetWishListAmount,
+  wishListValue,
+} from "@/slices/wishListSlice";
+import {
+  sweetMixinErrorAlert,
+  sweetTopSmallSuccessAlert,
+} from "@/libs/types/sweetAlert";
 
 const Cart = () => {
   const cartItems = useSelector(cartItemsValue);
   console.log("cartItemsValue", cartItems.length);
-
-  const products = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-
   const [hasMounted, setHasMounted] = useState(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setHasMounted(true);

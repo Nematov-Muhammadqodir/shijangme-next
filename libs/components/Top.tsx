@@ -18,6 +18,7 @@ import { GET_FAVORITES } from "@/apollo/user/query";
 import { T } from "../types/common";
 import { useSelector } from "react-redux";
 import { wishListValue } from "@/slices/wishListSlice";
+import { cartItemsValue } from "@/slices/cartSlice";
 
 const Navbar = () => {
   const user = useReactiveVar(userVar);
@@ -29,7 +30,7 @@ const Navbar = () => {
     limit: 6,
   });
   const wishListAmount = useSelector(wishListValue);
-
+  const cartItems = useSelector(cartItemsValue);
   const [logoutAnchor, setLogoutAnchor] = React.useState<null | HTMLElement>(
     null
   );
@@ -187,7 +188,7 @@ const Navbar = () => {
 
             {user?._id && (
               <Box className="cart" onClick={handleCart}>
-                <Badge badgeContent={4} color="primary">
+                <Badge badgeContent={cartItems.length} color="primary">
                   <AddShoppingCartIcon />
                 </Badge>
                 <span>Cart</span>
