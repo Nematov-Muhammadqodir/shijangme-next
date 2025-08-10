@@ -1,7 +1,6 @@
 import { RootState } from "@/store";
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { decrement, increment } from "./cartSlice";
 
 export interface WishListCounterSlice {
   wishListAmount: number;

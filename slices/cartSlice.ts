@@ -1,31 +1,68 @@
+// slices/cartSlice.ts
+import { CartItem } from "@/libs/types/search";
 import { RootState } from "@/store";
-import { createSlice } from "@reduxjs/toolkit";
-import type { PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-export interface CounterState {
-  value: number;
+// Read from localStorage safely (only in browser)
+const storedCartJson =
+  typeof window !== "undefined" ? localStorage.getItem("cartData") : null;
+
+// Define a type for the slice state
+interface CartSliceState {
+  items: CartItem[];
 }
 
-const initialState: CounterState = {
-  value: 0,
+// Initial state with a descriptive property
+const initialState: CartSliceState = {
+  items: storedCartJson ? JSON.parse(storedCartJson) : [],
 };
 
-export const counterSlice = createSlice({
-  name: "counter",
+const cartSlice = createSlice({
+  name: "cart",
   initialState,
   reducers: {
-    increment: (state) => {
-      state.value += 1;
+    addItem: (state, action: PayloadAction<CartItem>) => {
+      const existing = state.items.find(
+        (item) => item._id === action.payload._id
+      );
+      if (existing) {
+        existing.quantity = (existing.quantity ?? 1) + 1;
+      } else {
+        state.items.push({ ...action.payload });
+      }
+      localStorage.setItem("cartData", JSON.stringify(state.items));
     },
-    decrement: (state) => {
-      state.value -= 1;
+    removeItem: (state, action: PayloadAction<CartItem>) => {
+      const existing = state.items.find(
+        (item) => item._id === action.payload._id
+      );
+      if (existing) {
+        if ((existing.quantity ?? 1) === 1) {
+          state.items = state.items.filter(
+            (item) => item._id !== action.payload._id
+          );
+        } else {
+          existing.quantity = (existing.quantity ?? 1) - 1;
+        }
+      }
+      localStorage.setItem("cartData", JSON.stringify(state.items));
+    },
+    deleteItem: (state, action: PayloadAction<CartItem>) => {
+      state.items = state.items.filter(
+        (item) => item._id !== action.payload._id
+      );
+      localStorage.setItem("cartData", JSON.stringify(state.items));
+    },
+    deleteAll: (state) => {
+      state.items = [];
+      localStorage.removeItem("cartData");
     },
   },
 });
 
-// Action creators are generated for each case reducer function
-export const { increment, decrement } = counterSlice.actions;
+export const { addItem, removeItem, deleteItem, deleteAll } = cartSlice.actions;
+export const selectCartItems = (state: RootState) => state.cart.items;
 
-export const selctValue = (state: RootState) => state.counter.value;
+export default cartSlice.reducer;
 
-export default counterSlice.reducer;
+// export const selctValue = (state: RootState) => state.counter.value;

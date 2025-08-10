@@ -7,10 +7,8 @@ import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import RemoveOutlinedIcon from "@mui/icons-material/RemoveOutlined";
 import type { RootState } from "../../../store.ts";
 import { useSelector, useDispatch } from "react-redux";
-import { decrement, increment, selctValue } from "../../../slices/cartSlice";
 
 const CartItem = () => {
-  const count = useSelector(selctValue);
   const dispatch = useDispatch();
   const like = true;
   return (
@@ -36,11 +34,11 @@ const CartItem = () => {
           </Button>
         </Stack>
         <Stack className="qty-container">
-          <div className="qty-amount">Qty: {count}</div>
-          <Button className="plus" onClick={() => dispatch(increment())}>
+          <div className="qty-amount">Qty: 2</div>
+          <Button className="plus">
             <AddOutlinedIcon />
           </Button>
-          <Button className="minus" onClick={() => dispatch(decrement())}>
+          <Button className="minus">
             <RemoveOutlinedIcon />
           </Button>
         </Stack>
@@ -50,5 +48,3 @@ const CartItem = () => {
 };
 
 export default CartItem;
-
-// onClick={() => dispatch(increment())}
