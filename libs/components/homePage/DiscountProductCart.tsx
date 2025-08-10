@@ -74,6 +74,7 @@ const DiscountProductCart = (props: DiscountProductCartProps) => {
                   name: product.productName,
                   price: Number(product.productPrice),
                   image: product.productImages[0],
+                  discountRate: product.productDiscountRate,
                 })
               )
             }

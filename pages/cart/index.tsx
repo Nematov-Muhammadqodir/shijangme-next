@@ -20,12 +20,31 @@ import {
   sweetMixinErrorAlert,
   sweetTopSmallSuccessAlert,
 } from "@/libs/types/sweetAlert";
+import { CartItem } from "@/libs/types/search";
 
 const Cart = () => {
   const cartItems = useSelector(cartItemsValue);
   console.log("cartItemsValue", cartItems.length);
   const [hasMounted, setHasMounted] = useState(false);
   const dispatch = useDispatch();
+
+  const totalItems = cartItems.reduce((acc: number, cur: CartItem) => {
+    return acc + cur.quantity;
+  }, 0);
+  const totalPrice = cartItems.reduce((acc: number, cur: CartItem) => {
+    return acc + cur.quantity * cur.price;
+  }, 0);
+
+  const discountedPrice = cartItems.reduce((acc: number, cur: CartItem) => {
+    console.log("currentItemInCart", cur);
+    return (
+      acc + cur.quantity * (cur.price - (cur.price / 100) * cur.discountRate)
+    );
+  }, 0);
+
+  console.log("discountedPrice", discountedPrice);
+
+  const earnedAmount = totalPrice - discountedPrice;
 
   useEffect(() => {
     setHasMounted(true);
@@ -56,8 +75,8 @@ const Cart = () => {
           <Stack className="right-config">
             <Stack className="top-config">
               <Stack className="row">
-                <span className="key">2 items:</span>
-                <span className="value">￦240 000</span>
+                <span className="key">{totalItems} items:</span>
+                <span className="value">￦{totalPrice}</span>
               </Stack>
               <Stack className="row">
                 <span className="key">Delivery cost:</span>
@@ -69,13 +88,13 @@ const Cart = () => {
               </Stack>
               <Stack className="row">
                 <span className="key">Discount:</span>
-                <span className="value">-￦50 000</span>
+                <span className="value">-￦{earnedAmount}</span>
               </Stack>
             </Stack>
             <div className="divider"></div>
             <Stack className="total-price-container">
               <span className="desc">Total:</span>
-              <span className="amount">￦240 000</span>
+              <span className="amount">￦{totalPrice - earnedAmount}</span>
             </Stack>
             <Button
               variant="contained"

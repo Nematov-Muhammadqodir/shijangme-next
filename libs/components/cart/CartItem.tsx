@@ -138,6 +138,8 @@ const CartItemCard = (props: CartItemProps) => {
                   price: cartItem.price,
                   name: cartItem.name,
                   image: cartItem.image,
+                  //@ts-ignore
+                  discountRate: product.productDiscountRate,
                 })
               )
             }
@@ -157,6 +159,8 @@ const CartItemCard = (props: CartItemProps) => {
                   price: cartItem.price,
                   name: cartItem.name,
                   image: cartItem.image,
+                  //@ts-ignore
+                  discountRate: product?.productDiscountRate,
                 })
               )
             }
@@ -173,6 +177,8 @@ const CartItemCard = (props: CartItemProps) => {
                   price: cartItem.price,
                   name: cartItem.name,
                   image: cartItem.image,
+                  //@ts-ignore
+                  discountRate: product?.productDiscountRate,
                 })
               )
             }
