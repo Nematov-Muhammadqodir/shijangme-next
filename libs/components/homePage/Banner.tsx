@@ -1,5 +1,6 @@
-import { Box, Button, Link, Stack } from "@mui/material";
+import { Box, Button, Stack } from "@mui/material";
 import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
+import Link from "next/link";
 
 const Banner = () => {
   return (
@@ -15,7 +16,7 @@ const Banner = () => {
               There are many variations of passages of Lorem Ipsum available but
               the majority have suffered alteration in some.
             </p>
-            <Link>
+            <Link href={"/product"}>
               <Button
                 className="banner-btn"
                 variant="contained"

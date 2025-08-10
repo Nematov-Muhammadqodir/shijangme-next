@@ -22,7 +22,6 @@ interface DiscountProductCartProps {
 }
 const DiscountProductCart = (props: DiscountProductCartProps) => {
   const { product, likeProductHandler } = props;
-  const [like, setLike] = useState(true);
   const user = useReactiveVar(userVar);
 
   const dispatch = useDispatch();

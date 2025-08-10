@@ -7,6 +7,8 @@ import AddIcon from "@mui/icons-material/Add";
 import { Product } from "@/libs/types/product/product";
 import { useReactiveVar } from "@apollo/client";
 import { userVar } from "@/apollo/store";
+import { addItem } from "@/slices/cartSlice";
+import { useDispatch } from "react-redux";
 
 interface NewProductCardProps {
   product: Product;
@@ -15,8 +17,8 @@ interface NewProductCardProps {
 
 const NewProductCard = (props: NewProductCardProps) => {
   const { product, likeProductHandler } = props;
-  const [like, setLike] = useState(true);
   const user = useReactiveVar(userVar);
+  const dispatch = useDispatch();
   return (
     <div>
       <Stack className="new-product-card">
@@ -47,7 +49,20 @@ const NewProductCard = (props: NewProductCardProps) => {
           </Box>
           <Stack className="product-price">
             <span>￦{product.productPrice}</span>
-            <Button className="add-btn">
+            <Button
+              className="add-btn"
+              onClick={() =>
+                dispatch(
+                  addItem({
+                    _id: product._id,
+                    quantity: 1,
+                    name: product.productName,
+                    price: Number(product.productPrice),
+                    image: product.productImages[0],
+                  })
+                )
+              }
+            >
               <AddIcon />
             </Button>
           </Stack>
