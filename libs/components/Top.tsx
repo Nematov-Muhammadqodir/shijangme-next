@@ -74,17 +74,17 @@ const Navbar = () => {
     },
   });
 
-  // const changeNavbarColor = () => {
-  //   if (window.scrollY >= 150) {
-  //     setColorChange(true);
-  //   } else {
-  //     setColorChange(false);
-  //   }
-  // };
+  const changeNavbarColor = () => {
+    if (window.scrollY >= 150) {
+      setColorChange(true);
+    } else {
+      setColorChange(false);
+    }
+  };
 
-  // if (typeof window !== "undefined") {
-  //   window.addEventListener("scroll", changeNavbarColor);
-  // }
+  if (typeof window !== "undefined") {
+    window.addEventListener("scroll", changeNavbarColor);
+  }
   useEffect(() => {
     const jwt = getJwtToken();
     if (jwt) updateUserInfo(jwt);
