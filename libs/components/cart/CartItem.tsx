@@ -7,8 +7,15 @@ import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import RemoveOutlinedIcon from "@mui/icons-material/RemoveOutlined";
 import type { RootState } from "../../../store.ts";
 import { useSelector, useDispatch } from "react-redux";
+import { Product } from "@/libs/types/product/product.js";
+import { CartItem } from "@/libs/types/search";
 
-const CartItem = () => {
+interface CartItemProps {
+  cartItem: CartItem;
+}
+
+const CartItemCard = (props: CartItemProps) => {
+  const { cartItem } = props;
   const dispatch = useDispatch();
   const like = true;
   return (
@@ -18,7 +25,7 @@ const CartItem = () => {
           <img src="/img/products/pinapple.png" alt="" />
         </Box>
         <Stack className="product-detail-container">
-          <span className="name">Qalampir</span>
+          <span className="name">{cartItem.name}</span>
           <span className="secondary">Volume: 2KG</span>
           <span className="secondary">Discount: 10%</span>
           <span className="secondary">Price: 120000 W - Total: 240000</span>
@@ -47,4 +54,4 @@ const CartItem = () => {
   );
 };
 
-export default CartItem;
+export default CartItemCard;

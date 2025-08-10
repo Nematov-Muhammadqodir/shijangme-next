@@ -7,6 +7,14 @@ import { Product } from "@/libs/types/product/product";
 import { REACT_APP_API_URL } from "@/libs/types/config";
 import { useReactiveVar } from "@apollo/client";
 import { userVar } from "@/apollo/store";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  addItem,
+  removeItem,
+  deleteAll,
+  deleteItem,
+  cartItemsValue,
+} from "@/slices/cartSlice";
 
 interface DiscountProductCartProps {
   product: Product;
@@ -16,6 +24,8 @@ const DiscountProductCart = (props: DiscountProductCartProps) => {
   const { product, likeProductHandler } = props;
   const [like, setLike] = useState(true);
   const user = useReactiveVar(userVar);
+
+  const dispatch = useDispatch();
   const discountPrice =
     Number(product.productPrice) -
     (Number(product.productPrice) / 100) * product.productDiscountRate;
@@ -54,7 +64,21 @@ const DiscountProductCart = (props: DiscountProductCartProps) => {
           <Box className="product-weight">
             <span>{product.productVolume} kg</span>
           </Box>
-          <Button className="add-to-cart-btn" variant="contained">
+          <Button
+            className="add-to-cart-btn"
+            variant="contained"
+            onClick={() =>
+              dispatch(
+                addItem({
+                  _id: product._id,
+                  quantity: 1,
+                  name: product.productName,
+                  price: Number(product.productPrice),
+                  image: product.productImages[0],
+                })
+              )
+            }
+          >
             <AddShoppingCartIcon />
             <span>Add To Cart</span>
           </Button>

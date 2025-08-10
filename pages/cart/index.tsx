@@ -1,12 +1,28 @@
-import CartItem from "@/libs/components/cart/CartItem";
 import withLayoutMain from "@/libs/components/layout/LayoutHome";
 import { Box, Button, Stack, Typography } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ArrowRightAltOutlinedIcon from "@mui/icons-material/ArrowRightAltOutlined";
 import CreditScoreOutlinedIcon from "@mui/icons-material/CreditScoreOutlined";
+import { useSelector } from "react-redux";
+import { cartItemsValue } from "@/slices/cartSlice";
+import CartItemCard from "@/libs/components/cart/CartItem";
 
 const Cart = () => {
+  const cartItems = useSelector(cartItemsValue);
+  console.log("cartItemsValue", cartItems.length);
+
   const products = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+  const [hasMounted, setHasMounted] = useState(false);
+
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
+
+  if (!hasMounted) {
+    // Render a fallback or nothing on server and during hydration
+    return <p>Loading...</p>; // or return null
+  }
   return (
     <div className="main-cart-container" style={{ marginTop: "200px" }}>
       <Stack className="container">
@@ -15,14 +31,14 @@ const Cart = () => {
             Your Cart
           </Typography>
           <Typography className="products-amount">
-            5 Products in Your cart
+            {cartItems.length} Products in Your cart
           </Typography>
         </Box>
 
         <Stack className="cart-layout-main">
           <Stack className="left-config">
-            {products.map((product) => {
-              return <CartItem />;
+            {cartItems.map((cartItem) => {
+              return <CartItemCard key={cartItem._id} cartItem={cartItem} />;
             })}
           </Stack>
           <Stack className="right-config">
