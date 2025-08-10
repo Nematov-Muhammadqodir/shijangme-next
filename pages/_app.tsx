@@ -7,17 +7,21 @@ import "../scss/app.scss";
 import "../scss/pc/main.scss";
 import { useApollo } from "@/apollo/client";
 import { ApolloProvider } from "@apollo/client";
+import { store } from "../store";
+import { Provider } from "react-redux";
 
 export default function App({ Component, pageProps }: AppProps) {
   // @ts-ignore
   const [theme, setTheme] = useState(createTheme(light));
   const client = useApollo(pageProps.initialApolloState);
   return (
-    <ApolloProvider client={client}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Component {...pageProps} />
-      </ThemeProvider>
-    </ApolloProvider>
+    <Provider store={store}>
+      <ApolloProvider client={client}>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <Component {...pageProps} />
+        </ThemeProvider>
+      </ApolloProvider>
+    </Provider>
   );
 }
