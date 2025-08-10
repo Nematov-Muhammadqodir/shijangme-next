@@ -48,7 +48,7 @@ const MyPageFavoriteCard = (props: MyPageFavoriteCard) => {
               onClick={(e: React.MouseEvent<HTMLDivElement>) => {
                 e.preventDefault();
                 e.stopPropagation();
-                likeProductHandler(user, product._id);
+                likeProductHandler(user, product._id, product.productLikes);
               }}
             >
               {myFavorites ? (

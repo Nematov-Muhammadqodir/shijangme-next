@@ -24,7 +24,9 @@ const NewProductCard = (props: NewProductCardProps) => {
           <img src="/img/products/pinapple.png" alt="product-image" />
           <Box
             className="like"
-            onClick={() => likeProductHandler(user, product._id)}
+            onClick={() =>
+              likeProductHandler(user, product._id, product.productLikes)
+            }
           >
             {product.meLiked && product.meLiked[0]?.myFavorite ? (
               <ThumbUpIcon />

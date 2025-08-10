@@ -16,6 +16,8 @@ import { getJwtToken, logOut, updateUserInfo } from "../auth";
 import { Product } from "../types/product/product";
 import { GET_FAVORITES } from "@/apollo/user/query";
 import { T } from "../types/common";
+import { useSelector } from "react-redux";
+import { wishListValue } from "@/slices/wishListSlice";
 
 const Navbar = () => {
   const user = useReactiveVar(userVar);
@@ -26,6 +28,7 @@ const Navbar = () => {
     page: 1,
     limit: 6,
   });
+  const wishListAmount = useSelector(wishListValue);
 
   const [logoutAnchor, setLogoutAnchor] = React.useState<null | HTMLElement>(
     null
@@ -175,7 +178,7 @@ const Navbar = () => {
 
             {user?._id && (
               <Box className="wish-list" onClick={handleWishList}>
-                <Badge badgeContent={total} color="primary">
+                <Badge badgeContent={wishListAmount} color="primary">
                   <FavoriteBorderIcon />
                 </Badge>
                 <span>Wish List</span>

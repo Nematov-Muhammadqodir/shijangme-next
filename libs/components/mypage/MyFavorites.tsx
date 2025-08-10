@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { NextPage } from "next";
 import { Pagination, Stack, Typography } from "@mui/material";
 import { T } from "../../types/common";
@@ -8,6 +8,13 @@ import { Product } from "@/libs/types/product/product";
 import MyPageFavoriteCard from "./MyPageFavoriteCard";
 import { LIKE_TARGET_PRODUCT } from "@/apollo/user/mutation";
 import { GET_FAVORITES } from "@/apollo/user/query";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  wishListDecrement,
+  wishListIncrement,
+  resetWishListAmount,
+  wishListValue,
+} from "@/slices/wishListSlice";
 
 const MyFavorites: NextPage = () => {
   const [myFavorites, setMyFavorites] = useState<Product[]>([]);
@@ -16,6 +23,8 @@ const MyFavorites: NextPage = () => {
     page: 1,
     limit: 6,
   });
+  const dispatch = useDispatch();
+  const wishListAmount = useSelector(wishListValue);
 
   /** APOLLO REQUESTS **/
   const [likeTargetProduct] = useMutation(LIKE_TARGET_PRODUCT);
@@ -48,20 +57,42 @@ const MyFavorites: NextPage = () => {
     window.scrollTo({ top: 100, behavior: "smooth" });
   };
 
-  const likeProductHandler = async (user: any, productId: string) => {
+  const likeProductHandler = async (
+    user: any,
+    productId: string,
+    likeAmount: number
+  ) => {
     try {
       if (!user) throw new Error(Message.NOT_AUTHENTICATED);
-      await likeTargetProduct({
+      const likeResult = await likeTargetProduct({
         variables: {
           input: productId,
         },
       });
+      if (likeResult.data.likeTargetProduct.productLikes > likeAmount) {
+        dispatch(wishListIncrement());
+      } else {
+        dispatch(wishListDecrement());
+      }
       await refetchFavorites();
       console.log("likeProductHandler");
     } catch (err: any) {
       console.error("Error liking product:", err);
     }
   };
+
+  // Read from localStorage on mount
+  useEffect(() => {
+    const storedAmount = localStorage.getItem("wishListAmount");
+    if (storedAmount !== null) {
+      dispatch(resetWishListAmount(Number(storedAmount)));
+    }
+  }, [dispatch]);
+
+  // Write to localStorage whenever wishListAmount changes
+  useEffect(() => {
+    localStorage.setItem("wishListAmount", String(wishListAmount));
+  }, [wishListAmount]);
 
   return (
     <div id="my-favorites-page">

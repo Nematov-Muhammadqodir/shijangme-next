@@ -15,6 +15,7 @@ interface TrendProductsCardProps {
 
 const TrendProductsCard = (props: TrendProductsCardProps) => {
   const { product, likeProductHandler } = props;
+
   const user = useReactiveVar(userVar);
   return (
     <div>
@@ -26,7 +27,9 @@ const TrendProductsCard = (props: TrendProductsCardProps) => {
           />
           <Box
             className="like"
-            onClick={() => likeProductHandler(user, product._id)}
+            onClick={() =>
+              likeProductHandler(user, product._id, product.productLikes)
+            }
           >
             {product.meLiked && product.meLiked[0]?.myFavorite ? (
               <FavoriteIcon />

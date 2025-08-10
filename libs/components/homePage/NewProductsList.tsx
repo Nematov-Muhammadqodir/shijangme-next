@@ -1,5 +1,5 @@
 import { Box, Fade, Pagination, Stack } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import NewProductCard from "./NewProductCard";
 import { ProductsInquiry } from "@/libs/types/product/product.input";
 import { Product } from "@/libs/types/product/product";
@@ -12,6 +12,13 @@ import {
   sweetMixinErrorAlert,
   sweetTopSmallSuccessAlert,
 } from "@/libs/types/sweetAlert";
+import {
+  wishListDecrement,
+  wishListIncrement,
+  resetWishListAmount,
+  wishListValue,
+} from "@/slices/wishListSlice";
+import { useSelector, useDispatch } from "react-redux";
 
 interface NewProductsListProps {
   initialInput: ProductsInquiry;
@@ -27,6 +34,8 @@ const NewProductsList = ({ initialInput }: NewProductsListProps) => {
   };
   const [newProducts, setNewProducts] = useState<Product[]>([]);
   const [totalProducts, setTotalProducts] = useState(0);
+  const dispatch = useDispatch();
+  const wishListAmount = useSelector(wishListValue);
 
   /** APOLLO REQUESTS **/
   const [likeTargetProduct] = useMutation(LIKE_TARGET_PRODUCT);
@@ -49,14 +58,24 @@ const NewProductsList = ({ initialInput }: NewProductsListProps) => {
   });
 
   /** HANDLERS **/
-  const likeProductHandler = async (user: T, id: string) => {
+  const likeProductHandler = async (
+    user: T,
+    id: string,
+    likeAmount: number
+  ) => {
     console.log("likeRefid", user._id);
     try {
       if (!id) return;
       if (!user._id) throw new Error(Message.NOT_AUTHENTICATED);
 
       // execute likeTargetProperty Mutation
-      await likeTargetProduct({ variables: { input: id } });
+      const likeResult = await likeTargetProduct({ variables: { input: id } });
+
+      if (likeResult.data.likeTargetProduct.productLikes > likeAmount) {
+        dispatch(wishListIncrement());
+      } else {
+        dispatch(wishListDecrement());
+      }
       // execute getPropertiesRefetch
       await getNewProductsRefetch({ input: finalInput });
 
@@ -66,6 +85,19 @@ const NewProductsList = ({ initialInput }: NewProductsListProps) => {
       sweetMixinErrorAlert(err.message).then();
     }
   };
+
+  // Read from localStorage on mount
+  useEffect(() => {
+    const storedAmount = localStorage.getItem("wishListAmount");
+    if (storedAmount !== null) {
+      dispatch(resetWishListAmount(Number(storedAmount)));
+    }
+  }, [dispatch]);
+
+  // Write to localStorage whenever wishListAmount changes
+  useEffect(() => {
+    localStorage.setItem("wishListAmount", String(wishListAmount));
+  }, [wishListAmount]);
 
   //& PAGINATION START
   const [page, setPage] = useState(finalInput.page);

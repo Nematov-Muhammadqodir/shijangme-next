@@ -1,5 +1,5 @@
 import { Box, Fade, Pagination, Stack } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TrendProductsCard from "./TrendProductsCard";
 import { ProductsInquiry } from "@/libs/types/product/product.input";
 import { Product } from "@/libs/types/product/product";
@@ -7,12 +7,19 @@ import { useMutation, useQuery } from "@apollo/client";
 import { LIKE_TARGET_PRODUCT } from "@/apollo/user/mutation";
 import { GET_PRODUCTS } from "@/apollo/user/query";
 import { T } from "@/libs/types/common";
+import { useSelector, useDispatch } from "react-redux";
 
 import {
   sweetMixinErrorAlert,
   sweetTopSmallSuccessAlert,
 } from "@/libs/types/sweetAlert";
 import { Message } from "@/libs/enums/common.enum";
+import {
+  wishListDecrement,
+  wishListIncrement,
+  resetWishListAmount,
+  wishListValue,
+} from "@/slices/wishListSlice";
 
 interface TrendProductsListProps {
   initialInput: ProductsInquiry;
@@ -28,6 +35,8 @@ const TrendProductsList = ({ initialInput }: TrendProductsListProps) => {
   };
   const [trendProducts, setTrendProducts] = useState<Product[]>([]);
   const [totalProducts, setTotalProducts] = useState(0);
+  const dispatch = useDispatch();
+  const wishListAmount = useSelector(wishListValue);
 
   /** APOLLO REQUESTS **/
   const [likeTargetProduct] = useMutation(LIKE_TARGET_PRODUCT);
@@ -50,14 +59,25 @@ const TrendProductsList = ({ initialInput }: TrendProductsListProps) => {
   });
 
   /** HANDLERS **/
-  const likeProductHandler = async (user: T, id: string) => {
+  const likeProductHandler = async (
+    user: T,
+    id: string,
+    likeAmount: number
+  ) => {
     console.log("likeRefid", user._id);
     try {
       if (!id) return;
       if (!user._id) throw new Error(Message.NOT_AUTHENTICATED);
 
       // execute likeTargetProperty Mutation
-      await likeTargetProduct({ variables: { input: id } });
+      const likeResult = await likeTargetProduct({ variables: { input: id } });
+
+      if (likeResult.data.likeTargetProduct.productLikes > likeAmount) {
+        dispatch(wishListIncrement());
+      } else {
+        dispatch(wishListDecrement());
+      }
+
       // execute getPropertiesRefetch
       await getNewProductsRefetch({ input: finalInput });
 
@@ -67,6 +87,19 @@ const TrendProductsList = ({ initialInput }: TrendProductsListProps) => {
       sweetMixinErrorAlert(err.message).then();
     }
   };
+
+  // Read from localStorage on mount
+  useEffect(() => {
+    const storedAmount = localStorage.getItem("wishListAmount");
+    if (storedAmount !== null) {
+      dispatch(resetWishListAmount(Number(storedAmount)));
+    }
+  }, [dispatch]);
+
+  // Write to localStorage whenever wishListAmount changes
+  useEffect(() => {
+    localStorage.setItem("wishListAmount", String(wishListAmount));
+  }, [wishListAmount]);
 
   //& PAGINATION START
   const [page, setPage] = useState(finalInput.page);

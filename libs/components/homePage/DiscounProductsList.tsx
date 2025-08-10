@@ -1,5 +1,5 @@
 import { Box, Stack, Pagination, Fade } from "@mui/material"; // Import Pagination and Box
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DiscountProductCart from "./DiscountProductCart";
 import { useMutation, useQuery } from "@apollo/client";
 import { GET_PRODUCTS } from "@/apollo/user/query";
@@ -12,6 +12,13 @@ import {
   sweetMixinErrorAlert,
   sweetTopSmallSuccessAlert,
 } from "@/libs/types/sweetAlert";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  wishListDecrement,
+  wishListIncrement,
+  resetWishListAmount,
+  wishListValue,
+} from "@/slices/wishListSlice";
 
 interface DiscountProductsProps {
   initialInput: ProductsInquiry;
@@ -27,6 +34,9 @@ const DiscounProductsList = ({ initialInput }: DiscountProductsProps) => {
   };
   const [discountedProducts, setDiscountedProducts] = useState<Product[]>([]);
   const [totalProducts, setTotalProducts] = useState(0);
+  const dispatch = useDispatch();
+  const wishListAmount = useSelector(wishListValue);
+  let likeResult: any = null;
 
   /** APOLLO REQUESTS **/
   const [likeTargetProduct] = useMutation(LIKE_TARGET_PRODUCT);
@@ -50,14 +60,24 @@ const DiscounProductsList = ({ initialInput }: DiscountProductsProps) => {
   });
 
   /** HANDLERS **/
-  const likeProductHandler = async (user: T, id: string) => {
+  const likeProductHandler = async (
+    user: T,
+    id: string,
+    likeAmount: number
+  ) => {
     console.log("likeRefid", user._id);
     try {
       if (!id) return;
       if (!user._id) throw new Error(Message.NOT_AUTHENTICATED);
 
       // execute likeTargetProperty Mutation
-      await likeTargetProduct({ variables: { input: id } });
+      likeResult = await likeTargetProduct({ variables: { input: id } });
+
+      if (likeResult.data.likeTargetProduct.productLikes > likeAmount) {
+        dispatch(wishListIncrement());
+      } else {
+        dispatch(wishListDecrement());
+      }
       // execute getPropertiesRefetch
       await getDiscountedProductsRefetch({ input: finalInput });
 
@@ -67,6 +87,19 @@ const DiscounProductsList = ({ initialInput }: DiscountProductsProps) => {
       sweetMixinErrorAlert(err.message).then();
     }
   };
+
+  // Read from localStorage on mount
+  useEffect(() => {
+    const storedAmount = localStorage.getItem("wishListAmount");
+    if (storedAmount !== null) {
+      dispatch(resetWishListAmount(Number(storedAmount)));
+    }
+  }, [dispatch]);
+
+  // Write to localStorage whenever wishListAmount changes
+  useEffect(() => {
+    localStorage.setItem("wishListAmount", String(wishListAmount));
+  }, [wishListAmount]);
 
   //& PAGINATION START
   const [page, setPage] = useState(initialInput.page);
