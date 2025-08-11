@@ -30,25 +30,27 @@ import {
   sweetTopSmallSuccessAlert,
 } from "@/libs/types/sweetAlert";
 import { ProductFrom } from "@/libs/enums/product.enum";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  resetWishListAmount,
+  wishListDecrement,
+  wishListIncrement,
+  wishListValue,
+} from "@/slices/wishListSlice";
 
 interface ProductsProps {
   initialInput: ProductsInquiry;
 }
 
 const Products = ({ initialInput }: ProductsProps) => {
-  const finalInput = initialInput ?? {
-    page: 1,
-    limit: 4,
-    sort: "productLikes",
-    direction: "DESC",
-    search: {},
-  };
   const router = useRouter();
   const [searchFilter, setSearchFilter] = useState<ProductsInquiry>(
     router?.query?.input
       ? JSON.parse(router?.query?.input as string)
       : initialInput
   );
+  const dispatch = useDispatch();
+  const wishListAmount = useSelector(wishListValue);
   //*PAGINATION START
   const [total, setTotal] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -96,14 +98,23 @@ const Products = ({ initialInput }: ProductsProps) => {
   }, [searchFilter]);
 
   /** HANDLERS **/
-  const likeProductHandler = async (user: T, id: string) => {
+  const likeProductHandler = async (
+    user: T,
+    id: string,
+    likeAmount: number
+  ) => {
     console.log("likeRefId", id);
     try {
       if (!id) return;
       if (!user._id) throw new Error(Message.NOT_AUTHENTICATED);
 
       //executeLikeProductsMutation
-      await likeTargetProduct({ variables: { input: id } });
+      const likeResult = await likeTargetProduct({ variables: { input: id } });
+      if (likeResult.data.likeTargetProduct.productLikes > likeAmount) {
+        dispatch(wishListIncrement());
+      } else {
+        dispatch(wishListDecrement());
+      }
       //execute getProductsRefetch
       await getProductsRefetch({ input: searchFilter });
 
@@ -113,6 +124,19 @@ const Products = ({ initialInput }: ProductsProps) => {
       sweetMixinErrorAlert(err.message).then();
     }
   };
+
+  // Read from localStorage on mount
+  useEffect(() => {
+    const storedAmount = localStorage.getItem("wishListAmount");
+    if (storedAmount !== null) {
+      dispatch(resetWishListAmount(Number(storedAmount)));
+    }
+  }, [dispatch]);
+
+  // Write to localStorage whenever wishListAmount changes
+  useEffect(() => {
+    localStorage.setItem("wishListAmount", String(wishListAmount));
+  }, [wishListAmount]);
 
   const handlePaginationChange = async (
     event: ChangeEvent<unknown>,

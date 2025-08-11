@@ -19,6 +19,8 @@ import { T } from "../types/common";
 import { useSelector } from "react-redux";
 import { wishListValue } from "@/slices/wishListSlice";
 import { cartItemsValue } from "@/slices/cartSlice";
+import { REACT_APP_API_URL } from "../types/config";
+import ForumOutlinedIcon from "@mui/icons-material/ForumOutlined";
 
 const Navbar = () => {
   const user = useReactiveVar(userVar);
@@ -73,6 +75,10 @@ const Navbar = () => {
       }
     },
   });
+
+  const imagePath = user.memberImage
+    ? `${REACT_APP_API_URL}/${user.memberImage}`
+    : "/img/profile/defaultImg.jpg";
 
   // const changeNavbarColor = () => {
   //   if (window.scrollY >= 150) {
@@ -176,6 +182,16 @@ const Navbar = () => {
                 </div>
               </Link>
             </Box>
+            {user?._id && (
+              <Box className="about-us">
+                <Link href={"/chat"}>
+                  <div>
+                    <ForumOutlinedIcon />
+                    <div>Chat</div>
+                  </div>
+                </Link>
+              </Box>
+            )}
 
             {user?._id && (
               <Box className="wish-list" onClick={handleWishList}>
@@ -203,7 +219,7 @@ const Navbar = () => {
                 >
                   <img
                     className="navbar-profile-image"
-                    src={"/img/profile/defaultImg.jpg"}
+                    src={imagePath}
                     alt=""
                   />
                 </div>
