@@ -196,8 +196,8 @@ const Products = ({ initialInput }: ProductsProps) => {
         </Stack>
         <MultipleBanner />
         <Box component={"div"} className={"right"}>
-          <span>Sort by</span>
-          <div>
+          <span className="sort-text">Sort by:</span>
+          <div className="sorting-container">
             <Button
               onClick={sortingClickHandler}
               endIcon={<KeyboardArrowDownRoundedIcon />}
@@ -208,19 +208,23 @@ const Products = ({ initialInput }: ProductsProps) => {
               anchorEl={anchorEl}
               open={sortingOpen}
               onClose={sortingCloseHandler}
-              sx={{ paddingTop: "5px" }}
+              sx={{ paddingTop: "5px", fontWeight: "bold" }}
             >
               <MenuItem
                 onClick={sortingHandler}
                 id={"new"}
+                className="sorting-item"
                 disableRipple
-                sx={{ boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px" }}
+                sx={{
+                  boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px",
+                }}
               >
                 New
               </MenuItem>
               <MenuItem
                 onClick={sortingHandler}
                 id={"lowest"}
+                className="sorting-item"
                 disableRipple
                 sx={{ boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px" }}
               >
@@ -229,6 +233,7 @@ const Products = ({ initialInput }: ProductsProps) => {
               <MenuItem
                 onClick={sortingHandler}
                 id={"highest"}
+                className="sorting-item"
                 disableRipple
                 sx={{ boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px" }}
               >
