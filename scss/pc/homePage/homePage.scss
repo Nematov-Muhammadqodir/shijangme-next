@@ -108,12 +108,18 @@
           display: flex;
           flex-direction: row;
           justify-content: space-between;
+          width: 1300px;
+          overflow: hidden;
           .category-item {
             display: flex;
-            flex-direction: row;
+            flex-direction: column;
+            // justify-content: center;
             align-items: center;
             width: 188px;
-            height: 75px;
+            height: auto;
+            &:hover {
+              cursor: pointer;
+            }
             .category-img {
               width: 75px;
               height: 75px;
@@ -126,8 +132,7 @@
                 font-size: 40px;
               }
             }
-            display: flex;
-            flex-direction: row;
+
             gap: 10px;
           }
         }

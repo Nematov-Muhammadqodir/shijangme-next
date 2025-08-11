@@ -6,6 +6,8 @@ export enum ProductCollection {
   HERBS = "HERBS",
   NUTS = "NUTS",
   GRAINS = "GRAINS",
+  MEAT_EGGS = "MEAT_EGGS",
+  MILK_BEVARAGES = "MILK_BEVARAGES",
 }
 
 export enum ProductStatus {

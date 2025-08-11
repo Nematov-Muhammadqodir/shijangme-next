@@ -303,7 +303,7 @@ const Filter = (props: FilterType) => {
         <p className="title">Product Collection</p>
         <Stack
           className="product-collection"
-          style={{ height: showMore ? "195px" : "115px" }}
+          style={{ height: showMore ? "255px" : "115px" }}
           onMouseEnter={() => setShowMore(true)}
           onMouseLeave={() => {
             if (!searchFilter?.search?.productCollection) {

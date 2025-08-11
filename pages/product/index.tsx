@@ -252,7 +252,7 @@ const Products = ({ initialInput }: ProductsProps) => {
                   className={"empty-list"}
                   sx={{ gridColumn: "1 / -1" }}
                 >
-                  No Discounted Products Available
+                  No Products Found!
                 </Box>
               ) : (
                 productsToDisplay.map((product, key) => (
