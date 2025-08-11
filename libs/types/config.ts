@@ -22,7 +22,7 @@ export const Messages = {
 
 export const topProductRank = 3;
 
-export function formatDate(dateString: string): string {
+export function formatDate(dateString: Date): string {
   const date = new Date(dateString);
   return date.toLocaleDateString("en-US", {
     year: "numeric",

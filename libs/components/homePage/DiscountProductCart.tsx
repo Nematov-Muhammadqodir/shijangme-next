@@ -28,12 +28,14 @@ const DiscountProductCart = (props: DiscountProductCartProps) => {
   const discountPrice =
     Number(product.productPrice) -
     (Number(product.productPrice) / 100) * product.productDiscountRate;
-  const imgPath = `${REACT_APP_API_URL}/${product?.productImages[0]}`;
+  const imgPath = product?.productImages[0]
+    ? `${REACT_APP_API_URL}/${product?.productImages[0]}`
+    : "/img/products/pinapple.png";
   return (
     <div>
       <Stack className="discount-card">
         <Box className="card-image">
-          <img src={"/img/products/pinapple.png"} alt="product-image" />
+          <img src={imgPath} alt="product-image" />
           <Stack className="card-features">
             <Box className="discount">{product.productDiscountRate}%</Box>
             <Box

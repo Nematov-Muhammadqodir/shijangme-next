@@ -228,7 +228,7 @@
                 .product-name {
                   width: 100%;
                   color: #3d3d3d;
-                  font-size: 1px;
+                  font-size: 18px;
                   font-style: normal;
                   font-weight: 500;
                   line-height: 22px; /* 157.143% */
@@ -559,7 +559,9 @@
                 justify-content: center;
                 img {
                   width: 200px;
+                  height: 250px;
                   margin-bottom: 30px;
+                  object-fit: contain;
                 }
                 .like {
                   position: absolute;

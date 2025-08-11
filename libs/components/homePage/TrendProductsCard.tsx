@@ -9,6 +9,7 @@ import { useReactiveVar } from "@apollo/client";
 import { userVar } from "@/apollo/store";
 import { addItem } from "@/slices/cartSlice";
 import { useDispatch } from "react-redux";
+import { REACT_APP_API_URL } from "@/libs/types/config";
 
 interface TrendProductsCardProps {
   product: Product;
@@ -19,14 +20,14 @@ const TrendProductsCard = (props: TrendProductsCardProps) => {
   const { product, likeProductHandler } = props;
   const dispatch = useDispatch();
   const user = useReactiveVar(userVar);
+  const imgPath = product?.productImages[0]
+    ? `${REACT_APP_API_URL}/${product?.productImages[0]}`
+    : "/img/products/pinapple.png";
   return (
     <div>
       <Stack className="trend-products-card">
         <Stack className="trend-products-card-image">
-          <img
-            src="/img/products/pinapple.png"
-            alt="trend-products-card-image"
-          />
+          <img src={imgPath} alt="trend-products-card-image" />
           <Box
             className="like"
             onClick={() =>
