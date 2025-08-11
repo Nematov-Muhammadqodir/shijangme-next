@@ -27,6 +27,7 @@ export interface PISearch {
   productVolume?: ProductVolume[]; // not array
   productDiscountRate?: number; // not array
   productOrigin?: string[];
+  productPrice?: Range;
   text?: string;
 }
 
@@ -67,4 +68,9 @@ export interface AllProductsInquery {
   sort?: string;
   direction?: Direction;
   search: ALPISearch;
+}
+
+interface Range {
+  start: number;
+  end: number;
 }

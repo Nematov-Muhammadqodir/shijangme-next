@@ -303,7 +303,12 @@ Products.defaultProps = {
     limit: 6,
     sort: "createdAt",
     direction: "DESC",
-    search: {},
+    search: {
+      productPrice: {
+        start: 0,
+        end: 2000000,
+      },
+    },
   },
 };
 

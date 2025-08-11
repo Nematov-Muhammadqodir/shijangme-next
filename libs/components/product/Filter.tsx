@@ -44,11 +44,14 @@ const Filter = (props: FilterType) => {
   const [showMoreOrigin, setShowMoreOrigin] = useState(false);
   const [showMoreCollection, setShowMoreCollection] = useState(false);
   const [showMoreVolume, setShowMoreVolume] = useState(false);
+  const selectedVolumes = (searchFilter?.search?.productVolume || []).map((v) =>
+    typeof v === "string" ? parseFloat(v) : v
+  );
 
   useEffect(() => {
     if (searchFilter?.search?.productOrigin?.length == 0) {
       delete searchFilter.search.productOrigin;
-      setShowMore(false);
+      setShowMoreOrigin(false);
       router
         .push(
           `/product?input=${JSON.stringify({
@@ -277,6 +280,61 @@ const Filter = (props: FilterType) => {
     [searchFilter]
   );
 
+  const productPriceHandler = useCallback(
+    async (value: number, type: string) => {
+      if (type == "start") {
+        await router.push(
+          `/product?input=${JSON.stringify({
+            ...searchFilter,
+            search: {
+              ...searchFilter.search,
+              productPrice: {
+                ...searchFilter.search.productPrice,
+                start: value * 1,
+              },
+            },
+          })}`,
+          `/product?input=${JSON.stringify({
+            ...searchFilter,
+            search: {
+              ...searchFilter.search,
+              productPrice: {
+                ...searchFilter.search.productPrice,
+                start: value * 1,
+              },
+            },
+          })}`,
+          { scroll: false }
+        );
+      } else {
+        await router.push(
+          `/product?input=${JSON.stringify({
+            ...searchFilter,
+            search: {
+              ...searchFilter.search,
+              productPrice: {
+                ...searchFilter.search.productPrice,
+                end: value * 1,
+              },
+            },
+          })}`,
+          `/product?input=${JSON.stringify({
+            ...searchFilter,
+            search: {
+              ...searchFilter.search,
+              productPrice: {
+                ...searchFilter.search.productPrice,
+                end: value * 1,
+              },
+            },
+          })}`,
+          { scroll: false }
+        );
+      }
+    },
+    [searchFilter]
+  );
+
   return (
     <Stack className="filter-main-container">
       <Stack className="search-by-text-container">
@@ -410,9 +468,7 @@ const Filter = (props: FilterType) => {
                   color="default"
                   size="small"
                   value={volume}
-                  checked={(searchFilter?.search?.productVolume || []).includes(
-                    volume
-                  )}
+                  checked={selectedVolumes.includes(volume)}
                   onChange={productVolumeSelectHandler}
                   icon={<RadioButtonUncheckedIcon fontSize="small" />}
                   checkedIcon={<CheckCircleIcon fontSize="small" />}
@@ -425,6 +481,34 @@ const Filter = (props: FilterType) => {
               </Stack>
             );
           })}
+        </Stack>
+      </Stack>
+
+      <Stack className={"find-your-product"}>
+        <Typography className={"title"}>Price Range</Typography>
+        <Stack className="product-price-input">
+          <input
+            type="number"
+            placeholder="$ min"
+            min={0}
+            value={searchFilter?.search?.productPrice?.start ?? 0}
+            onChange={(e: any) => {
+              if (e.target.value >= 0) {
+                productPriceHandler(e.target.value, "start");
+              }
+            }}
+          />
+          <div className="central-divider"></div>
+          <input
+            type="number"
+            placeholder="$ max"
+            value={searchFilter?.search?.productPrice?.end ?? 0}
+            onChange={(e: any) => {
+              if (e.target.value >= 0) {
+                productPriceHandler(e.target.value, "end");
+              }
+            }}
+          />
         </Stack>
       </Stack>
     </Stack>
