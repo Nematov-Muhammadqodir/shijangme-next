@@ -198,10 +198,9 @@
         flex-direction: row;
         .filter-main-container {
           width: 339px;
-          border: 1px solid black;
           padding: 20px;
           border-radius: 12px;
-          box-shadow: 0 1px 4px 0 rgba(24, 26, 32, 0.07);
+          // box-shadow: 0 1px 4px 0 rgba(24, 26, 32, 0.4);
           .search-by-text-container {
             display: flex;
             flex-direction: column;
@@ -209,7 +208,12 @@
             width: 100%;
             height: 88px;
             .title {
-              color: red;
+              color: #2c2c2c;
+              font-size: 20px;
+              font-style: normal;
+              font-weight: 500;
+              line-height: normal;
+              text-transform: capitalize;
             }
             .search-details-container {
               display: flex;
@@ -219,8 +223,17 @@
           .find-by-origin-main {
             display: flex;
             gap: 10px;
+            border-radius: 15px;
+            border: 1px solid rgba(0, 0, 0, 0.09);
+            background: #f5f5f5;
+            padding: 20px;
             .title {
+              color: #2c2c2c;
+              font-size: 20px;
+              font-style: normal;
               font-weight: 600;
+              line-height: normal;
+              text-transform: capitalize;
             }
             .product-origin {
               gap: 10px;
@@ -241,12 +254,11 @@
                   margin-right: 10px;
                 }
                 .product-origin-item {
-                  color: #181a20;
-                  // font-family: $font;
-                  font-size: 14px;
+                  color: #5e5e5e;
+                  font-size: 16px;
                   font-style: normal;
-                  font-weight: 400;
-                  line-height: 19px;
+                  font-weight: 500;
+                  line-height: 25px; /* 156.25% */
                 }
               }
             }
@@ -254,8 +266,17 @@
           .find-by-collection-main {
             display: flex;
             gap: 10px;
+            border-radius: 15px;
+            border: 1px solid rgba(0, 0, 0, 0.09);
+            background: #f5f5f5;
+            padding: 20px;
             .title {
+              color: #2c2c2c;
+              font-size: 20px;
+              font-style: normal;
               font-weight: 600;
+              line-height: normal;
+              text-transform: capitalize;
             }
             .product-collection {
               gap: 10px;
@@ -276,6 +297,50 @@
                   margin-right: 10px;
                 }
                 .product-collection-item {
+                  color: #181a20;
+                  // font-family: $font;
+                  font-size: 14px;
+                  font-style: normal;
+                  font-weight: 400;
+                  line-height: 19px;
+                }
+              }
+            }
+          }
+          .find-by-volume-main {
+            display: flex;
+            gap: 10px;
+            border-radius: 15px;
+            border: 1px solid rgba(0, 0, 0, 0.09);
+            background: #f5f5f5;
+            padding: 20px;
+            .title {
+              color: #2c2c2c;
+              font-size: 20px;
+              font-style: normal;
+              font-weight: 600;
+              line-height: normal;
+              text-transform: capitalize;
+            }
+            .product-volume {
+              gap: 10px;
+              height: 145px;
+              overflow: hidden;
+              transition: 1s;
+              &:hover {
+                height: 240px;
+              }
+              .input-box {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                .volume-checkbox {
+                  width: 16px;
+                  height: 15px;
+                  border-radius: 12px;
+                  margin-right: 10px;
+                }
+                .product-volume-item {
                   color: #181a20;
                   // font-family: $font;
                   font-size: 14px;
@@ -320,7 +385,7 @@
                 height: 400px;
                 border-radius: 10px;
                 background-color: #f6f9fa;
-                border: 1px solid #6a6b66;
+                border: 1px solid #e1e3d6;
                 .image-container {
                   position: relative;
                   width: 100%;

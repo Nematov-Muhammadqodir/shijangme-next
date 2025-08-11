@@ -11,7 +11,13 @@ import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import { ProductsInquiry } from "@/libs/types/product/product.input";
 import { useRouter } from "next/router";
-import { ProductCollection, ProductFrom } from "@/libs/enums/product.enum";
+import {
+  ProductCollection,
+  ProductFrom,
+  ProductVolume,
+} from "@/libs/enums/product.enum";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 
 interface FilterType {
   searchFilter: ProductsInquiry;
@@ -28,9 +34,16 @@ const Filter = (props: FilterType) => {
   const [productCollection, setProductCollection] = useState<
     ProductCollection[]
   >(Object.values(ProductCollection));
+  const productVolumes = Object.values(ProductVolume).filter(
+    (v) => typeof v === "number"
+  ) as ProductVolume[];
+  const [productVolume, setProductVolume] =
+    useState<ProductVolume[]>(productVolumes);
 
   const [searchText, setSearchText] = useState<string>("");
-  const [showMore, setShowMore] = useState<boolean>(false);
+  const [showMoreOrigin, setShowMoreOrigin] = useState(false);
+  const [showMoreCollection, setShowMoreCollection] = useState(false);
+  const [showMoreVolume, setShowMoreVolume] = useState(false);
 
   useEffect(() => {
     if (searchFilter?.search?.productOrigin?.length == 0) {
@@ -220,6 +233,50 @@ const Filter = (props: FilterType) => {
     },
     [searchFilter]
   );
+
+  const productVolumeSelectHandler = useCallback(
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const isChecked = e.target.checked;
+      const value = parseFloat(e.target.value); // volumes are numbers
+
+      try {
+        if (isChecked) {
+          await router.push(
+            `/product?input=${JSON.stringify({
+              ...searchFilter,
+              search: {
+                ...searchFilter.search,
+                productVolume: [
+                  ...(searchFilter?.search?.productVolume || []),
+                  value,
+                ],
+              },
+            })}`,
+            undefined,
+            { scroll: false }
+          );
+        } else {
+          await router.push(
+            `/product?input=${JSON.stringify({
+              ...searchFilter,
+              search: {
+                ...searchFilter.search,
+                productVolume: searchFilter?.search?.productVolume?.filter(
+                  (item: number) => item !== value
+                ),
+              },
+            })}`,
+            undefined,
+            { scroll: false }
+          );
+        }
+      } catch (err) {
+        console.error("ERROR, productVolumeSelectHandler:", err);
+      }
+    },
+    [searchFilter]
+  );
+
   return (
     <Stack className="filter-main-container">
       <Stack className="search-by-text-container">
@@ -266,11 +323,11 @@ const Filter = (props: FilterType) => {
         <p className="title">Product Origin</p>
         <Stack
           className="product-origin"
-          style={{ height: showMore ? "310px" : "115px" }}
-          onMouseEnter={() => setShowMore(true)}
+          style={{ height: showMoreOrigin ? "310px" : "115px" }}
+          onMouseEnter={() => setShowMoreOrigin(true)}
           onMouseLeave={() => {
             if (!searchFilter?.search?.productOrigin) {
-              setShowMore(false);
+              setShowMoreOrigin(false);
             }
           }}
         >
@@ -287,6 +344,8 @@ const Filter = (props: FilterType) => {
                     origin as ProductFrom
                   )}
                   onChange={productOriginSelectHandler}
+                  icon={<RadioButtonUncheckedIcon fontSize="small" />}
+                  checkedIcon={<CheckCircleIcon fontSize="small" />}
                 />
                 <label htmlFor={origin} style={{ cursor: "pointer" }}>
                   <Typography className="product-origin-item">
@@ -303,11 +362,11 @@ const Filter = (props: FilterType) => {
         <p className="title">Product Collection</p>
         <Stack
           className="product-collection"
-          style={{ height: showMore ? "255px" : "115px" }}
-          onMouseEnter={() => setShowMore(true)}
+          style={{ height: showMoreCollection ? "255px" : "115px" }}
+          onMouseEnter={() => setShowMoreCollection(true)}
           onMouseLeave={() => {
             if (!searchFilter?.search?.productCollection) {
-              setShowMore(false);
+              setShowMoreCollection(false);
             }
           }}
         >
@@ -324,10 +383,43 @@ const Filter = (props: FilterType) => {
                     searchFilter?.search?.productCollection || []
                   ).includes(collection as ProductCollection)}
                   onChange={productCollectionSelectHandler}
+                  icon={<RadioButtonUncheckedIcon fontSize="small" />}
+                  checkedIcon={<CheckCircleIcon fontSize="small" />}
                 />
                 <label htmlFor={collection} style={{ cursor: "pointer" }}>
                   <Typography className="product-collection-item">
                     {collection}
+                  </Typography>
+                </label>
+              </Stack>
+            );
+          })}
+        </Stack>
+      </Stack>
+
+      <Stack className="find-by-volume-main" mb={"30px"}>
+        <p className="title">Product Volume</p>
+        <Stack className="product-volume" style={{ height: "200px" }}>
+          {productVolume.map((volume) => {
+            const volumeId = String(volume);
+            return (
+              <Stack className="input-box" key={volumeId}>
+                <Checkbox
+                  id={volumeId}
+                  className="volume-checkbox"
+                  color="default"
+                  size="small"
+                  value={volume}
+                  checked={(searchFilter?.search?.productVolume || []).includes(
+                    volume
+                  )}
+                  onChange={productVolumeSelectHandler}
+                  icon={<RadioButtonUncheckedIcon fontSize="small" />}
+                  checkedIcon={<CheckCircleIcon fontSize="small" />}
+                />
+                <label htmlFor={volumeId} style={{ cursor: "pointer" }}>
+                  <Typography className="product-volume-item">
+                    {volume}
                   </Typography>
                 </label>
               </Stack>
