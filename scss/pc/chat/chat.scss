@@ -1,42 +1,43 @@
 #pc-wrap {
-  .chatty-app {
-    padding-bottom: 30px;
-    background-color: rgb(247, 244, 240);
-    .chat-navbar-main-container {
-      background-color: white;
-      box-shadow: 0 4px 12px rgba(128, 0, 128, 0.2);
-      z-index: 10;
-      width: 100%;
+  .chat-navbar-main-container {
+    background-color: white;
+    box-shadow: 0 4px 12px rgba(128, 0, 128, 0.2);
+    z-index: 10;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    height: 70px;
+    .chat-navbar-container {
+      width: 90%;
+      padding: 0px 10px;
       display: flex;
-      justify-content: center;
-      height: 70px;
-      .chat-navbar-container {
-        width: 90%;
-        padding: 0px 10px;
+      justify-content: space-between;
+      align-items: center;
+      .chat-logo-container {
         display: flex;
-        justify-content: space-between;
         align-items: center;
-        .chat-logo-container {
-          display: flex;
-          align-items: center;
-          gap: 5px;
-          span {
-            font-size: 20px;
-            font-style: italic;
-            font-weight: 600;
-          }
+        gap: 5px;
+        cursor: pointer;
+        span {
+          font-size: 20px;
+          font-style: italic;
+          font-weight: 600;
         }
-        .chat-settings-container {
+      }
+      .chat-settings-container {
+        display: flex;
+        gap: 10px;
+        font-weight: 700;
+        button {
           display: flex;
-          gap: 10px;
-          font-weight: 700;
-          button {
-            display: flex;
-            gap: 5px;
-          }
+          gap: 5px;
         }
       }
     }
+  }
+  .chatty-app {
+    padding-bottom: 30px;
+    background-color: rgb(247, 244, 240);
     .container {
       .chat-message-main-container {
         .chat-message-container {
