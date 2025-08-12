@@ -69,7 +69,7 @@ const ChatApp = () => {
             </div>
           </Container>
         </Stack>
-        <Toaster />
+        {/* <Toaster /> */}
       </div>
     );
   }
