@@ -7,15 +7,18 @@ import MessageNavbar from "@/libs/components/chat/MessageNavbar";
 import withLayoutChat from "@/libs/components/layout/ChatBasic";
 import withLayoutMain from "@/libs/components/layout/LayoutHome";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useChatStore } from "@/store/useChatStore";
 import { Box, Container, Stack } from "@mui/material";
 import React, { useEffect } from "react";
 import Loader from "lucide-react";
 import RotateRightOutlinedIcon from "@mui/icons-material/RotateRightOutlined";
 import { useRouter } from "next/router";
 import { Toaster } from "react-hot-toast";
+import SpeakerNotesOffOutlinedIcon from "@mui/icons-material/SpeakerNotesOffOutlined";
 
 const ChatApp = () => {
   const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
+  const { selectedUser } = useChatStore();
   const router = useRouter();
 
   useEffect(() => {
@@ -27,8 +30,6 @@ const ChatApp = () => {
       router.push("/chat/login");
     }
   }, [authUser, router]);
-
-  console.log("authUser", authUser);
 
   if (!authUser && isCheckingAuth) {
     return (
@@ -62,9 +63,18 @@ const ChatApp = () => {
               <ChatSidebar />
               <div className="vertical-border"></div>
               <div className="message-bar-container">
-                <MessageNavbar />
-                <ChatContainer />
-                <MessageInput />
+                {!selectedUser ? (
+                  <div className="no-chat">
+                    <span>No chat selected</span>
+                    <SpeakerNotesOffOutlinedIcon />
+                  </div>
+                ) : (
+                  <>
+                    <MessageNavbar />
+                    <ChatContainer />
+                    <MessageInput />
+                  </>
+                )}
               </div>
             </div>
           </Container>

@@ -119,6 +119,13 @@
 
             justify-content: center; /* vertical centering */
             height: 80vh; /* or any fixed height */
+
+            .no-chat {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              gap: 10px;
+            }
             .chosen-user-main-header {
               display: flex;
               flex-direction: row;
