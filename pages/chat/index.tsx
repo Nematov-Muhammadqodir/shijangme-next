@@ -12,6 +12,7 @@ import React, { useEffect } from "react";
 import Loader from "lucide-react";
 import RotateRightOutlinedIcon from "@mui/icons-material/RotateRightOutlined";
 import { useRouter } from "next/router";
+import { Toaster } from "react-hot-toast";
 
 const ChatApp = () => {
   const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
@@ -68,6 +69,7 @@ const ChatApp = () => {
             </div>
           </Container>
         </Stack>
+        <Toaster />
       </div>
     );
   }
