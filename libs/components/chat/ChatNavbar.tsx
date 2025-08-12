@@ -1,16 +1,19 @@
-import React from "react";
+// @ts-nocheck
+import React, { useEffect } from "react";
 import { Button } from "@mui/material";
 import SettingsIcon from "@mui/icons-material/Settings";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import LogoutIcon from "@mui/icons-material/Logout";
 import SendIcon from "@mui/icons-material/Send";
 import { useRouter } from "next/router";
+import { useAuthStore } from "@/store/useAuthStore";
 
 const ChatNavbar = () => {
   const router = useRouter();
   const handleHomeClick = () => {
     router.push("/");
   };
+
   return (
     <div className="chat-navbar-main-container">
       <div className="chat-navbar-container">
