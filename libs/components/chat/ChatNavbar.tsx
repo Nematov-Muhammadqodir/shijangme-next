@@ -14,6 +14,10 @@ const ChatNavbar = () => {
     router.push("/");
   };
 
+  const handleProfilePage = () => {
+    router.push("/chat/profile");
+  };
+
   return (
     <div className="chat-navbar-main-container">
       <div className="chat-navbar-container">
@@ -26,7 +30,7 @@ const ChatNavbar = () => {
             <SettingsIcon />
             <span>Settings</span>
           </Button>
-          <Button variant="outlined">
+          <Button variant="outlined" onClick={handleProfilePage}>
             <AdminPanelSettingsIcon />
             <span>Profile</span>
           </Button>
