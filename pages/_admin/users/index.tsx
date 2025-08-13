@@ -3,18 +3,20 @@ import withLayoutAdmin from "@/libs/components/layout/AdminLayout";
 import { MembersInquiry } from "@/libs/types/member/member.input";
 import {
   InputAdornment,
+  List,
+  ListItem,
   MenuItem,
   OutlinedInput,
   Select,
   Stack,
 } from "@mui/material";
 import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import { Member } from "@/libs/types/member/member";
 import { T } from "@/libs/types/common";
 import { GET_ALL_MEMBERS_BY_ADMIN } from "@/apollo/admin/query";
-import { MemberType } from "@/libs/enums/member.enum";
+import { MemberStatus, MemberType } from "@/libs/enums/member.enum";
 import MemberHorizontalCard from "@/libs/components/admin/MemberHorizontalCard";
 import { MemberUpdate } from "@/libs/types/member/member.update";
 import { UPDATE_MEMBER_BY_ADMIN } from "@/apollo/admin/mutation";
@@ -28,10 +30,16 @@ const Users = ({ initialInquiry, ...props }: any) => {
   const [membersTotal, setMembersTotal] = useState<number>(0);
   const [searchText, setSearchText] = useState("");
   const [searchType, setSearchType] = useState("ALL");
+  const [value, setValue] = useState(
+    membersInquiry?.search?.memberStatus
+      ? membersInquiry?.search?.memberStatus
+      : "ALL"
+  );
 
   //APOLLO REQUESTS
   /** APOLLO REQUESTS **/
   const [updateMemberByAdmin] = useMutation(UPDATE_MEMBER_BY_ADMIN);
+  console.log("membersInquery", membersInquiry);
   const {
     loading: getAllMembersLoading,
     data: getAllMembersData,
@@ -42,6 +50,7 @@ const Users = ({ initialInquiry, ...props }: any) => {
     variables: { input: membersInquiry },
     notifyOnNetworkStatusChange: true,
     onCompleted: (data: T) => {
+      console.log("getAllMembersData: ", data);
       setMembers(data?.getAllMembersByAdmin?.list);
       setMembersTotal(data?.getAllMembersByAdmin?.metaCounter[0]?.total ?? 0);
     },
@@ -71,6 +80,7 @@ const Users = ({ initialInquiry, ...props }: any) => {
   };
 
   const searchTypeHandler = async (newValue: string) => {
+    console.log("new Value", newValue);
     try {
       setSearchType(newValue);
 
@@ -78,7 +88,6 @@ const Users = ({ initialInquiry, ...props }: any) => {
         setMembersInquiry({
           ...membersInquiry,
           page: 1,
-          sort: "createdAt",
           search: {
             ...membersInquiry.search,
             memberType: newValue as MemberType,
@@ -114,7 +123,48 @@ const Users = ({ initialInquiry, ...props }: any) => {
     }
   };
 
-  const memberList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  const tabChangeHandler = async (event: any, newValue: string) => {
+    setValue(newValue);
+    setSearchText("");
+
+    setMembersInquiry({ ...membersInquiry, page: 1, sort: "createdAt" });
+
+    switch (newValue) {
+      case "ALL":
+        setMembersInquiry({
+          ...membersInquiry,
+          search: {},
+        });
+        break;
+      case "ACTIVE":
+        setMembersInquiry({
+          ...membersInquiry,
+          search: { memberStatus: MemberStatus.ACTIVE },
+        });
+        break;
+      case "BLOCK":
+        setMembersInquiry({
+          ...membersInquiry,
+          search: { memberStatus: MemberStatus.BLOCK },
+        });
+        break;
+      case "DELETE":
+        setMembersInquiry({
+          ...membersInquiry,
+          search: { memberStatus: MemberStatus.DELETE },
+        });
+        break;
+      default:
+        delete membersInquiry?.search?.memberStatus;
+        setMembersInquiry({ ...membersInquiry });
+        break;
+    }
+  };
+
+  /** LIFECYCLES **/
+  useEffect(() => {
+    getAllMembersRefetch({ input: membersInquiry });
+  }, [membersInquiry]);
 
   return (
     <div className="users-page">
@@ -122,7 +172,38 @@ const Users = ({ initialInquiry, ...props }: any) => {
         <span className="page-name">Users Page</span>
         <span className="page-desc">View All Users</span>
       </Stack>
-      <TopNavigation initialInquiry={membersInquiry} type="users" />
+      <div className="top-navigation">
+        <List className={"tab-menu"}>
+          <ListItem
+            onClick={(e: any) => tabChangeHandler(e, "ALL")}
+            value="ALL"
+            className={value === "ALL" ? "li on" : "li"}
+          >
+            All
+          </ListItem>
+          <ListItem
+            onClick={(e: any) => tabChangeHandler(e, "ACTIVE")}
+            value="ACTIVE"
+            className={value === "ACTIVE" ? "li on" : "li"}
+          >
+            Active
+          </ListItem>
+          <ListItem
+            onClick={(e: any) => tabChangeHandler(e, "BLOCK")}
+            value="BLOCK"
+            className={value === "BLOCK" ? "li on" : "li"}
+          >
+            Blocked
+          </ListItem>
+          <ListItem
+            onClick={(e: any) => tabChangeHandler(e, "DELETE")}
+            value="DELETE"
+            className={value === "DELETE" ? "li on" : "li"}
+          >
+            Deleted
+          </ListItem>
+        </List>
+      </div>
       <Stack className="members-list-main-container">
         <Stack className="search-container">
           <OutlinedInput
@@ -166,17 +247,17 @@ const Users = ({ initialInquiry, ...props }: any) => {
             value={searchType}
             className="select-container"
           >
-            <MenuItem value={"ALL"} onClick={() => searchTypeHandler("ALL")}>
+            <MenuItem value={"ALL"} onClick={() => "ALL"}>
               All
             </MenuItem>
             <MenuItem value={"USER"} onClick={() => searchTypeHandler("USER")}>
               User
             </MenuItem>
             <MenuItem
-              value={"AGENT"}
-              onClick={() => searchTypeHandler("AGENT")}
+              value={"VENDOR"}
+              onClick={() => searchTypeHandler("VENDOR")}
             >
-              Agent
+              Vendor
             </MenuItem>
             <MenuItem
               value={"ADMIN"}
@@ -204,6 +285,7 @@ const Users = ({ initialInquiry, ...props }: any) => {
                   menuIconCloseHandler={menuIconCloseHandler}
                   index={index}
                   member={member}
+                  key={member?._id}
                 />
               );
             })}
@@ -217,8 +299,7 @@ const Users = ({ initialInquiry, ...props }: any) => {
 Users.defaultProps = {
   initialInquiry: {
     page: 1,
-    limit: 10,
-    sort: "createdAt",
+    limit: 1000,
     search: {},
   },
 };

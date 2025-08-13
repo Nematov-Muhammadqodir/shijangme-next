@@ -32,14 +32,14 @@ const MemberHorizontalCard = (props: MemberHorizontalCardProps) => {
   return (
     <div className="member-horiz-card-main">
       <Box className="id-container">
-        <span className="id">66089ea21669073834636faf</span>
+        <span className="id">{member?._id}</span>
       </Box>
       <Stack className="nick-img-container">
         <img src="/img/profile/defaultImg.jpg" alt="" />
-        <span className="nick">Kevin</span>
+        <span className="nick">{member?.memberNick}</span>
       </Stack>
       <Box className="phone-container">
-        <span className="tel">010-80-94-00-23</span>
+        <span className="tel">{member?.memberPhone}</span>
       </Box>
 
       <Box className="status-container">
@@ -47,8 +47,7 @@ const MemberHorizontalCard = (props: MemberHorizontalCardProps) => {
           onClick={(e: any) => menuIconClickHandler(e, member?._id)}
           className={"status-change-btn badge success"}
         >
-          ACTIVE
-          {/* {member?.memberStatus} */}
+          {member?.memberStatus}
         </Button>
 
         <Menu
@@ -86,8 +85,7 @@ const MemberHorizontalCard = (props: MemberHorizontalCardProps) => {
           onClick={(e: any) => menuIconClickHandler(e, index)}
           className={"type-change-btn badge success"}
         >
-          USER
-          {/* {member?.memberType} */}
+          {member?.memberType}
         </Button>
 
         <Menu

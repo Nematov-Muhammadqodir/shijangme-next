@@ -4,7 +4,7 @@
     display: flex;
     flex-direction: row;
     margin-top: 10px;
-    gap: 30px;
+    // gap: 30px;
 
     .left-navbar-container {
       width: 350px;
@@ -12,6 +12,7 @@
       flex-shrink: 0;
       border-radius: 0 25px 25px 0;
       background: #280559;
+      margin-right: 30px;
       .left-navbar-main {
         display: flex;
         flex-direction: column;
@@ -145,7 +146,7 @@
       width: 100%;
       .users-page {
         width: 100%;
-        height: 100%;
+        height: 99%;
         display: flex;
         flex-direction: column;
         padding-top: 20px;
@@ -238,7 +239,7 @@
                 .nick-img-container {
                   display: flex;
                   flex-direction: row;
-                  justify-content: center;
+
                   align-items: center;
                   gap: 5px;
                   width: 100px;
