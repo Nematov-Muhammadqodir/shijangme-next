@@ -1,0 +1,177 @@
+#pc-wrap {
+  .container {
+    display: flex;
+    flex-direction: row;
+    margin-top: 10px;
+    gap: 30px;
+    background-color: #e8e9eb;
+    .left-navbar-container {
+      width: 350px;
+      height: 98vh;
+      flex-shrink: 0;
+      border-radius: 0 25px 25px 0;
+      background: #280559;
+      .left-navbar-main {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        padding: 30px;
+        .admin-info-box {
+          display: flex;
+          flex-direction: row;
+          gap: 10px;
+          width: 192px;
+          height: 45px;
+          .admin-profile-img {
+            img {
+              width: 70px;
+              height: 70px;
+              border-radius: 50%;
+            }
+          }
+          .admin-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding-top: 10px;
+            gap: 10px;
+            color: white;
+            .name {
+              font-weight: 600;
+              letter-spacing: 1px;
+              text-transform: uppercase;
+            }
+          }
+        }
+        .divider {
+          width: 80%;
+          border-bottom: 1px solid white;
+          padding-top: 10px;
+        }
+        .menu-main-container {
+          display: flex;
+          flex-direction: column;
+          gap: 30px;
+          .menu-title {
+            color: #92929d;
+            font-family: Poppins;
+            font-size: 18px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: normal;
+            letter-spacing: 0.994px;
+            text-transform: uppercase;
+          }
+          .menu-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            .users-btn-active {
+              display: flex;
+              flex-direction: row;
+              gap: 20px;
+              justify-content: flex-start;
+              width: 290px;
+              height: 61px;
+              flex-shrink: 0;
+              border-radius: 15px;
+              background: #e6eff3;
+              padding: 20px;
+              .icon {
+                width: 20px;
+                height: 35px;
+                color: #280559;
+              }
+              .text {
+                color: #280559;
+                font-family: Poppins;
+                font-size: 18px;
+                font-style: normal;
+                font-weight: 500;
+                line-height: normal;
+                letter-spacing: 0.112px;
+              }
+            }
+            .users-btn {
+              display: flex;
+              flex-direction: row;
+              gap: 20px;
+              justify-content: flex-start;
+              width: 290px;
+              height: 61px;
+              flex-shrink: 0;
+              padding: 20px;
+              .icon {
+                width: 20px;
+                height: 35px;
+                color: white;
+              }
+              .text {
+                color: white;
+                font-family: Poppins;
+                font-size: 18px;
+                font-style: normal;
+                font-weight: 500;
+                line-height: normal;
+                letter-spacing: 0.112px;
+              }
+            }
+          }
+        }
+        .logout-container {
+          display: flex;
+          flex-direction: row;
+          gap: 10px;
+          width: 100%;
+          justify-content: space-between;
+          align-items: center;
+          .logo-container {
+            color: white;
+            display: flex;
+            margin-top: 150px;
+          }
+          .logout-btn {
+            color: white;
+            display: flex;
+            margin-top: 148px;
+            font-weight: 600;
+            font-size: 18px;
+          }
+        }
+      }
+    }
+    .right-content-container {
+      width: 100%;
+      .users-page {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        padding-top: 50px;
+        .users-page-intro {
+          display: flex;
+          flex-direction: column;
+          .page-name {
+            color: #280559;
+
+            font-size: 36px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: normal;
+          }
+          .page-desc {
+            color: #9898a3;
+
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: normal;
+          }
+        }
+      }
+      .products-page {
+        background-color: red;
+      }
+    }
+  }
+}

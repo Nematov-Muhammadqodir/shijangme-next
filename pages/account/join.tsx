@@ -57,7 +57,7 @@ const Join = () => {
     try {
       await logIn(input.nick, input.password);
       if (user?.memberType === MemberType.ADMIN) {
-        await router.push(`${router.query.referrer ?? "/_admin/users"}`);
+        await router.push(`${"/_admin/users"}`);
       } else {
         await router.push(`${router.query.referrer ?? "/"}`);
       }
