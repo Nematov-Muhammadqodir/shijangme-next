@@ -38,6 +38,7 @@
   .chatty-app {
     padding-bottom: 30px;
     background-color: rgb(247, 244, 240);
+    background: #4070f4;
     .container {
       .chat-message-main-container {
         .chat-message-container {
@@ -194,12 +195,16 @@
                       font-size: 16px;
                     }
                     .attached-image {
-                      border-radius: 2px;
-                      width: 100px;
-                      height: 100px;
-                      background-color: white;
+                      border-radius: 20px;
+                      width: 200px;
+                      height: 200px;
+                      background: rgb(243, 192, 137);
                       color: white;
-                      padding: 0;
+                      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      transition: transform 0.2s ease, box-shadow 0.2s ease;
                     }
                     .message-text {
                       display: flex;

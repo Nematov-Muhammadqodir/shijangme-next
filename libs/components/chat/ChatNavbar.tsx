@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 import { useAuthStore } from "@/store/useAuthStore";
 
 const ChatNavbar = () => {
+  const { logout } = useAuthStore();
   const router = useRouter();
   const handleHomeClick = () => {
     router.push("/");
@@ -26,7 +27,7 @@ const ChatNavbar = () => {
           <span>Chatty</span>
         </div>
         <div className="chat-settings-container">
-          <Button variant="outlined">
+          <Button variant="outlined" disabled>
             <SettingsIcon />
             <span>Settings</span>
           </Button>
@@ -34,7 +35,7 @@ const ChatNavbar = () => {
             <AdminPanelSettingsIcon />
             <span>Profile</span>
           </Button>
-          <Button>
+          <Button onClick={logout}>
             <LogoutIcon />
             <span>Logout</span>
           </Button>
