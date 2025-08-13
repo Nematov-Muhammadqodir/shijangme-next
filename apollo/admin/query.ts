@@ -29,7 +29,6 @@ export const GET_ALL_MEMBERS_BY_ADMIN = gql`
         memberRank
         memberWarnings
         memberBlocks
-        vendorNumber
         deletedAt
         createdAt
         updatedAt
@@ -103,7 +102,6 @@ const GET_ALL_PRODUCTS_BY_ADMIN = gql`
           memberRank
           memberWarnings
           memberBlocks
-          vendorNumber
           deletedAt
           createdAt
           updatedAt
@@ -219,7 +217,6 @@ export const GET_COMMENTS = gql`
           memberRank
           memberWarnings
           memberBlocks
-          vendorNumber
           deletedAt
           createdAt
           updatedAt
