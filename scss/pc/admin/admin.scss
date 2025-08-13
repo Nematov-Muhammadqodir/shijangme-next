@@ -184,6 +184,17 @@
             flex-direction: row;
             justify-content: space-between;
             width: 100%;
+            .search {
+              border-radius: 15px;
+              border: 2px solid rgba(203, 210, 220, 0.5);
+              background: #fff;
+            }
+            .select-container {
+              border-radius: 15px;
+              border: 1px solid rgba(203, 210, 220, 0.5);
+              background: #fff;
+              box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.05);
+            }
           }
         }
       }

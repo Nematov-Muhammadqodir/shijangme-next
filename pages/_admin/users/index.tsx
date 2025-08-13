@@ -1,13 +1,20 @@
 import TopNavigation from "@/libs/components/admin/TopNavigation";
 import withLayoutAdmin from "@/libs/components/layout/AdminLayout";
 import { MembersInquiry } from "@/libs/types/member/member.input";
-import { InputAdornment, OutlinedInput, Stack } from "@mui/material";
+import {
+  InputAdornment,
+  MenuItem,
+  OutlinedInput,
+  Select,
+  Stack,
+} from "@mui/material";
 import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
 import React, { useCallback, useState } from "react";
 import { useQuery } from "@apollo/client";
 import { Member } from "@/libs/types/member/member";
 import { T } from "@/libs/types/common";
 import { GET_ALL_MEMBERS_BY_ADMIN } from "@/apollo/admin/query";
+import { MemberType } from "@/libs/enums/member.enum";
 
 const Users = ({ initialInquiry, ...props }: any) => {
   const [membersInquiry, setMembersInquiry] =
@@ -15,6 +22,7 @@ const Users = ({ initialInquiry, ...props }: any) => {
   const [members, setMembers] = useState<Member[]>([]);
   const [membersTotal, setMembersTotal] = useState<number>(0);
   const [searchText, setSearchText] = useState("");
+  const [searchType, setSearchType] = useState("ALL");
 
   //APOLLO REQUESTS
   const {
@@ -54,6 +62,30 @@ const Users = ({ initialInquiry, ...props }: any) => {
       console.log("searchTextHandler: ", err.message);
     }
   };
+
+  const searchTypeHandler = async (newValue: string) => {
+    try {
+      setSearchType(newValue);
+
+      if (newValue !== "ALL") {
+        setMembersInquiry({
+          ...membersInquiry,
+          page: 1,
+          sort: "createdAt",
+          search: {
+            ...membersInquiry.search,
+            memberType: newValue as MemberType,
+          },
+        });
+      } else {
+        delete membersInquiry?.search?.memberType;
+        setMembersInquiry({ ...membersInquiry });
+      }
+    } catch (err: any) {
+      console.log("searchTypeHandler: ", err.message);
+    }
+  };
+
   return (
     <div className="users-page">
       <Stack className="users-page-intro">
@@ -99,6 +131,30 @@ const Users = ({ initialInquiry, ...props }: any) => {
               </>
             }
           />
+          <Select
+            sx={{ width: "160px", ml: "20px" }}
+            value={searchType}
+            className="select-container"
+          >
+            <MenuItem value={"ALL"} onClick={() => searchTypeHandler("ALL")}>
+              All
+            </MenuItem>
+            <MenuItem value={"USER"} onClick={() => searchTypeHandler("USER")}>
+              User
+            </MenuItem>
+            <MenuItem
+              value={"AGENT"}
+              onClick={() => searchTypeHandler("AGENT")}
+            >
+              Agent
+            </MenuItem>
+            <MenuItem
+              value={"ADMIN"}
+              onClick={() => searchTypeHandler("ADMIN")}
+            >
+              Admin
+            </MenuItem>
+          </Select>
         </Stack>
         <Stack className="members-list"></Stack>
       </Stack>
