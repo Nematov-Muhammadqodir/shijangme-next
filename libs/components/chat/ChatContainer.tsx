@@ -1,26 +1,73 @@
+// @ts-nocheck
 import { formatDate } from "@/libs/types/config";
+import { useAuthStore } from "@/store/useAuthStore";
+import { useChatStore } from "@/store/useChatStore";
 import React, { useEffect, useRef } from "react";
 
 const ChatContainer = () => {
-  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const messageEndRef = useRef<HTMLDivElement | null>(null);
   const scrollableContainerRef = useRef<HTMLDivElement | null>(null);
-  const messages = [true, false, true, false, true];
+  const {
+    messages,
+    getMessages,
+    isMessagesLoading,
+    selectedUser,
+    subscribeToMessages,
+    unsubscribeFromMessages,
+  } = useChatStore();
+  const { authUser } = useAuthStore();
+
+  useEffect(() => {
+    console.log("userID", selectedUser._id);
+    getMessages(selectedUser._id);
+    subscribeToMessages();
+
+    return () => unsubscribeFromMessages();
+  }, [
+    selectedUser._id,
+    getMessages,
+    subscribeToMessages,
+    unsubscribeFromMessages,
+  ]);
+
+  useEffect(() => {
+    if (messageEndRef.current && messages) {
+      messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
+
+  console.log("messages", messages);
 
   return (
     <div className="chat-main-container" ref={scrollableContainerRef}>
       {messages.map((message: any, i) => (
-        <div className={`message-item ${message ? "end" : "start"}`} key={i}>
+        <div
+          className={`message-item ${
+            message.senderId === authUser._id ? "end" : "start"
+          }`}
+          key={i}
+          ref={messageEndRef}
+        >
           <img src={"/img/profile/defaultImg.jpg"} alt="" />
           <div className="message-item-text">
-            <span>03.01.2002</span>
+            <span>{message?.createdAt?.split("T")[0]}</span>
             <div className="text-container">
-              <span>Hello</span>
+              <div>
+                {message.image && (
+                  <img
+                    src={`${"http://localhost:3002"}${message.image}`}
+                    alt="Attachment"
+                    className="attached-image"
+                  />
+                )}
+                {message.text && <p className="message-text">{message.text}</p>}
+              </div>
             </div>
           </div>
         </div>
       ))}
       {/* Optional: you can keep a dummy div to scroll to */}
-      <div ref={messagesEndRef} />
+      <div ref={messageEndRef} />
     </div>
   );
 };

@@ -1,12 +1,36 @@
+// @ts-nocheck
 import React, { useRef, useState } from "react";
 import ImageIcon from "@mui/icons-material/Image";
 import { Send } from "@mui/icons-material";
 import { T } from "@/libs/types/common";
+import { sweetErrorHandling } from "@/libs/types/sweetAlert";
+import { Messages } from "@/libs/types/config";
+import { useChatStore } from "@/store/useChatStore";
 
 const MessageInput = () => {
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [text, setText] = useState<string>("");
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [text, setText] = useState("");
+  const [imagePreview, setImagePreview] = useState(null);
+  const fileInputRef = useRef(null);
+  const { sendMessage } = useChatStore();
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please select an image file");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImagePreview(reader.result);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const removeImage = () => {
+    setImagePreview(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
 
   const handleImageIconClick = () => {
     fileInputRef.current?.click();
@@ -15,39 +39,38 @@ const MessageInput = () => {
   const handleFileChange = (e: T) => {
     const file = e.target.files?.[0];
 
-    //   const fileType = file?.type,
-    //     validateImageTypes = ["image/png", "image/jpg", "image/jpeg"];
-    //   if (!validateImageTypes.includes(fileType)) {
-    //     sweetErrorHandling(Messages.error5).then();
-    //   } else {
-    //     if (file) {
-    //       setImagePreview(URL.createObjectURL(file));
-    //     }
-    //   }
-    // };
-  };
-
-  const handleSendMessage = async (e: T) => {
-    e.preventDefault();
-    if (!text.trim() && !imagePreview) return;
-    console.log("texttrim", text);
-    console.log("imagePreview", imagePreview);
-
-    try {
-      // await sendMessage({
-      //   text: text.trim(),
-      //   image: imagePreview,
-      // });
-
-      if (fileInputRef.current) fileInputRef.current.value = "";
-    } catch (err) {
-      console.error("Failed to send message:", err);
-    } finally {
-      setText("");
-      setImagePreview(null);
+    const fileType = file?.type,
+      validateImageTypes = ["image/png", "image/jpg", "image/jpeg"];
+    if (!validateImageTypes.includes(fileType)) {
+      sweetErrorHandling(Messages.error5).then();
+    } else {
+      if (file) {
+        setImagePreview(URL.createObjectURL(file));
+      }
     }
   };
 
+  const handleSendMessage = async (e) => {
+    e.preventDefault();
+    if (!text.trim() && !fileInputRef.current?.files?.[0]) return;
+
+    try {
+      const formData = new FormData();
+      formData.append("text", text.trim());
+      if (fileInputRef.current?.files?.[0]) {
+        formData.append("chatImage", fileInputRef.current.files[0]);
+      }
+
+      await sendMessage(formData);
+
+      // Clear form
+      setText("");
+      setImagePreview(null);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    } catch (error) {
+      console.error("Failed to send message:", error);
+    }
+  };
   return (
     <form onSubmit={handleSendMessage}>
       <div className="message-input-main">

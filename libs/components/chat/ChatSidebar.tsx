@@ -29,7 +29,9 @@ const ChatSidebar = () => {
         {filteredUsers.map((user) => {
           return (
             <Button
-              className={`user-container-btn ${selectedUser ? "selected" : ""}`}
+              className={`user-container-btn ${
+                selectedUser?._id === user._id ? "selected" : ""
+              }`}
               key={user._id}
               onClick={() => setSelectedUser(user)}
               fullWidth
